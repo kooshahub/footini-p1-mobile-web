@@ -167,13 +167,12 @@ body[data-mode="mobile"] [data-vshop]{height:calc(100vh - 174px)!important;heigh
 .fi-vsz[disabled]{opacity:.3;cursor:default;text-decoration:line-through}
 .fi-vcl{width:27px;height:27px;flex:0 0 27px;border-radius:999px;border:1px solid rgba(58,42,34,.16);padding:0;cursor:pointer;transition:box-shadow .16s ease}
 .fi-vcl[aria-pressed="true"]{box-shadow:0 0 0 2px #F8EFE8,0 0 0 3.5px #3A2A22}
-/* the video is the only snap point on the page: scrolling into it always stops on the
-   frame (full screen), while everything after it — the lookbook included — scrolls freely.
-   scroll-margin-top = 106 sticky chips, so the frame starts right under them. */
-html:has(body[data-mode="mobile"]),html[data-mode="mobile"]{scroll-snap-type:y proximity}
-/* snap-stop:always حذف شد: قاب هنوز می‌چسبد اگر انگشت نزدیکش رها شود، ولی دیگر
-   اسکرولِ تند را مجبور نمی‌کند رویش بایستد — همین بود که روی iOS حس «صفحه لج کرده» می‌داد. */
-body[data-mode="mobile"] [data-vshop]{scroll-snap-align:start;scroll-margin-top:calc(106px + env(safe-area-inset-top))}
+/* اسنپِ سطحِ صفحه کاملاً حذف شد — نه فقط نرم شد. scroll-snap-type روی html/body یکی
+   از شناخته‌شده‌ترین دلایلِ «گیرکردنِ» فیزیکِ اسکرول در سافاریِ iOS است: مرورگر حین هر
+   اسکرولِ تند/مومنتوم باید مدام محاسبه کند نزدیکِ یک نقطه‌ی اسنپ هست یا نه، و همین کنارِ
+   هدرِ چسبانِ درحالِ تغییرِ اندازه و ده‌ها گالریِ افقیِ تودرتو، دقیقاً همان حسِ «صاف حرکت
+   نمی‌کند» را می‌سازد. نتیجه‌اش (چسبیدنِ نرم به ویدیوی شاپبل) یک مزیتِ کوچک بود؛ روانیِ
+   اسکرولِ کلِ صفحه اولویتِ بالاتری دارد. */
 
 /* ================= interactive prototype ================= */
 [data-screen-label]{position:relative}
