@@ -24,7 +24,7 @@ a:hover{color:#3A2A22}
 body[data-mode]{background:#fff!important}
 /* بعد از حذف فوتر، صفحه‌هایی که محتوایشان کوتاه‌تر از ارتفاع صفحه‌نمایش است، زیر نوار تب
    جای خالی نشان می‌دهند — همان رنگ کِرِمِ خودِ ماکاپ موبایل را می‌گیرد، نه سفید خام */
-body[data-mode="mobile"]{background:#F8EFE8!important}
+body[data-mode="mobile"]{background:#F8EFE8!important;transition:background-color .3s ease}
 /* body بیرون از [data-screen-label="P1 Mobile"] است، پس var(--fi-bg) به آن ارث نمی‌رسد —
    وقتی حالت تاریک فعال است، همین رنگِ پس‌زمینه‌ی جای‌خالیِ زیر صفحات کوتاه (سبد/علاقه‌مندی
    خالی یا کم‌آیتم) هم باید هماهنگ شود؛ فقط زیرِ data-mode="mobile" تا دسکتاپ اصلاً درگیر نشود. */
@@ -47,7 +47,7 @@ body[data-mode="mobile"] [data-screen-label]{overflow:visible!important}
    هر scrollTo دقیقاً سرِ جای خودش می‌نشیند و کلاس یک‌بار و تمیز عوض می‌شود. */
 body[data-mode="mobile"] [data-screen-label]{overflow-anchor:none}
 body[data-mode="mobile"] [data-page]{padding-top:0!important}
-body[data-mode="mobile"] [data-stickycat]{position:sticky;top:calc(60px + env(safe-area-inset-top));z-index:50;background:var(--fi-bg,#F8EFE8);box-shadow:0 8px 16px rgba(var(--fi-shadow-rgb,58,42,34),.07);transition:top .3s cubic-bezier(.4,0,.2,1),padding .3s cubic-bezier(.4,0,.2,1)}
+body[data-mode="mobile"] [data-stickycat]{position:sticky;top:calc(60px + env(safe-area-inset-top));z-index:50;background:var(--fi-bg,#F8EFE8);box-shadow:0 8px 16px rgba(var(--fi-shadow-rgb,58,42,34),.07);transition:top .3s cubic-bezier(.4,0,.2,1),padding .3s cubic-bezier(.4,0,.2,1),background-color .3s ease}
 /* ===== جمع‌وجور شدنِ هدر و ریل دسته‌بندی موقع اسکرول =====
    هدر هم مثل ریل دسته‌بندی به بالای صفحه می‌چسبد؛ همین که چسبید (سنتینلِ زیر
    استاتوس‌بار رد می‌شود) کلاس fi-compact روی صفحه می‌شیند: پدینگ‌ها جمع می‌شوند،
@@ -161,8 +161,8 @@ body[data-mode="mobile"] [data-vshop]{height:calc(100vh - 174px)!important;heigh
 .fi-vt.sec .line{background:rgba(255,255,255,.55)}
 .fi-vt.sec .dot{box-shadow:0 0 0 4px rgba(255,255,255,.14),0 2px 8px rgba(20,12,8,.3)}
 [data-vshop][data-act],[data-vsheet][data-act]{cursor:default}
-[data-vsheet]{position:absolute;right:14px;left:14px;bottom:16px;z-index:6;background:var(--fi-panel,#F8EFE8);border-radius:22px;padding:14px;box-shadow:0 20px 50px rgba(20,12,8,.4);visibility:hidden;transform:translateY(140%);transition:transform .3s cubic-bezier(.32,.72,0,1),visibility 0s linear .3s}
-[data-vsheet].on{visibility:visible;transform:none;transition:transform .3s cubic-bezier(.32,.72,0,1),visibility 0s}
+[data-vsheet]{position:absolute;right:14px;left:14px;bottom:16px;z-index:6;background:var(--fi-panel,#F8EFE8);border-radius:22px;padding:14px;box-shadow:0 20px 50px rgba(20,12,8,.4);visibility:hidden;transform:translateY(140%);transition:transform .3s cubic-bezier(.32,.72,0,1),visibility 0s linear .3s,background-color .3s ease}
+[data-vsheet].on{visibility:visible;transform:none;transition:transform .3s cubic-bezier(.32,.72,0,1),visibility 0s,background-color .3s ease}
 [data-vsheet] .vrow{display:flex;align-items:center;gap:11px}
 [data-vsheet] .vsep{height:1px;background:rgba(var(--fi-border-rgb,58,42,34),.09);margin:13px 0 12px}
 [data-vsheet] .vlbl{font:700 11.5px/1 'YekanBakh';color:var(--fi-muted,#8A7668);flex:0 0 auto}
@@ -188,10 +188,10 @@ body[data-mode="mobile"] [data-vshop]{height:calc(100vh - 174px)!important;heigh
    بخشی از آن هنوز زیر نوار ثابت پنهان است. */
 [data-screen-label]:has([data-tabbar]) [data-viewhost]{padding-bottom:calc(72px + env(safe-area-inset-bottom))}
 [data-screen-label]:has([data-tabbar]) [data-view="home"]{padding-bottom:calc(72px + env(safe-area-inset-bottom))}
-[data-scrim]{position:absolute;inset:0;background:rgba(var(--fi-shadow-rgb,58,42,34),.5);opacity:0;visibility:hidden;transition:opacity .22s ease,visibility 0s linear .22s;z-index:70;cursor:pointer}
-[data-scrim].on{opacity:1;visibility:visible;transition:opacity .22s ease,visibility 0s}
-[data-drawer],[data-sheet],[data-modal]{position:absolute;z-index:80;background:var(--fi-panel,#F8EFE8);color:var(--fi-ink,#3A2A22);visibility:hidden;transition:transform .28s cubic-bezier(.32,.72,0,1),visibility 0s linear .28s;overflow:auto;-webkit-overflow-scrolling:touch}
-[data-drawer].on,[data-sheet].on,[data-modal].on{visibility:visible;transform:none;transition:transform .28s cubic-bezier(.32,.72,0,1),visibility 0s}
+[data-scrim]{position:absolute;inset:0;background:rgba(var(--fi-shadow-rgb,58,42,34),.5);opacity:0;visibility:hidden;transition:opacity .22s ease,visibility 0s linear .22s,background-color .3s ease;z-index:70;cursor:pointer}
+[data-scrim].on{opacity:1;visibility:visible;transition:opacity .22s ease,visibility 0s,background-color .3s ease}
+[data-drawer],[data-sheet],[data-modal]{position:absolute;z-index:80;background:var(--fi-panel,#F8EFE8);color:var(--fi-ink,#3A2A22);visibility:hidden;transition:transform .28s cubic-bezier(.32,.72,0,1),visibility 0s linear .28s,background-color .3s ease,color .3s ease;overflow:auto;-webkit-overflow-scrolling:touch}
+[data-drawer].on,[data-sheet].on,[data-modal].on{visibility:visible;transform:none;transition:transform .28s cubic-bezier(.32,.72,0,1),visibility 0s,background-color .3s ease,color .3s ease}
 [data-drawer]{top:0;bottom:0;left:0;width:min(400px,86%);transform:translateX(-102%);box-shadow:14px 0 44px rgba(var(--fi-shadow-rgb,58,42,34),.2);
   padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);padding-left:env(safe-area-inset-left)}
 [data-sheet="search"]{top:0;right:0;left:0;transform:translateY(-102%);box-shadow:0 14px 44px rgba(var(--fi-shadow-rgb,58,42,34),.2);max-height:88%;
@@ -200,8 +200,8 @@ body[data-mode="mobile"] [data-vshop]{height:calc(100vh - 174px)!important;heigh
   padding-bottom:env(safe-area-inset-bottom)}
 [data-modal]{top:50%;right:50%;transform:translate(50%,-46%) scale(.97);width:min(760px,90%);max-height:86%;border-radius:20px;opacity:0;transition:transform .24s ease,opacity .24s ease,visibility 0s linear .24s}
 [data-modal].on{transform:translate(50%,-50%) scale(1);opacity:1;transition:transform .24s ease,opacity .24s ease,visibility 0s}
-[data-toast]{position:absolute;z-index:90;bottom:26px;right:50%;transform:translate(50%,14px);opacity:0;visibility:hidden;transition:opacity .2s ease,transform .2s ease,visibility 0s linear .2s;background:var(--fi-ink,#3A2A22);color:var(--fi-bg,#F8EFE8);border-radius:14px;padding:13px 20px;font:600 13px/1.7 'YekanBakh';box-shadow:0 16px 40px rgba(var(--fi-shadow-rgb,58,42,34),.3);max-width:80%;text-align:center;pointer-events:none}
-[data-toast].on{opacity:1;visibility:visible;transform:translate(50%,0);transition:opacity .2s ease,transform .2s ease,visibility 0s}
+[data-toast]{position:absolute;z-index:90;bottom:26px;right:50%;transform:translate(50%,14px);opacity:0;visibility:hidden;transition:opacity .2s ease,transform .2s ease,visibility 0s linear .2s,background-color .3s ease,color .3s ease;background:var(--fi-ink,#3A2A22);color:var(--fi-bg,#F8EFE8);border-radius:14px;padding:13px 20px;font:600 13px/1.7 'YekanBakh';box-shadow:0 16px 40px rgba(var(--fi-shadow-rgb,58,42,34),.3);max-width:80%;text-align:center;pointer-events:none}
+[data-toast].on{opacity:1;visibility:visible;transform:translate(50%,0);transition:opacity .2s ease,transform .2s ease,visibility 0s,background-color .3s ease,color .3s ease}
 body[data-mode] [data-scrim],body[data-mode] [data-drawer],body[data-mode] [data-sheet],body[data-mode] [data-modal],body[data-mode] [data-toast]{position:fixed}
 body[data-mode="mobile"] [data-toast]{bottom:calc(84px + env(safe-area-inset-bottom))}
 .fi-x{cursor:pointer;user-select:none}
@@ -211,7 +211,7 @@ body[data-mode="mobile"] [data-toast]{bottom:calc(84px + env(safe-area-inset-bot
 .fi-sz{min-width:50px;height:44px;border:1px solid rgba(var(--fi-border-rgb,58,42,34),.2);border-radius:999px;background:none;font:600 13.5px/1 'YekanBakh';cursor:pointer;color:inherit;transition:background .15s,color .15s,border-color .15s}
 .fi-sz[aria-pressed="true"]{background:var(--fi-ink,#3A2A22);border-color:var(--fi-ink,#3A2A22);color:var(--fi-bg,#F8EFE8)}
 .fi-sz:disabled{opacity:.38;text-decoration:line-through;cursor:not-allowed}
-.fi-btn{border:0;border-radius:999px;background:var(--fi-ink,#3A2A22);color:var(--fi-bg,#F8EFE8);font:700 14.5px/1 'YekanBakh';cursor:pointer;padding:0 24px;height:50px;transition:transform .12s ease,opacity .15s}
+.fi-btn{border:0;border-radius:999px;background:var(--fi-ink,#3A2A22);color:var(--fi-bg,#F8EFE8);font:700 14.5px/1 'YekanBakh';cursor:pointer;padding:0 24px;height:50px;transition:transform .12s ease,opacity .15s,background-color .3s ease,color .3s ease}
 .fi-btn:active{transform:scale(.975)}
 .fi-btn.ghost{background:none;border:1.5px solid rgba(var(--fi-border-rgb,58,42,34),.28);color:var(--fi-ink,#3A2A22)}
 .fi-btn.acc{background:var(--fi-accent,#C4805F)}
@@ -250,7 +250,7 @@ body[data-mode="mobile"] [data-toast]{bottom:calc(84px + env(safe-area-inset-bot
 [data-tab]:focus-visible{outline:3px solid var(--fi-accent,#C4805F);outline-offset:3px;border-radius:12px}
 [data-tab]::before{content:"";position:absolute;top:-8px;left:50%;margin-left:-8px;width:16px;height:3px;border-radius:999px;
   background:var(--fi-accent,#C4805F);opacity:0;transform:scaleX(.28);
-  transition:opacity .22s ease,transform .22s cubic-bezier(.32,.72,0,1)}
+  transition:opacity .22s ease,transform .22s cubic-bezier(.32,.72,0,1),background-color .3s ease}
 [data-tab].on::before{opacity:1;transform:scaleX(1)}
 /* رنگ و ترنسفورم اینجا می‌مانند و نه در style درون‌خطی — استایل درون‌خطی بر
    شیت مقدم است و حالت‌های .on و :active را زیر خودش دفن می‌کند */
@@ -287,6 +287,7 @@ html:has(body[data-mode="mobile"]),html[data-mode="mobile"]{overscroll-behavior-
    برمی‌گردد — یعنی literal فعلی، بدون هیچ تغییری. رنگ‌های محصول (VCOL/CMEDIA) و پس‌زمینه‌ی
    ویدیوها عمداً توکنیزه نشده‌اند: آن‌ها رنگ واقعیِ کالا/رسانه‌اند، نه رنگ رابط. */
 [data-screen-label="P1 Mobile"]{
+ transition:background-color .3s ease,color .3s ease;
  --fi-bg:#F8EFE8;               /* پس‌زمینه‌ی صفحه */
  --fi-panel:#F8EFE8;            /* کشو/شیت/مودال/کارت‌های تودرتو — پله‌ی ارتفاعِ متفاوت از --fi-bg در تاریک */
  --fi-ink:#3A2A22;               /* متن اصلی */
@@ -342,12 +343,18 @@ html:has(body[data-mode="mobile"]),html[data-mode="mobile"]{overscroll-behavior-
  filter:brightness(0) invert(1);
 }
 
+:where([data-screen-label="P1 Mobile"]) *{
+ transition:background-color .3s ease,color .3s ease,border-color .3s ease,box-shadow .3s ease,fill .3s ease,filter .3s ease;
+}
+@media (prefers-reduced-motion:reduce){
+ :where([data-screen-label="P1 Mobile"]) *{transition:none!important}
+}
 
 /* night-mode toggle + its toast */
 [data-nightbtn]{cursor:pointer;transition:background .18s ease,color .18s ease,border-color .18s ease,box-shadow .18s ease}
 [data-nightbtn].on{background:var(--fi-accent,#C4805F);border-color:var(--fi-accent,#C4805F);color:var(--fi-accent-ink,#F8EFE8);box-shadow:0 0 16px rgba(var(--fi-accent-rgb,196,128,95),.45)}
-[data-nighttoast]{position:absolute;top:calc(100% + 12px);right:0;background:var(--fi-ink,#3A2A22);color:var(--fi-bg,#F8EFE8);border-radius:14px;padding:13px 18px;font:600 13px/1.7 'YekanBakh';white-space:nowrap;box-shadow:0 18px 44px rgba(var(--fi-shadow-rgb,58,42,34),.28);opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .15s ease,transform .15s ease,visibility 0s linear .15s;z-index:90;pointer-events:none;text-align:right}
-[data-nighttoast].on{opacity:1;visibility:visible;transform:translateY(0);transition:opacity .15s ease,transform .15s ease,visibility 0s}
+[data-nighttoast]{position:absolute;top:calc(100% + 12px);right:0;background:var(--fi-ink,#3A2A22);color:var(--fi-bg,#F8EFE8);border-radius:14px;padding:13px 18px;font:600 13px/1.7 'YekanBakh';white-space:nowrap;box-shadow:0 18px 44px rgba(var(--fi-shadow-rgb,58,42,34),.28);opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .15s ease,transform .15s ease,visibility 0s linear .15s,background-color .3s ease,color .3s ease;z-index:90;pointer-events:none;text-align:right}
+[data-nighttoast].on{opacity:1;visibility:visible;transform:translateY(0);transition:opacity .15s ease,transform .15s ease,visibility 0s,background-color .3s ease,color .3s ease}
 
 /* ===================== کارت محصول: تگ رنگ، عنوان تک‌خطی، ویدیو، گالری اسلایدی =====================
    نگه‌داشتن انگشت روی موبایل، منوی بومی مرورگر را باز می‌کند (iOS: «Save Image»، اندروید:
@@ -393,7 +400,7 @@ html:has(body[data-mode="mobile"]),html[data-mode="mobile"]{overscroll-behavior-
 .fi-vp .rc{stroke-dasharray:50.3;stroke-dashoffset:50.3;transition:stroke-dashoffset .1s linear}
 .fi-card.hold .fi-vp .rc{stroke-dashoffset:0;transition:stroke-dashoffset .3s linear}
 .fi-card.hold{transform:scale(.972)}
-.fi-card{transition:transform .22s cubic-bezier(.32,.72,0,1)}
+.fi-card{transition:transform .22s cubic-bezier(.32,.72,0,1),background-color .3s ease}
 
 /* ویدیو در جای خود کارت (مسیر ۱) */
 .fi-vwrap{position:absolute;inset:0;z-index:2;opacity:0;transition:opacity .26s ease;pointer-events:none}
@@ -661,12 +668,12 @@ html:has(body[data-mode="mobile"]),html[data-mode="mobile"]{overscroll-behavior-
           <div data-mhero style="position:relative;overflow:hidden;height:554px;background:#E8DCD2">
             <video data-speed="1.8" src="Video/9-16/magnific_create-a-video_ovCsGAQ829.mp4" poster="assets/hero-lifestyle-2.webp" autoplay muted loop playsinline preload="auto" style="width:100%;height:100%;object-fit:cover;display:block"></video>
             <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(58,42,34,.7),rgba(58,42,34,.05) 55%)"></div>
-            <div data-mherocopy style="position:absolute;bottom:20px;right:18px;left:18px;color:#fff">
-              <div style="font:800 26px/1.5 'YekanBakh';margin-bottom:8px">قدم‌های روزمره‌ات<br>راحت و شیک</div>
-              <p style="margin:0 0 18px;font:400 13.5px/1.8 'YekanBakh';opacity:.85">۴۲۰ مدل کفش و کیف، برای هر سلیقه</p>
-              <div style="display:flex;gap:8px">
-                <button type="button" data-act="plp" data-v="all" style="flex:1;background:#F8EFE8;color:#3A2A22;border:0;border-radius:999px;padding:15px 0;text-align:center;font:700 14px/1 'YekanBakh';cursor:pointer">کالکشن جدید</button>
-                <button type="button" data-act="sizeguide" style="flex:1;background:none;color:#fff;border:1.5px solid rgba(255,255,255,.7);border-radius:999px;padding:14px 0;text-align:center;font:700 14px/1 'YekanBakh';cursor:pointer">سایز من</button>
+            <div data-mherocopy style="position:absolute;bottom:18px;right:18px;left:18px;color:#fff">
+              <div style="font:800 19px/1.45 'YekanBakh';margin-bottom:6px">قدم‌های روزمره‌ات<br>راحت و شیک</div>
+              <p style="margin:0 0 13px;font:400 11.5px/1.7 'YekanBakh';opacity:.85">۴۲۰ مدل کفش و کیف، برای هر سلیقه</p>
+              <div style="display:flex;gap:7px">
+                <button type="button" data-act="plp" data-v="all" style="flex:1;background:#F8EFE8;color:#3A2A22;border:0;border-radius:999px;padding:11px 0;text-align:center;font:700 12px/1 'YekanBakh';cursor:pointer">کالکشن جدید</button>
+                <button type="button" data-act="sizeguide" style="flex:1;background:none;color:#fff;border:1.5px solid rgba(255,255,255,.7);border-radius:999px;padding:10px 0;text-align:center;font:700 12px/1 'YekanBakh';cursor:pointer">سایز من</button>
               </div>
             </div>
           </div>
@@ -692,7 +699,7 @@ html:has(body[data-mode="mobile"]),html[data-mode="mobile"]{overscroll-behavior-
             <span style="font:800 20px/1.4 'YekanBakh'">پرفروش‌های هفته</span>
             <button type="button" data-act="plp" data-v="all" style="background:none;border:0;padding:0;font:700 12.5px/1 'YekanBakh';color:var(--fi-accent,#C4805F);cursor:pointer">همه ←</button>
           </div>
-          <div data-fill="best" data-n="4" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px"></div>
+          <div data-fill="best" data-n="6" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px"></div>
         </div>
 
         <!-- mobile shoppable video (full-height, above the lookbook) — tags open the product page -->
@@ -1147,7 +1154,7 @@ function vPDP(sc){
   : '<div style="display:grid;grid-template-columns:1.05fr .95fr;gap:46px;align-items:start;padding:34px 56px 20px">'+gal+'<div style="position:sticky;top:24px">'+info+'</div></div>';
  var relHTML=rel.length?'<div style="padding:'+(m?'6px 18px 26px':'20px 56px 60px')+'"><div style="font:800 '+(m?17:22)+'px/1.5 \'YekanBakh\';margin-bottom:16px">مشابه‌ها</div>'+
   '<div style="display:grid;grid-template-columns:repeat('+(m?2:4)+',minmax(0,1fr));gap:'+(m?14:20)+'px">'+rel.map(function(x){return card(x,m);}).join('')+'</div></div>':'';
- return body+relHTML;
+ return body+reviewsHTML(p,m)+relHTML;
 }
 /* نقطه‌ها و شمارنده‌ی هر گالری (کارت یا صفحه‌ی محصول) روی کاشی i بایستند */
 function galMark(sl,i){
@@ -1174,7 +1181,7 @@ function cartTotal(){var t=0;cart.forEach(function(i){t+=byId(i.id).pr*i.q;});re
 function cartCount(){var n=0;cart.forEach(function(i){n+=i.q;});return n;}
 function vCart(sc){
  var m=isM(sc),pad=m?'16px 18px 26px':'34px 56px 60px';
- if(!cart.length)return '<div style="padding:'+pad+'"><button data-act="home" class="fi-chip" style="height:34px;margin-bottom:16px">→ بازگشت</button>'+
+ if(!cart.length)return '<div style="padding:'+pad+'"><button data-act="back" class="fi-chip" style="height:34px;margin-bottom:16px">→ بازگشت</button>'+
   '<div style="text-align:center;padding:60px 20px"><div style="font:800 20px/1.7 \'YekanBakh\';margin-bottom:8px">سبد خالی است</div>'+
   '<div style="font:400 13.5px/1.9 \'YekanBakh\';color:var(--fi-muted,#8A7668);margin-bottom:20px">یک جفت انتخاب کن تا اینجا ببینیش.</div>'+
   '<button class="fi-btn" data-act="plp" data-v="all">دیدن محصولات</button></div></div>';
@@ -1192,7 +1199,7 @@ function vCart(sc){
       '<button data-act="inc" data-i="'+i+'" aria-label="زیاد" style="width:36px;height:36px;border:0;background:none;font:700 16px/1 \'YekanBakh\';cursor:pointer;color:inherit">+</button></div>'+
      '<span class="fi-num" style="font:800 14px/1 \'YekanBakh\'">'+money(p.pr*it.q)+'</span></div></div></div>';}).join('');
  var ship=cartTotal()>=5000000?0:250000;
- return '<div style="padding:'+pad+'"><button data-act="home" class="fi-chip" style="height:34px;margin-bottom:14px">→ بازگشت</button>'+
+ return '<div style="padding:'+pad+'"><button data-act="back" class="fi-chip" style="height:34px;margin-bottom:14px">→ بازگشت</button>'+
   '<div style="font:800 '+(m?22:30)+'px/1.4 \'YekanBakh\';margin-bottom:6px">سبد خرید</div>'+
   '<div class="fi-num" style="font:400 12.5px/1 \'YekanBakh\';color:var(--fi-muted,#8A7668);margin-bottom:18px">'+fa(cartCount())+' کالا</div>'+
   rows+
@@ -1220,7 +1227,7 @@ function vCheckout(sc){
  else inner=['پرداخت اینترنتی','پرداخت در محل (تهران)'].map(function(t,i){
   return '<label style="display:flex;align-items:center;gap:11px;background:var(--fi-surface,#fff);border:1px solid rgba(var(--fi-border-rgb,58,42,34),'+(i===0?'.32':'.12')+');border-radius:14px;padding:15px;margin-bottom:10px;cursor:pointer">'+
   '<input type="radio" name="pm" '+(i===0?'checked':'')+' style="accent-color:var(--fi-accent,#C4805F);width:18px;height:18px"><span style="font:600 13.5px/1.6 \'YekanBakh\'">'+t+'</span></label>';}).join('');
- return '<div style="padding:'+pad+'"><button data-act="cart" class="fi-chip" style="height:34px;margin-bottom:14px">→ بازگشت</button>'+
+ return '<div style="padding:'+pad+'"><button data-act="back" class="fi-chip" style="height:34px;margin-bottom:14px">→ بازگشت</button>'+
   '<div style="font:800 '+(m?22:30)+'px/1.4 \'YekanBakh\';margin-bottom:18px">تکمیل خرید</div>'+
   '<div style="display:flex;gap:10px;margin-bottom:22px">'+dots+'</div>'+
   '<div style="max-width:'+(m?'100%':'520px')+'">'+inner+
@@ -1231,7 +1238,7 @@ function vCheckout(sc){
 function vWish(sc){
  var m=isM(sc),pad=m?'16px 18px 26px':'34px 56px 60px';
  var list=P.filter(function(p){return wish[p.id];});
- return '<div style="padding:'+pad+'"><button data-act="home" class="fi-chip" style="height:34px;margin-bottom:14px">→ بازگشت</button>'+
+ return '<div style="padding:'+pad+'"><button data-act="back" class="fi-chip" style="height:34px;margin-bottom:14px">→ بازگشت</button>'+
   '<div style="font:800 '+(m?22:30)+'px/1.4 \'YekanBakh\';margin-bottom:18px">علاقه‌مندی‌ها</div>'+
   (list.length?'<div style="display:grid;grid-template-columns:repeat('+(m?2:4)+',minmax(0,1fr));gap:'+(m?14:20)+'px">'+list.map(function(p){return card(p,m);}).join('')+'</div>'
    :'<div style="text-align:center;padding:60px 20px"><div style="font:800 18px/1.7 \'YekanBakh\';margin-bottom:8px">هنوز چیزی نپسندیده‌ای</div><div style="font:400 13.5px/1.9 \'YekanBakh\';color:var(--fi-muted,#8A7668);margin-bottom:20px">قلبِ کنار هر محصول را بزن تا اینجا جمع شود.</div><button class="fi-btn" data-act="plp" data-v="all">دیدن محصولات</button></div>')+'</div>';
@@ -1286,7 +1293,7 @@ function carGoto(car,i){
 function pageShell(m,title,body){
  var pad=m?'16px 18px 40px':'34px 56px 70px';
  return '<div style="padding:'+pad+'">'+
-  '<button data-act="home" class="fi-chip" style="height:34px;margin-bottom:16px">→ بازگشت</button>'+
+  '<button data-act="back" class="fi-chip" style="height:34px;margin-bottom:16px">→ بازگشت</button>'+
   '<div style="font:800 '+(m?22:32)+'px/1.4 \'YekanBakh\';margin-bottom:'+(m?18:28)+'px">'+title+'</div>'+
   '<div style="max-width:'+(m?'100%':'640px')+'">'+body+'</div></div>';
 }
@@ -1408,6 +1415,119 @@ var CMEDIA={
  f315060:{colors:[
   {n:'مشکی',h:'#191E26',k:'black',white:'assets/shop/media/f315060/black/white-bg.webp',model:'assets/shop/media/f315060/black/model.webp'}]}
 };
+var REVIEWS={
+ f245455:[
+  {n:'مریم.',r:5,d:'۳ هفته پیش',t:'برای کف پای صافم گرفتمش، واقعاً حس می‌کنم قوس کف پا رو نگه می‌داره. تا آخر شب راحتم.'},
+  {n:'حسین.',r:4,d:'۱ ماه پیش',t:'کیفیتش خوبه ولی یک‌کم گشاد اومد، یه سایز کوچیک‌تر بگیرید.'},
+  {n:'زهرا.',r:5,d:'۲ ماه پیش',t:'برای مادرم خریدم که مشکل زانو داره، خیلی راضیه. سبک و نرمه.'}
+ ],
+ f225263:[
+  {n:'نگین.',r:5,d:'۱۰ روز پیش',t:'رنگش دقیقاً مثل عکس بود، خیلی خنکه برای تابستون.'},
+  {n:'آرمین.',r:4,d:'۳ هفته پیش',t:'راحته ولی زیره‌اش یک‌کم نازکه، رو آسفالت داغ گرما رو حس می‌کنی.'},
+  {n:'پریسا.',r:5,d:'۱ ماه پیش',t:'کفشِ سبک و شیکیه، با شلوار جین و دامن هردو ست می‌شه.'},
+  {n:'یاسمن.',r:3,d:'۶ هفته پیش',t:'خودِ کفش خوبه، ولی بسته‌بندیش موقع ارسال یک‌کم آسیب دیده بود.'}
+ ],
+ f34765:[
+  {n:'فاطمه.',r:5,d:'۲ هفته پیش',t:'برای دیابتی‌ها واقعاً مناسبه، پرستار بیمارستانم و تمام شیفت رو باهاش سرپام.'},
+  {n:'سارا.',r:5,d:'۱ ماه پیش',t:'زیره‌ی فومش عالیه، انگار رو ابر راه می‌ری.'},
+  {n:'مهسا.',r:4,d:'۲ ماه پیش',t:'کیفیت ساختش خوبه، فقط رنگ‌بندیش محدوده.'}
+ ],
+ f346732:[
+  {n:'امیر.',r:5,d:'۵ روز پیش',t:'جورابی بودنش فوق‌العادست، پا رو کامل می‌گیره بدون این‌که فشار بیاره.'},
+  {n:'نیلوفر.',r:4,d:'۳ هفته پیش',t:'برای پیاده‌روی روزانه گرفتم، خیلی سبکه. فقط شستنش یک‌کم سخته چون جورابیه.'},
+  {n:'کیانا.',r:5,d:'۱ ماه پیش',t:'یونیسکسه و برای من و همسرم هردو خریدیم، سایزبندیش دقیقه.'}
+ ],
+ f18414:[
+  {n:'الناز.',r:5,d:'۱ هفته پیش',t:'با این‌همه تخفیف واقعاً ارزش خرید داشت، کیفیتش بالاتر از قیمتشه.'},
+  {n:'شیوا.',r:4,d:'۲ هفته پیش',t:'قشنگه و راحته، فقط بند پشتش اول یک‌کم محکم بود، بعد از چندبار پوشیدن جا باز کرد.'},
+  {n:'رضا.',r:5,d:'۱ ماه پیش',t:'برای همسرم گرفتم، رنگش خیلی شیک و تابستونیه.'}
+ ],
+ f337994:[
+  {n:'بهاره.',r:5,d:'۴ روز پیش',t:'شبیه نمونه‌ی اصلیش خیلی خوب دراومده، برای محیط کار عالیه.'},
+  {n:'نازنین.',r:5,d:'۲ هفته پیش',t:'راحت و کلاسیکه، با هر لباسی جور می‌شه.'},
+  {n:'سهیل.',r:3,d:'۳ هفته پیش',t:'برای همسرم خریدم، خودِ کفش خوبه ولی چسبِ داخلش بعد چند هفته یک‌کم صدا می‌ده.'},
+  {n:'مینا.',r:5,d:'۱ ماه پیش',t:'پرفروش‌بودنش بی‌دلیل نیست، واقعاً راحته.'}
+ ],
+ f221718:[
+  {n:'طاهره.',r:5,d:'۱ هفته پیش',t:'طبی‌بودنش کاملاً حس می‌شه، برای کف پای دردناکم عالی بود.'},
+  {n:'هانیه.',r:4,d:'۳ هفته پیش',t:'راحته، فقط رنگ بژش یک‌کم با عکس فرق داشت، روشن‌تر بود.'},
+  {n:'داریوش.',r:5,d:'۱ ماه پیش',t:'برای پدرم که مشکل پا داره گرفتم، خیلی راضیه؛ می‌گه حسِ آزادیِ پابرهنگی رو داره ولی محکمه.'}
+ ],
+ f315060:[
+  {n:'علی.',r:5,d:'۶ روز پیش',t:'طرحش خیلی شبیه اورجینالشه، برای ورزش روزانه می‌پوشم.'},
+  {n:'سمیرا.',r:4,d:'۲ هفته پیش',t:'کیفیت دوخت خوبه، فقط بند کفشش کیفیت متوسطی داره.'},
+  {n:'کوروش.',r:5,d:'۱ ماه پیش',t:'با این تخفیف گرفتمش، واقعاً حیفه از دست بدید.'}
+ ],
+ f345270:[
+  {n:'رویا.',r:5,d:'۲ هفته پیش',t:'دوتا سگک داره که تنظیمِ دورِ پا رو خیلی راحت می‌کنه.'},
+  {n:'ملیکا.',r:4,d:'۱ ماه پیش',t:'قشنگ و راحته، فقط سایزش نسبت به بقیه‌ی مدل‌ها یک‌کم بزرگ‌تر می‌زنه.'},
+  {n:'کاظم.',r:5,d:'۲ ماه پیش',t:'برای همسرم گرفتم که کف پای حساسی داره، می‌گه خیلی نرمه.'}
+ ],
+ f225019:[
+  {n:'آیدا.',r:5,d:'۱۰ روز پیش',t:'برای پیاده‌روی صبحگاهی گرفتم، ضربه‌گیریش محسوسه.'},
+  {n:'بهنام.',r:5,d:'۳ هفته پیش',t:'طرحش خیلی شیکه، با اسپرت و رسمی هم جواب می‌ده.'},
+  {n:'غزل.',r:3,d:'۵ هفته پیش',t:'کفش خوبیه ولی رنگ سفیدش زود کثیف می‌شه.'}
+ ],
+ f260822:[
+  {n:'پویا.',r:5,d:'۱ هفته پیش',t:'زیره‌ی بوستش واقعاً فنری و نرمه، برای دویدن هم امتحان کردم خوب بود.'},
+  {n:'ترانه.',r:4,d:'۳ هفته پیش',t:'راحته و سبکه، فقط جعبه‌بندیش ساده بود، انتظار بهتری داشتم.'},
+  {n:'آرش.',r:5,d:'۲ ماه پیش',t:'با این تخفیف واقعاً معامله‌ی خوبی بود.'}
+ ],
+ f336444:[
+  {n:'سپیده.',r:4,d:'۲ هفته پیش',t:'طرحش رترو و خاصه، توی جمع خیلی ازش تعریف کردن.'},
+  {n:'فرهاد.',r:5,d:'۱ ماه پیش',t:'کیفیت چرمش خوبه، چون یونیسکسه سایزبندی رو دقیق چک کنید.'},
+  {n:'ژاله.',r:5,d:'۲ ماه پیش',t:'برای پسرم گرفتم، از طرح رترو دیزلش خیلی خوشش اومد.'}
+ ],
+ f263590:[
+  {n:'مژگان.',r:5,d:'۵ روز پیش',t:'برای کارمندهایی که کل روز سرپان عالیه، سبک و نرمه.'},
+  {n:'لیلا.',r:4,d:'۲ هفته پیش',t:'راحته ولی طرحش یک‌کم ساده‌تر از چیزیه که فکر می‌کردم.'},
+  {n:'نسترن.',r:5,d:'۱ ماه پیش',t:'کفش روزمره‌ی خیلی خوبیه، با هر چیزی ست می‌شه.'}
+ ],
+ f448680:[
+  {n:'آناهیتا.',r:5,d:'۱ هفته پیش',t:'خیلی بامزه و شیکه، برای دخترم گرفتم عاشقش شده.'},
+  {n:'ویدا.',r:4,d:'۳ هفته پیش',t:'ظاهرش خیلی خوبه، فقط پاشنه‌اش یک‌کم روی سنگ سُر می‌خوره.'},
+  {n:'پرستو.',r:5,d:'۱ ماه پیش',t:'برای مهمونی و روزمره هم می‌شه پوشید، خیلی سبکه.'}
+ ],
+ f45625:[
+  {n:'صدیقه.',r:5,d:'۴ روز پیش',t:'لژدار بودنش خیلی به کمر و پام کمک کرده، تو خونه همیشه پامه.'},
+  {n:'کامران.',r:5,d:'۲ هفته پیش',t:'برای پدربزرگم خریدم که تعادلش کمه، می‌گه خیلی محکم زیر پاست.'},
+  {n:'الهام.',r:4,d:'۱ ماه پیش',t:'راحته، فقط رنگ‌بندیش کمه.'}
+ ],
+ f362094:[
+  {n:'رها.',r:5,d:'۶ روز پیش',t:'کنفی و سبکه، برای بهار و تابستون خیلی خوبه.'},
+  {n:'سامان.',r:4,d:'۲ هفته پیش',t:'طرحش کیوته، فقط جنسِ بندش یک‌کم نازک به نظر می‌آد.'},
+  {n:'مهتاب.',r:5,d:'۱ ماه پیش',t:'با این قیمت واقعاً ارزششو داره.'}
+ ]
+};
+function starsHTML(n,size){
+ size=size||13;var s='';
+ for(var i=1;i<=5;i++)s+='<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="'+(i<=n?'var(--fi-accent,#C4805F)':'none')+'" stroke="var(--fi-accent,#C4805F)" stroke-width="1.5" stroke-linejoin="round"><path d="M12 2.5 15.09 8.76 22 9.77 17 14.64 18.18 21.52 12 18.22 5.82 21.52 7 14.64 2 9.77 8.91 8.76 12 2.5Z"/></svg>';
+ return '<span style="display:inline-flex;gap:1px;vertical-align:middle" aria-hidden="true">'+s+'</span>';
+}
+function reviewsHTML(p,m){
+ var revs=REVIEWS[p.id];if(!revs||!revs.length)return '';
+ var avg=revs.reduce(function(s,r){return s+r.r;},0)/revs.length;
+ var avgTxt=fa(avg.toFixed(1)).replace('.','٫');
+ var head='<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">'+
+  '<span class="fi-num" style="font:800 '+(m?20:24)+'px/1 \'YekanBakh\'">'+avgTxt+'</span>'+
+  starsHTML(Math.round(avg),m?15:17)+
+  '<span class="fi-num" style="font:500 '+(m?12:13)+'px/1 \'YekanBakh\';color:var(--fi-muted,#8A7668)">('+fa(revs.length)+' نظر)</span>'+
+ '</div>';
+ var list=revs.map(function(r){
+  return '<div style="background:var(--fi-surface,#fff);border-radius:16px;padding:'+(m?'14px 15px':'18px 20px')+';margin-bottom:10px">'+
+   '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px">'+
+    '<span style="font:700 '+(m?12.5:13.5)+'px/1.5 \'YekanBakh\'">'+esc(r.n)+'</span>'+
+    '<span class="fi-num" style="font:400 '+(m?10.5:11.5)+'px/1 \'YekanBakh\';color:var(--fi-muted,#8A7668);white-space:nowrap">'+r.d+'</span>'+
+   '</div>'+
+   starsHTML(r.r,m?12:13)+
+   '<p style="margin:'+(m?'8px':'9px')+' 0 0;font:400 '+(m?12.5:13.5)+'px/1.85 \'YekanBakh\';color:var(--fi-secondary-text,#6B584D)">'+esc(r.t)+'</p>'+
+  '</div>';
+ }).join('');
+ return '<div style="padding:'+(m?'6px 18px 26px':'20px 56px 60px')+'">'+
+  '<div style="font:800 '+(m?17:22)+'px/1.5 \'YekanBakh\';margin-bottom:16px">نظرات مشتریان</div>'+
+  head+list+
+ '</div>';
+}
 /* ---------- «فوتینی برای همه سلیقه‌ها»: ویدیوی پیش‌فرض، قفسه‌ی ریلی، قرعه‌ی هر بار ----------
    کاشی‌های قفسه‌ی ریلی از ویدیوهای عمودیِ آرشیو (پوشه‌ی Video) ساخته می‌شوند که هیچ‌جای
    دیگر ماک‌آپ استفاده نشده‌اند — پس تکراری با کارت‌های بالای همان صفحه نیستند.
@@ -1552,7 +1672,7 @@ function homeCard(p,m,kind,first,noQuick){
    (hasV?vpillHTML():'')+quick+
   '</div><div style="padding:'+(m?'12px 13px 15px':'18px 20px 20px')+'">'+
    '<div class="fi-tt" style="font:700 '+(m?12.5:15.5)+'px/1.7 \'YekanBakh\';margin-bottom:'+(m?7:9)+'px">'+esc(p.n)+'</div>'+
-   swatchHTML(p,m)+
+   (cols?swatchHTML(p,m):'')+
    '<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">'+
     '<span class="fi-num" style="font:700 '+(m?13:16)+'px/1 \'YekanBakh\'">'+money(p.pr)+' <span style="font-weight:500;font-size:'+(m?10.5:12.5)+'px">تومان</span></span>'+old+
    '</div></div></div>';
@@ -1582,6 +1702,9 @@ function fillHome(sc,force){
       انتخاب می‌شود (همان استخرِ VORDER)، تا هر کارتِ این ردیف یک‌دست باشد —
       نه بعضی با عکسِ روی پا و بدون ویدیو، بعضی با بک‌سفید و ویدیو. */
    pick=VORDER.map(byId).filter(Boolean).slice(0,n);
+   /* موبایل: جای یکی از کارت‌های ردیفِ وسط با اولین کارتِ ردیفِ آخر عوض می‌شود
+      (گرید دوستونه: ردیف۱=۰،۱ / ردیف۲=۲،۳ / ردیف۳=۴،۵) تا چیدمان یکنواخت نباشد. */
+   if(m&&pick.length>4){var tmpBest=pick[2];pick[2]=pick[4];pick[4]=tmpBest;}
   }else{
    var step=Math.max(1,Math.floor(P.length/n));           /* spread across categories */
    for(var i=0;i<P.length&&pick.length<n;i+=step) pick.push(P[i]);
@@ -1640,10 +1763,23 @@ function syncTabs(sc){
   fab.setAttribute('aria-pressed',String(on==='shop'));}
 }
 function syncTabsAll(){scopes().forEach(syncTabs);}
-function go(sc,view,extra){var s=st(sc);s.view=view;if(extra)for(var k in extra)s[k]=extra[k];
+function go(sc,view,extra){var s=st(sc);
+ var pidChanged=extra&&('pid' in extra)&&extra.pid!==s.pid;
+ if(view!==s.view||pidChanged){
+  s.hist=s.hist||[];
+  s.hist.push({view:s.view,pid:s.pid,f:JSON.parse(JSON.stringify(s.f||{})),step:s.step});
+  if(s.hist.length>40)s.hist.shift();
+ }
+ s.view=view;if(extra)for(var k in extra)s[k]=extra[k];
  closeAll(sc);renderView(sc);
  var root=sc; if(document.body.hasAttribute('data-mode'))window.scrollTo({top:0,behavior:'smooth'});
  else root.scrollIntoView({block:'start',behavior:'smooth'});}
+function back(sc){var s=st(sc),prev=(s.hist&&s.hist.length)?s.hist.pop():null;
+ if(!prev){go(sc,'home');return;}
+ s.view=prev.view;s.pid=prev.pid;s.f=prev.f;s.step=prev.step;
+ closeAll(sc);renderView(sc);
+ if(document.body.hasAttribute('data-mode'))window.scrollTo({top:0,behavior:'smooth'});
+ else sc.scrollIntoView({block:'start',behavior:'smooth'});}
 
 /* ---------- drawers content ---------- */
 function fillMenu(sc){
@@ -1659,7 +1795,6 @@ function fillMenu(sc){
  '</button>'+
  (catOpen?('<div style="padding:2px 0 4px">'+CATS.map(function(c){return '<button data-act="plp" data-v="'+c.k+'" style="display:flex;width:100%;justify-content:space-between;align-items:center;background:none;border:0;border-bottom:1px solid rgba(var(--fi-border-rgb,58,42,34),.08);padding:13px 0 13px 16px;font:600 13.5px/1 \'YekanBakh\';cursor:pointer;color:inherit"><span>'+c.n+'</span><span class="fi-num" style="color:var(--fi-muted,#8A7668);font-weight:400;font-size:12.5px">'+fa(c.k==='all'?P.length:P.filter(function(p){return p.c===c.k;}).length)+'</span></button>';}).join('')+'</div>'):'')+
  '<div style="height:1px;background:rgba(var(--fi-border-rgb,58,42,34),.1);margin:20px 0 14px"></div>'+
- '<div style="font:700 11px/1 \'YekanBakh\';color:var(--fi-muted,#8A7668);letter-spacing:.05em;margin-bottom:4px">بیشتر</div>'+
  [['ورود / ثبت‌نام','login',FI_ICONS.user],['پیگیری سفارش','track',FI_ICONS.track],['پرسش‌های متداول','faq',FI_ICONS.help],['ارسال و تعویض','shipping',FI_ICONS.truck],['درباره ما','about',FI_ICONS.info],['تماس با ما','contact',FI_ICONS.mail]].map(function(x){
   return '<button data-act="'+x[1]+'" style="display:flex;align-items:center;gap:13px;width:100%;text-align:right;background:none;border:0;border-bottom:1px solid rgba(var(--fi-border-rgb,58,42,34),.08);padding:16px 0;font:600 15px/1 \'YekanBakh\';cursor:pointer;color:inherit">'+
    '<span style="flex:0 0 auto;display:flex;color:var(--fi-muted,#8A7668)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+x[2]+'</svg></span>'+
@@ -1963,7 +2098,7 @@ document.addEventListener('click',function(ev){
   case 'cnext': s.step=Math.min(3,(s.step||1)+1);renderView(sc);break;
   case 'cprev': s.step=Math.max(1,(s.step||1)-1);renderView(sc);break;
   case 'placeorder': cart=[];syncBadges();go(sc,'order');scopes().forEach(function(x){fillCart(x);});break;
-  case 'back': go(sc,'plp');break;
+  case 'back': back(sc);break;
   case 'plpdisc': s.f.cat='all';s.f.disc=true;s.f.sort='disc';go(sc,'plp');break;
   case 'subscribe': var box=el.closest('div'),inp=box&&box.querySelector('input');
     toast(sc,(inp&&/.+@.+\..+/.test(inp.value))?'ثبت شد — اول از همه باخبر می‌شوی':'ایمیلت را کامل وارد کن');break;
