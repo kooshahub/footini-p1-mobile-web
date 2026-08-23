@@ -1,0 +1,2406 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-mode="mobile">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0C99EF">
+<meta name="description" content="نسخه موبایل فروشگاه فوتینی — نمونه تعاملی P1">
+<meta name="robots" content="noindex,nofollow">
+<title>فوتینی — نسخه موبایل P1</title>
+<script src="./support.js"></script>
+</head>
+<body data-mode="mobile">
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="fonts.css">
+<style>
+body{margin:0;background:#EDE4DC;font-family:'YekanBakh',system-ui,sans-serif}
+a{color:#C4805F;text-decoration:none}
+a:hover{color:#3A2A22}
+*{box-sizing:border-box}
+@keyframes fp1{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+
+body[data-mode]{background:#fff!important}
+/* بعد از حذف فوتر، صفحه‌هایی که محتوایشان کوتاه‌تر از ارتفاع صفحه‌نمایش است، زیر نوار تب
+   جای خالی نشان می‌دهند — همان رنگ کِرِمِ خودِ ماکاپ موبایل را می‌گیرد، نه سفید خام */
+body[data-mode="mobile"]{background:#F8EFE8!important}
+body[data-mode] [data-page]{padding:0!important}
+body[data-mode] [data-cap]{display:none!important}
+body[data-mode] [data-screen-label]{border-radius:0!important;box-shadow:none!important}
+body[data-mode="desktop"] [data-mode="mobile"]{display:none!important}
+body[data-mode="mobile"] [data-mode="desktop"]{display:none!important}
+body[data-mode="mobile"] [data-screen-label]{width:100%!important}
+html[data-mode]{scrollbar-width:none}
+html[data-mode]::-webkit-scrollbar{width:0;display:none}
+body[data-mode="mobile"] [data-page]>div{display:block!important}
+body[data-mode="mobile"] [data-screen-label]{overflow:visible!important}
+/* ===== مهم: خاموش کردن scroll anchoring =====
+   هدر و ریلِ دسته‌بندی موقع چسبیدن جمع می‌شوند و ارتفاعِ محتوا کم می‌شود؛ مرورگر این را
+   «پرشِ ناخواسته» می‌بیند و اسکرول را برمی‌گرداند عقب — هدر دوباره باز می‌شود، دوباره
+   جمع می‌شود، و انگشتِ کاربر عملاً با صفحه کشتی می‌گیرد. اندازه‌گیری: با انکرینگِ روشن،
+   scrollTo(40) روی 25 می‌نشست و کلاس fi-compact بین true/false می‌لرزید؛ با خاموش‌کردنش
+   هر scrollTo دقیقاً سرِ جای خودش می‌نشیند و کلاس یک‌بار و تمیز عوض می‌شود. */
+body[data-mode="mobile"] [data-screen-label]{overflow-anchor:none}
+body[data-mode="mobile"] [data-page]{padding-top:0!important}
+body[data-mode="mobile"] [data-stickycat]{position:sticky;top:calc(60px + env(safe-area-inset-top));z-index:50;background:#F8EFE8;box-shadow:0 8px 16px rgba(58,42,34,.07);transition:top .3s cubic-bezier(.4,0,.2,1),padding .3s cubic-bezier(.4,0,.2,1)}
+/* ===== جمع‌وجور شدنِ هدر و ریل دسته‌بندی موقع اسکرول =====
+   هدر هم مثل ریل دسته‌بندی به بالای صفحه می‌چسبد؛ همین که چسبید (سنتینلِ زیر
+   استاتوس‌بار رد می‌شود) کلاس fi-compact روی صفحه می‌شیند: پدینگ‌ها جمع می‌شوند،
+   آیکون‌ها کمی کوچک می‌شوند و نوشته‌ی زیر هر دسته محو/جمع می‌شود — با برگشتن به
+   بالای صفحه، سنتینل دوباره دیده می‌شود و همه چیز نرم به حالت اول برمی‌گردد. */
+/* position با !important، چون خودِ ردیف هدر inline‌استایلِ position:relative دارد
+   (برای لنگر شدنِ توستِ حالت شب) و inline بر شیت مقدم است. */
+body[data-mode="mobile"] [data-mheadrow]{position:sticky!important;top:env(safe-area-inset-top);z-index:52;transition:padding .3s cubic-bezier(.4,0,.2,1)}
+body[data-mode="mobile"] [data-screen-label].fi-compact [data-mheadrow]{padding-top:7px!important;padding-bottom:7px!important}
+body[data-mode="mobile"] [data-screen-label].fi-compact [data-stickycat]{top:calc(48px + env(safe-area-inset-top));padding-top:6px!important;padding-bottom:8px!important}
+body[data-mode="mobile"] [data-catitem]{transition:gap .3s cubic-bezier(.4,0,.2,1)}
+body[data-mode="mobile"] [data-screen-label].fi-compact [data-catitem]{gap:0!important}
+/* آیکون‌ها باید در «چیدمان» کوچک شوند، نه فقط در ظاهر: transform:scale ارتفاعِ
+   واقعی را کم نمی‌کند و زیر هر آیکون فضای مرده جا می‌گذارد، پس ریل آن‌قدر که
+   باید جمع نمی‌شود. به‌جایش خودِ ابعاد را انیمیت می‌کنیم — و چون ابعاد inline
+   هستند، !important لازم است تا شیت بر آن‌ها مقدم شود. */
+body[data-mode="mobile"] [data-caticon]>img,
+body[data-mode="mobile"] [data-caticon="all"]{transition:width .3s cubic-bezier(.4,0,.2,1),height .3s cubic-bezier(.4,0,.2,1),font-size .3s cubic-bezier(.4,0,.2,1)}
+body[data-mode="mobile"] [data-screen-label].fi-compact [data-caticon]>img{width:44px!important;height:44px!important}
+body[data-mode="mobile"] [data-screen-label].fi-compact [data-caticon="all"]{width:52px!important;height:52px!important;font-size:14px!important}
+body[data-mode="mobile"] [data-catlabel]{display:block;overflow:hidden;opacity:1;max-height:14px;transition:opacity .22s ease,max-height .3s cubic-bezier(.4,0,.2,1)}
+body[data-mode="mobile"] [data-screen-label].fi-compact [data-catlabel]{opacity:0;max-height:0}
+/* ===== ریل دسته‌بندی موبایل =====
+   اسکرول افقی کاملاً آزاد — بدون snap، چون snap ریل را موقع لود از وسط شروع می‌کرد
+   و آیتم اول بیرون کادر می‌افتاد. اسکرول‌بار پنهان می‌ماند چون این یک ماکاپ گوشی است
+   و نوار خاکستری مرورگر توهمِ دستگاه را می‌شکند. */
+[data-stickycat]{overflow-x:auto;overflow-y:hidden;
+  scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;cursor:grab}
+[data-stickycat]::-webkit-scrollbar{display:none}
+[data-stickycat].drag{cursor:grabbing}
+[data-stickycat].drag *{pointer-events:none}
+body[data-mode="mobile"] [data-tabbar]{position:fixed!important;bottom:env(safe-area-inset-bottom)!important;right:0;left:0;z-index:60;
+  padding-left:calc(16px + env(safe-area-inset-left))!important;padding-right:calc(16px + env(safe-area-inset-right))!important}
+/* سطحِ سفیدِ نوار، برخلافِ خودِ نوار، تا کفِ فیزیکی صفحه کشیده می‌شود تا زیرِ نوارِ خانه
+   رنگِ صفحه بیرون نزند. drop-shadow روی همین گروه است، پس پُرکننده هم باید داخلش باشد
+   وگرنه سایه دیگر دور گودیِ FAB نمی‌چرخد. */
+body[data-mode="mobile"] [data-tabsurface]{bottom:calc(-1 * env(safe-area-inset-bottom))!important}
+body[data-mode="mobile"] [data-tabfab]{position:fixed!important;bottom:calc(25px + env(safe-area-inset-bottom))!important;z-index:61}
+/* first screen: 29 promo + 60 header + 106 chips + 68 tabbar = 263 */
+body[data-mode="mobile"] [data-mhero]{height:calc(100vh - 263px)!important;height:calc(100dvh - 263px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;min-height:380px}
+
+/* ===== هیروی ویدیویی دسکتاپ =====
+   ارتفاع دقیقاً بقیه‌ی صفحه‌ی اول است، نه یک عدد گرد شده:
+   ۶۴٫۸ بنر اسنپ‌پی (گیف ۲۵۶۰×۱۱۴ روی عرض ۱۰۱٪) + ۵۶ هدر + ۵۸ نوار منو = ۱۷۹ */
+[data-dhero]{position:relative;overflow:hidden;background:#180F0B;height:720px;isolation:isolate}
+body[data-mode="desktop"] [data-dhero]{height:calc(100vh - 179px)!important;height:calc(100dvh - 179px)!important;min-height:580px}
+[data-dhero]>video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
+  transform-origin:52% 62%;animation:dhzoom 26s ease-in-out infinite alternate}
+/* دو محو روی هم: افقی برای خوانایی ستون متن، عمودی برای نشاندن کف قاب.
+   محو افقی عمداً تا ۷۴٪ عرض تمام می‌شود تا خودِ کفش سمت چپ روشن بماند. */
+[data-dveil]{position:absolute;inset:0;z-index:2;pointer-events:none;background:
+  linear-gradient(to top,rgba(24,15,11,.46) 0%,rgba(24,15,11,0) 40%),
+  linear-gradient(to left,rgba(24,15,11,.9) 0%,rgba(24,15,11,.78) 20%,rgba(24,15,11,.46) 42%,rgba(24,15,11,.14) 62%,rgba(24,15,11,0) 78%)}
+[data-dcopy]{position:absolute;z-index:3;top:50%;right:76px;transform:translateY(-50%);max-width:540px;color:#fff}
+[data-dcopy] h1{font:800 50px/1.38 'YekanBakh';margin:0 0 20px;text-shadow:0 2px 30px rgba(20,12,8,.45);text-wrap:balance}
+[data-dcopy] h1 em{font-style:normal;color:#E8A87C}
+[data-dcopy] p{margin:0 0 32px;font:400 15px/2.1 'YekanBakh';color:rgba(255,255,255,.78);max-width:398px;text-shadow:0 1px 16px rgba(20,12,8,.45)}
+[data-dcta]{display:flex;gap:11px;margin-bottom:28px}
+[data-dcta] button{font:700 14px/1 'YekanBakh';border-radius:999px;cursor:pointer;transition:transform .18s ease,background .18s ease,border-color .18s ease}
+[data-dcta] .p{background:#F8EFE8;color:#3A2A22;border:0;padding:16px 28px}
+[data-dcta] .p:hover{background:#fff;transform:translateY(-1px)}
+[data-dcta] .g{background:rgba(255,255,255,.06);color:#fff;border:1.5px solid rgba(255,255,255,.52);padding:14.5px 24px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+[data-dcta] .g:hover{border-color:#fff;background:rgba(255,255,255,.14);transform:translateY(-1px)}
+[data-dtrust]{display:flex;align-items:center;gap:14px;font:500 12.5px/1 'YekanBakh';color:rgba(255,255,255,.62)}
+[data-dtrust] i{width:3px;height:3px;border-radius:999px;background:rgba(255,255,255,.35)}
+/* راهنمای اسکرول: خط نازک با یک نقطه‌ی نور که پایین می‌رود */
+[data-dscroll]{position:absolute;z-index:3;bottom:26px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;
+  align-items:center;gap:9px;cursor:pointer;background:none;border:0;padding:0;
+  font:600 11px/1 'YekanBakh';letter-spacing:.08em;color:rgba(255,255,255,.72);text-shadow:0 1px 12px rgba(20,12,8,.6)}
+[data-dscroll] span{position:relative;display:block;width:1px;height:38px;background:rgba(255,255,255,.38);overflow:hidden;box-shadow:0 0 10px rgba(20,12,8,.5)}
+[data-dscroll] span::after{content:'';position:absolute;top:-14px;left:0;width:1px;height:14px;background:#fff;animation:dhdrop 2.4s cubic-bezier(.6,0,.3,1) infinite}
+[data-dscroll]:hover{color:#fff}
+/* ورود آرام محتوا — فقط یک بار، موقع نشستن صفحه */
+[data-danim]{opacity:0;animation:dhrise .9s cubic-bezier(.16,.84,.3,1) forwards}
+[data-danim="2"]{animation-delay:.13s}
+[data-danim="3"]{animation-delay:.24s}
+[data-danim="4"]{animation-delay:.34s}
+@keyframes dhrise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes dhzoom{from{transform:scale(1)}to{transform:scale(1.07)}}
+@keyframes dhdrop{0%{top:-14px}70%{top:38px}100%{top:38px}}
+@media (prefers-reduced-motion:reduce){
+  [data-dhero]>video{animation:none}
+  [data-danim]{opacity:1;animation:none}
+  [data-dscroll] span::after{animation:none;top:0}
+}
+
+/* ===== mobile shoppable video (above the lookbook) =====
+   full-height minus the tab bar: 106 sticky chips + 68 tabbar = 174 */
+[data-vshop]{position:relative;overflow:hidden;background:#1C120D;height:620px}
+body[data-mode="mobile"] [data-vshop]{height:calc(100vh - 174px)!important;height:calc(100dvh - 174px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;min-height:520px}
+[data-vshop]>video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+[data-vveil]{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top,rgba(28,18,13,.6) 0%,rgba(28,18,13,.2) 15%,rgba(28,18,13,0) 34%)}
+[data-vcopy]{position:absolute;right:18px;left:18px;bottom:26px;z-index:3;color:#fff;pointer-events:none;transition:opacity .26s ease,transform .26s ease}
+[data-vshop].on [data-vcopy]{opacity:0;transform:translateY(10px)}
+.fi-vt{position:absolute;z-index:4;display:flex;align-items:center;direction:rtl;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fi-vt.l{direction:ltr}
+.fi-vt .dot{position:relative;flex:0 0 10px;width:10px;height:10px;border-radius:999px;background:#fff;box-shadow:0 0 0 5px rgba(255,255,255,.18),0 2px 8px rgba(20,12,8,.35);transition:background .18s ease}
+.fi-vt .dot::after{content:'';position:absolute;inset:-2px;border-radius:999px;border:1.5px solid rgba(255,255,255,.85);animation:vpulse 2.6s cubic-bezier(.4,0,.2,1) infinite}
+.fi-vt .line{flex:0 0 32px;height:1px;background:rgba(255,255,255,.72)}
+.fi-vt .lab{background:rgba(248,239,232,.94);color:#3A2A22;border-radius:7px;padding:7px 10px;font:700 10.5px/1 'YekanBakh';white-space:nowrap;box-shadow:0 6px 18px rgba(20,12,8,.24);transition:background .18s ease,color .18s ease}
+.fi-vt.d2 .dot::after{animation-delay:.9s}
+.fi-vt.d3 .dot::after{animation-delay:1.8s}
+.fi-vt.on .dot{background:#C4805F}
+.fi-vt.on .dot::after{animation:none;opacity:0}
+.fi-vt.on .lab{background:#3A2A22;color:#F8EFE8}
+.fi-vt:focus-visible{outline:3px solid #C4805F;outline-offset:4px;border-radius:8px}
+@keyframes vpulse{0%{transform:scale(1);opacity:.9}70%{transform:scale(3.2);opacity:0}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.fi-vt .dot::after{animation:none}}
+.fi-vt.sec .lab{background:rgba(28,18,13,.5);color:#fff;box-shadow:0 6px 18px rgba(20,12,8,.2)}
+.fi-vt.sec .line{background:rgba(255,255,255,.55)}
+.fi-vt.sec .dot{box-shadow:0 0 0 4px rgba(255,255,255,.14),0 2px 8px rgba(20,12,8,.3)}
+[data-vshop][data-act],[data-vsheet][data-act]{cursor:default}
+[data-vsheet]{position:absolute;right:14px;left:14px;bottom:16px;z-index:6;background:#F8EFE8;border-radius:22px;padding:14px;box-shadow:0 20px 50px rgba(20,12,8,.4);visibility:hidden;transform:translateY(140%);transition:transform .3s cubic-bezier(.32,.72,0,1),visibility 0s linear .3s}
+[data-vsheet].on{visibility:visible;transform:none;transition:transform .3s cubic-bezier(.32,.72,0,1),visibility 0s}
+[data-vsheet] .vrow{display:flex;align-items:center;gap:11px}
+[data-vsheet] .vsep{height:1px;background:rgba(58,42,34,.09);margin:13px 0 12px}
+[data-vsheet] .vlbl{font:700 11.5px/1 'YekanBakh';color:#8A7668;flex:0 0 auto}
+.fi-vsz{min-width:38px;height:34px;padding:0 9px;border:1px solid rgba(58,42,34,.2);border-radius:999px;background:none;font:600 12px/1 'YekanBakh';color:inherit;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.fi-vsz[aria-pressed="true"]{background:#3A2A22;border-color:#3A2A22;color:#F8EFE8}
+.fi-vsz[disabled]{opacity:.3;cursor:default;text-decoration:line-through}
+.fi-vcl{width:27px;height:27px;flex:0 0 27px;border-radius:999px;border:1px solid rgba(58,42,34,.16);padding:0;cursor:pointer;transition:box-shadow .16s ease}
+.fi-vcl[aria-pressed="true"]{box-shadow:0 0 0 2px #F8EFE8,0 0 0 3.5px #3A2A22}
+/* the video is the only snap point on the page: scrolling into it always stops on the
+   frame (full screen), while everything after it — the lookbook included — scrolls freely.
+   scroll-margin-top = 106 sticky chips, so the frame starts right under them. */
+html:has(body[data-mode="mobile"]),html[data-mode="mobile"]{scroll-snap-type:y proximity}
+/* snap-stop:always حذف شد: قاب هنوز می‌چسبد اگر انگشت نزدیکش رها شود، ولی دیگر
+   اسکرولِ تند را مجبور نمی‌کند رویش بایستد — همین بود که روی iOS حس «صفحه لج کرده» می‌داد. */
+body[data-mode="mobile"] [data-vshop]{scroll-snap-align:start;scroll-margin-top:calc(106px + env(safe-area-inset-top))}
+
+/* ================= interactive prototype ================= */
+[data-screen-label]{position:relative}
+[data-viewhost]:empty{display:none}
+/* نوار پایین ۶۷ پیکسل است و روی محتوا می‌نشیند؛ بدون این فاصله، ردیف آخرِ
+   صفحه‌های داخلی (لیست، علاقه‌مندی، سبد) زیر نوار گم می‌شود. همین برای خودِ
+   صفحه‌ی خانه هم صادق است: بخش «مجله فوتینی» آخرین بخش است، پس تا همین
+   اندازه فاصله نیاز دارد وگرنه اسکرول به انتهای سند می‌رسد در حالی که
+   بخشی از آن هنوز زیر نوار ثابت پنهان است. */
+[data-screen-label]:has([data-tabbar]) [data-viewhost]{padding-bottom:calc(72px + env(safe-area-inset-bottom))}
+[data-screen-label]:has([data-tabbar]) [data-view="home"]{padding-bottom:calc(72px + env(safe-area-inset-bottom))}
+[data-scrim]{position:absolute;inset:0;background:rgba(58,42,34,.5);opacity:0;visibility:hidden;transition:opacity .22s ease,visibility 0s linear .22s;z-index:70;cursor:pointer}
+[data-scrim].on{opacity:1;visibility:visible;transition:opacity .22s ease,visibility 0s}
+[data-drawer],[data-sheet],[data-modal]{position:absolute;z-index:80;background:#F8EFE8;color:#3A2A22;visibility:hidden;transition:transform .28s cubic-bezier(.32,.72,0,1),visibility 0s linear .28s;overflow:auto;-webkit-overflow-scrolling:touch}
+[data-drawer].on,[data-sheet].on,[data-modal].on{visibility:visible;transform:none;transition:transform .28s cubic-bezier(.32,.72,0,1),visibility 0s}
+[data-drawer]{top:0;bottom:0;left:0;width:min(400px,86%);transform:translateX(-102%);box-shadow:14px 0 44px rgba(58,42,34,.2);
+  padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);padding-left:env(safe-area-inset-left)}
+[data-sheet="search"]{top:0;right:0;left:0;transform:translateY(-102%);box-shadow:0 14px 44px rgba(58,42,34,.2);max-height:88%;
+  padding-top:env(safe-area-inset-top)}
+[data-sheet="filter"]{right:0;left:0;bottom:0;transform:translateY(102%);border-radius:22px 22px 0 0;box-shadow:0 -14px 44px rgba(58,42,34,.2);max-height:82%;
+  padding-bottom:env(safe-area-inset-bottom)}
+[data-modal]{top:50%;right:50%;transform:translate(50%,-46%) scale(.97);width:min(760px,90%);max-height:86%;border-radius:20px;opacity:0;transition:transform .24s ease,opacity .24s ease,visibility 0s linear .24s}
+[data-modal].on{transform:translate(50%,-50%) scale(1);opacity:1;transition:transform .24s ease,opacity .24s ease,visibility 0s}
+[data-toast]{position:absolute;z-index:90;bottom:26px;right:50%;transform:translate(50%,14px);opacity:0;visibility:hidden;transition:opacity .2s ease,transform .2s ease,visibility 0s linear .2s;background:#3A2A22;color:#F8EFE8;border-radius:14px;padding:13px 20px;font:600 13px/1.7 'YekanBakh';box-shadow:0 16px 40px rgba(58,42,34,.3);max-width:80%;text-align:center;pointer-events:none}
+[data-toast].on{opacity:1;visibility:visible;transform:translate(50%,0);transition:opacity .2s ease,transform .2s ease,visibility 0s}
+body[data-mode] [data-scrim],body[data-mode] [data-drawer],body[data-mode] [data-sheet],body[data-mode] [data-modal],body[data-mode] [data-toast]{position:fixed}
+body[data-mode="mobile"] [data-toast]{bottom:calc(84px + env(safe-area-inset-bottom))}
+.fi-x{cursor:pointer;user-select:none}
+.fi-x:focus-visible{outline:3px solid #C4805F;outline-offset:2px}
+[data-act]{cursor:pointer}
+.fi-num{font-variant-numeric:tabular-nums}
+.fi-sz{min-width:50px;height:44px;border:1px solid rgba(58,42,34,.2);border-radius:999px;background:none;font:600 13.5px/1 'YekanBakh';cursor:pointer;color:inherit;transition:background .15s,color .15s,border-color .15s}
+.fi-sz[aria-pressed="true"]{background:#3A2A22;border-color:#3A2A22;color:#F8EFE8}
+.fi-sz:disabled{opacity:.38;text-decoration:line-through;cursor:not-allowed}
+.fi-btn{border:0;border-radius:999px;background:#3A2A22;color:#F8EFE8;font:700 14.5px/1 'YekanBakh';cursor:pointer;padding:0 24px;height:50px;transition:transform .12s ease,opacity .15s}
+.fi-btn:active{transform:scale(.975)}
+.fi-btn.ghost{background:none;border:1.5px solid rgba(58,42,34,.28);color:#3A2A22}
+.fi-btn.acc{background:#C4805F}
+.fi-chip{border:1px solid rgba(58,42,34,.2);border-radius:999px;background:none;height:40px;padding:0 15px;font:600 12.5px/1 'YekanBakh';cursor:pointer;color:inherit;display:inline-flex;align-items:center;gap:6px}
+.fi-chip[aria-pressed="true"]{background:#3A2A22;border-color:#3A2A22;color:#F8EFE8}
+
+/* ===== اسلایدر دوطرفه‌ی قیمت در شیت فیلتر — دو input[range] روی هم، جهت عمداً LTR
+   (رفتار اسلایدرهای بومی مرورگر در RTL ناپایدار است؛ برچسب‌ها همچنان فارسی/راست‌چین می‌مانند) ===== */
+.fi-range{position:absolute;inset:0;width:100%;height:28px;margin:0;background:none;-webkit-appearance:none;appearance:none;pointer-events:none}
+.fi-range::-webkit-slider-runnable-track{background:none;height:28px}
+.fi-range::-moz-range-track{background:none;height:28px;border:0}
+.fi-range::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:20px;height:20px;border-radius:999px;background:#fff;box-shadow:0 2px 8px rgba(58,42,34,.35),0 0 0 1px rgba(58,42,34,.1);margin-top:4px;cursor:pointer}
+.fi-range::-moz-range-thumb{pointer-events:auto;width:20px;height:20px;border-radius:999px;background:#fff;box-shadow:0 2px 8px rgba(58,42,34,.35),0 0 0 1px rgba(58,42,34,.1);border:0;cursor:pointer}
+.fi-fcol:focus-visible span{outline:2px solid #C4805F;outline-offset:2px}
+.fi-card{cursor:pointer}
+.fi-card img{transition:transform .4s ease}
+.fi-card:hover img{transform:scale(1.04)}
+[data-wish] svg{transition:fill .15s ease}
+[data-wish].on{color:#C4805F}
+[data-wish].on svg{fill:currentColor}
+@media (prefers-reduced-motion:reduce){[data-wish] svg{transition:none}}
+
+/* ===== نویگیشن پایین موبایل — وضعیت فعال =====
+   تب فعال سه نشانه با هم می‌گیرد: رنگ ترکوتا، آیکنِ پُر به‌جای خطی، و یک خط کوتاه
+   بالای تب. هر سه از روی view واقعی سینک می‌شوند، نه از روی آخرین کلیک. */
+[data-tab]{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;
+  min-width:58px;padding:0;border:0;background:none;font:600 10.5px/1 'YekanBakh';
+  color:#8A7668;cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:color .2s ease,transform .16s cubic-bezier(.32,.72,0,1)}
+[data-tab] svg{display:block}
+[data-tab] .fi-ic-on{display:none}
+[data-tab].on{color:#C4805F}
+[data-tab].on .fi-ic{display:none}
+[data-tab].on .fi-ic-on{display:block}
+[data-tab]:active{transform:scale(.93)}
+[data-tab]:focus-visible{outline:3px solid #C4805F;outline-offset:3px;border-radius:12px}
+[data-tab]::before{content:"";position:absolute;top:-8px;left:50%;margin-left:-8px;width:16px;height:3px;border-radius:999px;
+  background:#C4805F;opacity:0;transform:scaleX(.28);
+  transition:opacity .22s ease,transform .22s cubic-bezier(.32,.72,0,1)}
+[data-tab].on::before{opacity:1;transform:scaleX(1)}
+/* رنگ و ترنسفورم اینجا می‌مانند و نه در style درون‌خطی — استایل درون‌خطی بر
+   شیت مقدم است و حالت‌های .on و :active را زیر خودش دفن می‌کند */
+[data-tabfab]{background:#C4805F;transform:translateX(-50%);transition:background .22s ease,transform .16s cubic-bezier(.32,.72,0,1)}
+[data-tabfab].on{background:#3A2A22}
+[data-tabfab]:active{transform:translateX(-50%) scale(.92)}
+[data-tabfab]:focus-visible{outline:3px solid #C4805F;outline-offset:3px}
+@media (prefers-reduced-motion:reduce){
+  [data-tab],[data-tab]::before,[data-tabfab]{transition:none!important}
+}
+@media (prefers-reduced-motion:reduce){[data-scrim],[data-drawer],[data-sheet],[data-modal],[data-toast],.fi-card img{transition:none!important}}
+
+/* ===== نوارِ بالای صفحه (زیر داینامیک‌آیلند) =====
+   با viewport-fit=cover محتوا تا لبه‌ی فیزیکی بالا می‌آید، پس این نوار باید رنگ بگیرد
+   وگرنه عکس‌ها موقع اسکرول از زیر ناچ رد می‌شوند. سرِ صفحه آبیِ بنر اسنپ‌پی است و
+   همین که هدر می‌چسبد (همان کلاس fi-compact) نرم به کرمِ هدر می‌رسد — بدون پرش. */
+body[data-mode="mobile"] [data-safetop]{position:fixed;top:0;right:0;left:0;
+  height:env(safe-area-inset-top);z-index:53;pointer-events:none;background:#0C99EF;
+  transition:background .3s cubic-bezier(.4,0,.2,1)}
+body[data-mode="mobile"] [data-screen-label].fi-compact [data-safetop]{background:#F8EFE8}
+/* خودِ بنر هم به‌اندازه‌ی ناچ پدینگ می‌گیرد تا گرافیکش زیر نوارِ بالا گم نشود */
+body[data-mode="mobile"] [data-mpromo]{padding-top:env(safe-area-inset-top)}
+/* کشِ لاستیکیِ سافاری: هم رنگِ خام را بیرون می‌انداخت، هم موقع سوایپِ افقیِ گالری
+   می‌شد ناخواسته صفحه را رفرش کرد و کلِ وضعیتِ پروتوتایپ می‌پرید */
+html:has(body[data-mode="mobile"]),html[data-mode="mobile"]{overscroll-behavior-y:none}
+
+[data-carousel],[data-pdpgal],[data-qgal],[data-pdpthumbs]{scrollbar-width:none;-ms-overflow-style:none;
+  overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+[data-carousel]::-webkit-scrollbar,[data-qgal]::-webkit-scrollbar,[data-pdpthumbs]::-webkit-scrollbar{display:none}
+
+/* night-mode toggle + its toast */
+[data-nightbtn]{cursor:pointer;transition:background .18s ease,color .18s ease,border-color .18s ease}
+[data-nightbtn].on{background:#3A2A22;border-color:#3A2A22;color:#F8EFE8}
+[data-nighttoast]{position:absolute;top:calc(100% + 12px);right:0;background:#3A2A22;color:#F8EFE8;border-radius:14px;padding:13px 18px;font:600 13px/1.7 'YekanBakh';white-space:nowrap;box-shadow:0 18px 44px rgba(58,42,34,.28);opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .15s ease,transform .15s ease,visibility 0s linear .15s;z-index:90;pointer-events:none;text-align:right}
+[data-nighttoast].on{opacity:1;visibility:visible;transform:translateY(0);transition:opacity .15s ease,transform .15s ease,visibility 0s}
+
+/* ===================== کارت محصول: تگ رنگ، عنوان تک‌خطی، ویدیو، گالری اسلایدی =====================
+   نگه‌داشتن انگشت روی موبایل، منوی بومی مرورگر را باز می‌کند (iOS: «Save Image»، اندروید:
+   «Download image»). سه خط زیر آن را در هر دو خفه می‌کند؛ لغو contextmenu در JS کامل‌ش می‌کند. */
+.fi-card{cursor:pointer;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;
+  -webkit-user-select:none;user-select:none}
+.fi-card img{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none}
+
+/* عنوان تک‌خطی */
+.fi-tt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* تگ رنگ */
+.fi-sw{display:flex;align-items:center;gap:6px;min-height:16px}
+.fi-sw button{width:14px;height:14px;padding:0;border-radius:999px;border:1px solid rgba(58,42,34,.18);
+  cursor:pointer;flex:0 0 auto;box-shadow:0 0 0 0 rgba(58,42,34,0);
+  transition:box-shadow .16s ease,transform .16s ease}
+.fi-sw button[aria-pressed="true"]{box-shadow:0 0 0 1.5px #fff,0 0 0 3px #3A2A22;transform:scale(1.06)}
+.fi-sw em{font:600 10px/1 'YekanBakh';color:#8A7668;font-style:normal;margin-inline-start:1px}
+[data-mode="desktop"] .fi-sw button,body:not([data-mode]) .fi-card:not(.fi-m) .fi-sw button{width:16px;height:16px}
+
+/* انتخاب رنگ در صفحه‌ی محصول — همان تگ‌های رنگِ کارت، در اندازه‌ی قابل لمس */
+.fi-pc{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fi-pcb{width:30px;height:30px;padding:0;border-radius:999px;border:1px solid rgba(58,42,34,.16);
+  cursor:pointer;flex:0 0 auto;box-shadow:0 0 0 0 rgba(58,42,34,0);
+  transition:box-shadow .16s ease,transform .16s ease}
+.fi-pcb[aria-pressed="true"]{box-shadow:0 0 0 2px #F8EFE8,0 0 0 3.5px #3A2A22;transform:scale(1.05)}
+.fi-pcb:focus-visible{outline:2px solid #C4805F;outline-offset:3px}
+
+/* ردیف تامنیل گالری صفحه‌ی محصول دسکتاپ */
+.fi-pdpthumb{border:2px solid transparent;transition:border-color .16s ease,opacity .16s ease;opacity:.6}
+.fi-pdpthumb[aria-pressed="true"]{border-color:#3A2A22;opacity:1}
+.fi-pdpthumb:hover{opacity:1}
+.fi-pdpthumb:focus-visible{outline:2px solid #C4805F;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.fi-pcb{transition:none}}
+
+/* آیکون کوچک ویدیو — هدفِ تپِ صریح، تا «نگه‌داشتن» تنها راه نباشد */
+.fi-vp{position:absolute;bottom:9px;left:9px;z-index:4;display:flex;align-items:center;justify-content:center;
+  width:26px;height:26px;background:rgba(28,18,13,.58);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;
+  border:0;border-radius:999px;padding:0;cursor:pointer;
+  transition:opacity .2s ease,background .16s ease}
+.fi-vp:hover{background:rgba(28,18,13,.62)}
+.fi-vp svg{display:block;overflow:visible}
+.fi-vp .rc{stroke-dasharray:50.3;stroke-dashoffset:50.3;transition:stroke-dashoffset .1s linear}
+.fi-card.hold .fi-vp .rc{stroke-dashoffset:0;transition:stroke-dashoffset .3s linear}
+.fi-card.hold{transform:scale(.972)}
+.fi-card{transition:transform .22s cubic-bezier(.32,.72,0,1)}
+
+/* ویدیو در جای خود کارت (مسیر ۱) */
+.fi-vwrap{position:absolute;inset:0;z-index:2;opacity:0;transition:opacity .26s ease;pointer-events:none}
+.fi-vwrap video{width:100%;height:100%;object-fit:cover;display:block;background:#EFE6DD}
+.fi-card.live .fi-vwrap{opacity:1}
+.fi-card.live .fi-ph>img{opacity:0}
+.fi-ph>img{transition:opacity .26s ease}
+.fi-card.live .fi-vp{background:rgba(28,18,13,.62)}
+
+/* نماهای اتاق‌عکس بک‌سفیدند؛ قاب عکس یک لبه‌ی مو نازکِ گرم می‌گیرد تا در کارت سفید گم نشود */
+.fi-ph{box-shadow:inset 0 0 0 1px rgba(58,42,34,.08)}
+
+/* گالری اسلایدی کارت حراج */
+/* touch-action عمداً تعیین نمی‌شود. مقدار قبلی pan-x بود و چون این گالری
+   کلِ سطح عکسِ کارت را می‌پوشاند (inset:0)، هر لمسی که روی عکس شروع می‌شد
+   فقط اجازه‌ی حرکت افقی داشت — یعنی اسکرول عمودیِ صفحه کاملاً بلاک می‌شد.
+   با برداشتنش، داوریِ جهت به خود مرورگر برمی‌گردد: کشیدن افقی ← گالری، عمودی ← صفحه. */
+.fi-sl{position:absolute;inset:0;display:flex;overflow-x:auto;overflow-y:hidden;
+  scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none;
+  overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.fi-sl::-webkit-scrollbar{display:none}
+.fi-sl img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;scroll-snap-align:center;
+  display:block;pointer-events:none}
+.fi-dots{position:absolute;bottom:9px;right:0;left:0;display:flex;justify-content:center;gap:4px;
+  z-index:3;pointer-events:none}
+.fi-dots span{width:4px;height:4px;border-radius:999px;background:rgba(58,42,34,.3);
+  box-shadow:0 0 0 1px rgba(255,255,255,.8);transition:width .2s ease,background .2s ease}
+.fi-dots span.on{width:15px;background:#3A2A22}
+/* همان نقطه‌ها، این‌بار زیر گالری صفحه‌ی محصول و نه روی عکس */
+.fi-dots.fi-pdots{position:static;inset:auto;margin:11px 0 0}
+.fi-dots.fi-pdots i{flex:0 0 7px;height:4px}          /* فاصله‌ی بین دسته‌های رنگ */
+.fi-cnt.fi-pcnt{top:12px;right:30px;bottom:auto;left:auto}
+[data-pdpgal]::-webkit-scrollbar{display:none}
+.fi-cnt{position:absolute;bottom:9px;left:9px;z-index:3;background:rgba(28,18,13,.58);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;border-radius:999px;
+  padding:4px 8px;font:700 9.5px/1 'YekanBakh';pointer-events:none}
+.fi-hint{position:absolute;bottom:9px;right:9px;z-index:3;background:rgba(28,18,13,.58);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  color:#F8EFE8;border-radius:999px;padding:4px 8px;font:700 9.5px/1 'YekanBakh';
+  pointer-events:none;transition:opacity .25s ease}
+.fi-sl[data-moved="1"] ~ .fi-hint{opacity:0}
+.fi-cnt.late{opacity:0;transition:opacity .25s ease}
+.fi-sl[data-moved="1"] ~ .fi-cnt.late{opacity:1}
+/* اسلایدر که هست، زوم هاور روی عکس نباید کار کند */
+.fi-card:hover .fi-sl img,.fi-card.live img{transform:none}
+
+/* ==================================================================================
+   «فوتینی برای همه سلیقه‌ها» — ویدیو به‌عنوان نمای پیش‌فرض
+   نوار رسانه‌ی کارت: کاشی صفر ویدیوست و کاشی‌های بعدی همه‌ی عکس‌های همه‌ی رنگ‌ها.
+   جدا از .fi-sl نگه داشته شده چون آن‌جا فقط دو عکسِ رنگِ انتخابی است و رفتار
+   «نگه‌دار تا پخش شود»ی سکشن پرفروش‌ها هم نباید با این قاطی شود.
+   ================================================================================== */
+.fi-asl{position:absolute;inset:0;display:flex;overflow-x:auto;overflow-y:hidden;
+  scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none;
+  overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.fi-asl::-webkit-scrollbar{display:none}
+.fi-asl>div{flex:0 0 100%;width:100%;height:100%;scroll-snap-align:center;position:relative;background:#EFE6DD}
+.fi-asl video,.fi-asl img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+
+/* ===== کارت شاخصِ بالای سکشن ===== */
+.fi-spot{position:relative;border-radius:22px;overflow:hidden;background:#EFE6DD;aspect-ratio:4/5;
+  margin-bottom:16px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fi-spot .vl{position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(to top,rgba(20,12,8,.78) 0%,rgba(20,12,8,.15) 44%,rgba(20,12,8,0) 64%)}
+.fi-spot .kk{position:absolute;top:14px;right:14px;z-index:4;background:rgba(248,239,232,.93);
+  color:#3A2A22;border-radius:999px;padding:6px 11px;font:700 10px/1 'YekanBakh'}
+.fi-spot .in{position:absolute;right:15px;left:15px;bottom:15px;z-index:3;color:#fff}
+.fi-spot .nm{font:800 16.5px/1.6 'YekanBakh';margin-bottom:10px;text-shadow:0 1px 14px rgba(20,12,8,.4);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fi-spot .fi-dots{position:static;inset:auto;justify-content:flex-start;margin-bottom:11px;gap:4px}
+.fi-spot .fi-dots span{background:rgba(255,255,255,.42);box-shadow:none}
+.fi-spot .fi-dots span.on{background:#fff}
+.fi-spot .fi-dots i{flex:0 0 6px;height:4px}
+.fi-spot .bar{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:rgba(255,255,255,.15);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.26);border-radius:15px;padding:9px 13px 9px 9px}
+.fi-spot .pz{font:800 14px/1.35 'YekanBakh'}
+.fi-spot .pz span{font-weight:500;font-size:10.5px;opacity:.82}
+.fi-spot .pz u{display:block;text-decoration:line-through;font:400 10px/1.5 'YekanBakh';opacity:.62}
+.fi-spot .go{flex:0 0 auto;background:#F8EFE8;color:#3A2A22;border:0;border-radius:999px;
+  padding:11px 15px;font:700 11.5px/1 'YekanBakh';cursor:pointer}
+.fi-spot:focus-visible{outline:3px solid #C4805F;outline-offset:3px}
+
+/* ===== قفسه‌ی ریلی «با ویدیو ببین» =====
+   عمداً بدون گالری عکسِ تودرتو: خودِ ریل یک اسکرول افقی است و اسلایدرِ داخل کاشی،
+   ژست سوایپ را دو نیم می‌کند. اینجا فقط ویدیو، و تپ می‌رود به صفحه‌ی محصول. */
+.fi-rail{grid-column:1/-1;margin:4px -18px 2px}
+.fi-railh{display:flex;align-items:center;gap:9px;padding:0 18px;margin-bottom:11px}
+.fi-railh b{font:800 14px/1.5 'YekanBakh'}
+.fi-railh em{font:400 11.5px/1.5 'YekanBakh';font-style:normal;color:#8A7668}
+.fi-railh .d{position:relative;flex:0 0 8px;width:8px;height:8px;border-radius:999px;background:#fff;
+  box-shadow:0 0 0 2px rgba(196,128,95,.32)}
+.fi-railh .d::after{content:'';position:absolute;inset:-3px;border-radius:999px;
+  border:1.3px solid #C4805F;animation:firpulse 2.6s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes firpulse{0%{transform:scale(1);opacity:.9}70%{transform:scale(2.4);opacity:0}100%{opacity:0}}
+.fi-railt{display:flex;gap:11px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;
+  scrollbar-width:none;-ms-overflow-style:none;padding:0 18px 2px;
+  -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.fi-railt::-webkit-scrollbar{display:none}
+.fi-rt{position:relative;flex:0 0 148px;width:148px;aspect-ratio:9/15;border-radius:20px;overflow:hidden;
+  background:#241812;scroll-snap-align:start;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fi-rt>[data-autov]{position:absolute;inset:0}
+.fi-rt video{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.fi-rt .vl{position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(to top,rgba(20,12,8,.86) 0%,rgba(20,12,8,.26) 40%,rgba(20,12,8,0) 62%)}
+.fi-rt .in{position:absolute;right:10px;left:10px;bottom:10px;z-index:3;color:#fff;pointer-events:none}
+.fi-rt .cp{font:600 9px/1 'YekanBakh';color:rgba(255,255,255,.7);margin-bottom:5px}
+.fi-rt .nm{font:700 10.5px/1.55 'YekanBakh';margin-bottom:5px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fi-rt .pz{font:800 11px/1 'YekanBakh'}
+.fi-rt .pz span{font-weight:500;font-size:8.5px;opacity:.82}
+.fi-rt:focus-visible{outline:3px solid #C4805F;outline-offset:2px}
+
+@media (prefers-reduced-motion:reduce){
+  .fi-card,.fi-vwrap,.fi-sw button,.fi-dots span{transition:none!important}
+  .fi-railh .d::after{animation:none}
+}
+</style>
+<script>(function(){var m=new URLSearchParams(location.search).get('mode');if(m==='mobile'||m==='desktop'){document.body.setAttribute('data-mode',m);document.documentElement.setAttribute('data-mode',m);}})();</script>
+<script>(function(){
+  document.addEventListener('click',function(e){
+    var btn=e.target&&e.target.closest?e.target.closest('[data-nightbtn]'):null;
+    if(!btn)return;
+    btn.classList.toggle('on');
+    var toast=btn.querySelector('[data-nighttoast]');
+    if(!toast)return;
+    toast.classList.add('on');
+    if(toast.__t)clearTimeout(toast.__t);
+    toast.__t=setTimeout(function(){toast.classList.remove('on');},1600);
+  },true);
+})();</script>
+</helmet>
+
+<div data-page style="direction:rtl;padding:40px 44px 80px;font-family:'YekanBakh',system-ui,sans-serif">
+
+  <div style="display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start">
+
+    <!-- ============ MOBILE ============ -->
+    <div data-mode="mobile">
+      <div style="font:600 12px/1 'YekanBakh';color:#8A7668;margin-bottom:10px" data-cap>موبایل · ۳۹۰</div>
+      <div data-screen-label="P1 Mobile" style="width:390px;background:#F8EFE8;border-radius:34px;overflow:hidden;box-shadow:0 14px 40px rgba(58,42,34,.14);color:#3A2A22;position:relative">
+
+        <!-- probe: ارتفاعش دقیقاً env(safe-area-inset-top) است. env() از جاوااسکریپت خواندنی
+             نیست، پس ناظرِ چسبیدنِ هدر عددش را از روی همین المان می‌خواند — و چون خودِ CSS
+             نگهش می‌دارد، با چرخاندنِ گوشی هم خودبه‌خود به‌روز می‌ماند. -->
+        <div data-safeprobe aria-hidden="true" style="position:fixed;top:0;left:0;width:0;height:env(safe-area-inset-top);pointer-events:none;visibility:hidden"></div>
+        <div data-safetop aria-hidden="true"></div>
+
+        <!-- promo: same SnapPay gif, framed to its content band so it stays legible at 390px -->
+        <div data-mpromo data-act="soon" style="overflow:hidden;line-height:0;background:#0C99EF;direction:ltr">
+          <img src="assets/footini-snappay-header.webp" alt="اسنپ‌پی در فروشگاه فوتینی — خرید اعتباری و پرداخت قسطی" style="display:block;width:175.4%;max-width:none;margin-left:-34.1%;height:auto">
+        </div>
+
+        <div data-mheadsentinel style="height:0"></div>
+        <div data-mheadrow style="display:flex;align-items:center;padding:13px 18px;background:#F8EFE8;position:relative">
+
+          <div style="flex:1;display:flex;align-items:center;justify-content:flex-start">
+            <div data-nightbtn style="position:relative;display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:999px;border:1px solid rgba(58,42,34,.14);color:#3A2A22">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.3 14.9A8.7 8.7 0 0 1 9.1 3.7 8.7 8.7 0 1 0 20.3 14.9Z"/></svg>
+              <div data-nighttoast style="white-space:normal;width:232px;font:600 12px/1.8 'YekanBakh';padding:12px 15px">ممنون که بابت سلامتی چشمات حالت تاریک رو انتخاب کردی</div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:8px;flex:0 0 auto">
+            <img src="assets/logo-wordmark.webp" alt="فوتینی" style="height:22px;width:auto">
+          </div>
+
+          <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:10px;color:#3A2A22">
+            <button type="button" data-act="login" aria-label="ورود به حساب کاربری" style="display:flex;background:none;border:0;padding:12px 8px;margin:-12px -8px;color:inherit;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.2" r="3.4"/><path d="M5 20.2c1.2-3.6 4-5.6 7-5.6s5.8 2 7 5.6"/></svg></button>
+            <button type="button" data-act="openmenu" aria-label="منو" style="display:flex;padding:12px 14px 12px 4px;margin:-12px 0;background:none;border:0;color:inherit;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.6h16"/><path d="M4 12h16"/><path d="M4 16.4h10.5"/></svg></button>
+          </div>
+
+        </div>
+
+        <div data-view="home">
+        <!-- category chips -->
+        <div data-stickycat style="display:flex;gap:10px;padding:10px 18px 14px">
+          <div data-act="plp" data-v="slipper" data-catitem role="button" tabindex="0" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;flex:0 0 auto">
+            <span data-caticon style="display:block;padding:3px;border:1px solid rgba(58,42,34,.18);border-radius:999px">
+              <img src="assets/cat-slipper.webp" alt="" style="display:block;width:56px;height:56px;border-radius:999px;object-fit:cover;background:#fff">
+            </span>
+            <span data-catlabel style="font:600 11px/1 'YekanBakh';white-space:nowrap">اسلیپر</span>
+          </div>
+          <div data-act="plp" data-v="sandal" data-catitem role="button" tabindex="0" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;flex:0 0 auto">
+            <span data-caticon style="display:block;padding:3px;border:1px solid rgba(58,42,34,.18);border-radius:999px">
+              <img src="assets/cat-sandal-w.webp" alt="" style="display:block;width:56px;height:56px;border-radius:999px;object-fit:cover;background:#fff">
+            </span>
+            <span data-catlabel style="font:600 11px/1 'YekanBakh';white-space:nowrap">صندل</span>
+          </div>
+          <div data-act="plp" data-v="formal" data-catitem role="button" tabindex="0" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;flex:0 0 auto">
+            <span data-caticon style="display:block;padding:3px;border:1px solid rgba(58,42,34,.18);border-radius:999px">
+              <img src="assets/cat-formal.webp" alt="" style="display:block;width:56px;height:56px;border-radius:999px;object-fit:cover;background:#fff">
+            </span>
+            <span data-catlabel style="font:600 11px/1 'YekanBakh';white-space:nowrap">مجلسی</span>
+          </div>
+          <div data-act="plp" data-v="sneaker-w" data-catitem role="button" tabindex="0" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;flex:0 0 auto">
+            <span data-caticon style="display:block;padding:3px;border:1px solid rgba(58,42,34,.18);border-radius:999px">
+              <img src="assets/cat-sneaker-w.webp" alt="" style="display:block;width:56px;height:56px;border-radius:999px;object-fit:cover;background:#fff">
+            </span>
+            <span data-catlabel style="font:600 11px/1 'YekanBakh';white-space:nowrap">کتونی زنانه</span>
+          </div>
+          <div data-act="plp" data-v="boot" data-catitem role="button" tabindex="0" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;flex:0 0 auto">
+            <span data-caticon style="display:block;padding:3px;border:1px solid rgba(58,42,34,.18);border-radius:999px">
+              <img src="assets/cat-boot.webp" alt="" style="display:block;width:56px;height:56px;border-radius:999px;object-fit:cover;background:#fff">
+            </span>
+            <span data-catlabel style="font:600 11px/1 'YekanBakh';white-space:nowrap">نیم‌بوت</span>
+          </div>
+          <div data-act="plp" data-v="sneaker-m" data-catitem role="button" tabindex="0" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;flex:0 0 auto">
+            <span data-caticon style="display:block;padding:3px;border:1px solid rgba(58,42,34,.18);border-radius:999px">
+              <img src="assets/cat-sneaker-m.webp" alt="" style="display:block;width:56px;height:56px;border-radius:999px;object-fit:cover;background:#fff">
+            </span>
+            <span data-catlabel style="font:600 11px/1 'YekanBakh';white-space:nowrap">کتونی مردانه</span>
+          </div>
+          <div data-act="plp" data-v="shoe" data-catitem role="button" tabindex="0" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;flex:0 0 auto">
+            <span data-caticon style="display:block;padding:3px;border:1px solid rgba(58,42,34,.18);border-radius:999px">
+              <img src="assets/cat-shoe.webp" alt="" style="display:block;width:56px;height:56px;border-radius:999px;object-fit:cover;background:#fff">
+            </span>
+            <span data-catlabel style="font:600 11px/1 'YekanBakh';white-space:nowrap">کفش</span>
+          </div>
+          <div data-act="plp" data-v="bag" data-catitem role="button" tabindex="0" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;flex:0 0 auto">
+            <span data-caticon style="display:block;padding:3px;border:1px solid rgba(58,42,34,.18);border-radius:999px">
+              <img src="assets/cat-bag.webp" alt="" style="display:block;width:56px;height:56px;border-radius:999px;object-fit:cover;background:#fff">
+            </span>
+            <span data-catlabel style="font:600 11px/1 'YekanBakh';white-space:nowrap">کیف</span>
+          </div>
+          <div data-act="plp" data-v="all" data-catitem style="display:flex;flex-direction:column;align-items:center;gap:7px;flex:0 0 auto">
+            <span data-caticon="all" style="display:flex;align-items:center;justify-content:center;width:64px;height:64px;box-sizing:border-box;border:1px dashed rgba(196,128,95,.55);border-radius:999px;color:#C4805F;font:700 17px/1 'YekanBakh'">←</span>
+            <span data-catlabel style="font:600 11px/1 'YekanBakh';white-space:nowrap;color:#C4805F">همه دسته‌ها</span>
+          </div>
+        </div>
+
+        <!-- mobile hero video (full-bleed; meets the tab bar on the first screen) -->
+        <div style="padding:0">
+          <div data-mhero style="position:relative;overflow:hidden;height:554px;background:#E8DCD2">
+            <video data-speed="1.8" src="Video/9-16/magnific_create-a-video_ovCsGAQ829.mp4" poster="assets/hero-lifestyle-2.webp" autoplay muted loop playsinline preload="auto" style="width:100%;height:100%;object-fit:cover;display:block"></video>
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(58,42,34,.7),rgba(58,42,34,.05) 55%)"></div>
+            <div data-mherocopy style="position:absolute;bottom:20px;right:18px;left:18px;color:#fff">
+              <div style="font:800 26px/1.5 'YekanBakh';margin-bottom:8px">قدم‌های روزمره‌ات<br>راحت و شیک</div>
+              <p style="margin:0 0 18px;font:400 13.5px/1.8 'YekanBakh';opacity:.85">۴۲۰ مدل کفش و کیف، برای هر سلیقه</p>
+              <div style="display:flex;gap:8px">
+                <button type="button" data-act="plp" data-v="all" style="flex:1;background:#F8EFE8;color:#3A2A22;border:0;border-radius:999px;padding:15px 0;text-align:center;font:700 14px/1 'YekanBakh';cursor:pointer">کالکشن جدید</button>
+                <button type="button" data-act="sizeguide" style="flex:1;background:none;color:#fff;border:1.5px solid rgba(255,255,255,.7);border-radius:999px;padding:14px 0;text-align:center;font:700 14px/1 'YekanBakh';cursor:pointer">سایز من</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- mobile finder (hidden) -->
+        <div style="display:none;padding:0 18px 22px">
+          <div style="background:#fff;border-radius:22px;padding:18px">
+            <div style="font:700 15px/1.5 'YekanBakh';margin-bottom:14px">دنبال چی هستی؟</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+              <span style="border:1px solid rgba(58,42,34,.14);border-radius:999px;padding:10px 15px;font:500 13px/1 'YekanBakh'">نوع ▾</span>
+              <span style="border:1px solid rgba(58,42,34,.14);border-radius:999px;padding:10px 15px;font:500 13px/1 'YekanBakh'">سایز ۳۷ ▾</span>
+              <span style="border:1px solid rgba(58,42,34,.14);border-radius:999px;padding:10px 15px;font:500 13px/1 'YekanBakh'">رنگ ▾</span>
+              <span style="background:#E4EADD;color:#5E6E4F;border-radius:999px;padding:10px 15px;font:600 13px/1 'YekanBakh'">طبی</span>
+            </div>
+            <div style="background:#3A2A22;color:#F8EFE8;border-radius:999px;padding:14px 0;text-align:center;font:700 14px/1 'YekanBakh'">دیدن ۸۶ نتیجه</div>
+          </div>
+        </div>
+
+        <!-- mobile bestsellers -->
+        <div style="padding:22px 18px 22px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <span style="font:800 20px/1.4 'YekanBakh'">پرفروش‌های هفته</span>
+            <button type="button" data-act="plp" data-v="all" style="background:none;border:0;padding:0;font:700 12.5px/1 'YekanBakh';color:#C4805F;cursor:pointer">همه ←</button>
+          </div>
+          <div data-fill="best" data-n="4" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px"></div>
+        </div>
+
+        <!-- mobile shoppable video (full-height, above the lookbook) — tags open the product page -->
+        <div data-vshop data-act="vtagx">
+          <video data-speed="1" src="Video/9-16/magnific_vertical-phoneshot-custom_s7OjMoIl8e.mp4" poster="assets/video/shoppable-poster.webp" autoplay muted loop playsinline preload="metadata"></video>
+          <div data-vveil></div>
+
+          <div class="fi-vt" data-act="vtag" data-id="f214288" role="button" tabindex="0" aria-label="کفش کتونی زنانه BT Veja Volley" style="top:44%;right:31%">
+            <span class="dot"></span><span class="line"></span><span class="lab">کتونی وجا والی</span>
+          </div>
+          <div class="fi-vt l sec d2" data-act="plp" data-v="sneaker-w" role="button" tabindex="0" aria-label="مدل‌های مشابه" style="top:61%;left:36%">
+            <span class="dot"></span><span class="line"></span><span class="lab">مدل‌های مشابه</span>
+          </div>
+
+          <div data-vcopy>
+            <div style="font:800 21px/1.55 'YekanBakh';margin-bottom:6px;text-shadow:0 1px 14px rgba(20,12,8,.35)">هرچه در قاب می‌بینی، خریدنی است</div>
+            <div style="font:500 12.5px/1.85 'YekanBakh';opacity:.88">روی تگ‌ها بزن — صفحه‌ی محصول باز می‌شود و همان‌جا می‌خری.</div>
+          </div>
+
+          <div data-vsheet data-act="vnoop"></div>
+        </div>
+
+        <!-- mobile lookbook -->
+        <div data-lookbook style="padding:22px 18px 22px">
+          <div style="background:#fff;border-radius:24px;overflow:hidden">
+            <div style="position:relative;height:340px">
+              <div data-carousel style="position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory">
+                <img src="assets/look-2.webp" alt="" style="flex:none;width:100%;height:100%;object-fit:cover;scroll-snap-align:center">
+                <img src="assets/look-1.webp" alt="" style="flex:none;width:100%;height:100%;object-fit:cover;scroll-snap-align:center">
+                <img src="assets/hero-lifestyle-2.webp" alt="" style="flex:none;width:100%;height:100%;object-fit:cover;scroll-snap-align:center">
+                <img src="assets/ugc-3.webp" alt="" style="flex:none;width:100%;height:100%;object-fit:cover;scroll-snap-align:center">
+              </div>
+              <div style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,.92);border-radius:999px;padding:6px 12px;font:600 11px/1 'YekanBakh';pointer-events:none">لوک‌بوک ۴ · <span class="fi-num" data-cnt>۱/۴</span></div>
+              <div class="fi-dots" data-ind style="position:absolute;bottom:12px;right:0;left:0;display:flex;justify-content:center;gap:6px">
+                <span class="on" style="width:22px;height:4px;border-radius:999px;background:#fff"></span>
+                <span style="width:4px;height:4px;border-radius:999px;background:rgba(255,255,255,.55)"></span>
+                <span style="width:4px;height:4px;border-radius:999px;background:rgba(255,255,255,.55)"></span>
+                <span style="width:4px;height:4px;border-radius:999px;background:rgba(255,255,255,.55)"></span>
+              </div>
+              <button type="button" data-act="carnav" data-v="next" aria-label="عکس بعدی" style="position:absolute;top:50%;right:10px;transform:translateY(-50%);width:34px;height:34px;border-radius:999px;background:rgba(255,255,255,.9);border:0;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer">›</button>
+              <button type="button" data-act="carnav" data-v="prev" aria-label="عکس قبلی" style="position:absolute;top:50%;left:10px;transform:translateY(-50%);width:34px;height:34px;border-radius:999px;background:rgba(255,255,255,.9);border:0;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer">‹</button>
+            </div>
+            <div style="padding:20px">
+              <div style="font:800 19px/1.5 'YekanBakh';margin-bottom:14px">این استایل را کامل بخر</div>
+              <div data-looklist style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"></div>
+              <button type="button" data-act="addlook" data-lookbtn style="width:100%;background:#3A2A22;color:#F8EFE8;border:0;border-radius:999px;padding:14px 0;text-align:center;font:700 13.5px/1 'YekanBakh';cursor:pointer">افزودن ست به سبد</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- mobile discounted products (after lookbook 4) -->
+        <div style="padding:0 18px 22px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <span style="font:800 20px/1.4 'YekanBakh'">حراج آرام فوتینی</span>
+            <button type="button" data-act="plpdisc" style="background:none;border:0;padding:0;font:700 12.5px/1 'YekanBakh';color:#C4805F;cursor:pointer">۹۴ مدل ←</button>
+          </div>
+          <p style="margin:0 0 14px;font:400 12.5px/1.8 'YekanBakh';color:#8A7668">بدون شمارش معکوس، بدون فشار — قیمت‌ها تا پایان فصل ثابت‌اند.</p>
+          <div data-fill="sale" data-n="4" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px"></div>
+          <button type="button" data-act="plpdisc" style="width:100%;margin-top:14px;background:none;border:1.5px solid #3A2A22;border-radius:999px;padding:13px 0;text-align:center;font:700 13.5px/1 'YekanBakh';color:inherit;cursor:pointer">دیدن همه ۹۴ مدل حراج</button>
+        </div>
+
+        <!-- mobile magazine -->
+        <div data-magazine style="padding:0 18px 22px">
+          <div style="font:800 20px/1.4 'YekanBakh';margin-bottom:14px">مجله فوتینی</div>
+          <div data-act="soon" role="button" tabindex="0" style="cursor:pointer;background:#fff;border-radius:22px;overflow:hidden;display:flex;align-items:center;gap:14px;padding:12px">
+            <img src="assets/blog-1.webp" alt="" style="width:88px;height:88px;border-radius:16px;object-fit:cover">
+            <div>
+              <div style="font:600 11px/1 'YekanBakh';color:#8A6A56;margin-bottom:8px">راهنمای خرید</div>
+              <div style="font:700 14.5px/1.6 'YekanBakh'">چطور سایز درست کفش را پیدا کنیم؟</div>
+            </div>
+          </div>
+        </div>
+
+        </div><!-- /home -->
+        <div data-viewhost></div>
+
+        <!-- بدون فوتر: طبق تصمیم پروژه، نسخه‌ی موبایل هیچ‌جا فوتر پایین صفحه ندارد؛
+             لینک‌های راهنما/فروشگاه از منوی همبرگری و نوار پایین در دسترس‌اند -->
+
+        <!-- bottom tab bar -->
+        <div data-tabbar style="position:absolute;bottom:0;right:0;left:0;height:67px;padding:11px 16px 15px;display:flex;justify-content:space-between;align-items:flex-start;overflow:visible">
+
+          <!-- shaped surface: flat sides + a filleted cradle around the floating action -->
+          <!-- pieces are opaque and overlap by 3px; the .97 translucency is applied once to the
+               whole group so the seams between them can never composite as hairlines -->
+          <div data-tabsurface aria-hidden="true" style="position:absolute;inset:0;display:flex;align-items:flex-start;pointer-events:none;opacity:.97;filter:drop-shadow(0 -7px 13px rgba(58,42,34,.10))">
+            <!-- پُرکننده‌ی ناحیه‌ی نوارِ خانه؛ ۳ پیکسل روی قطعات بالایی می‌افتد تا درزِ مویی نماند -->
+            <div style="position:absolute;top:64px;right:0;left:0;bottom:0;background:#fff"></div>
+            <div style="flex:1;height:67px;background:#fff;border-top:1px solid rgba(58,42,34,.07)"></div>
+            <svg width="140" height="67" viewBox="0 0 140 67" style="flex:0 0 140px;display:block;overflow:visible">
+              <path d="M-3 0 H26.1 A14 14 0 0 1 40.07 14.95 A30 30 0 1 0 99.93 14.95 A14 14 0 0 1 113.9 0 H143 V67 H-3 Z" fill="#fff"/>
+              <path d="M-3 .5 H26.1 A14 14 0 0 1 40.07 15.45 A30 30 0 1 0 99.93 15.45 A14 14 0 0 1 113.9 .5 H143" fill="none" stroke="rgba(58,42,34,.07)" stroke-width="1"/>
+            </svg>
+            <div style="flex:1;height:67px;background:#fff;border-top:1px solid rgba(58,42,34,.07)"></div>
+          </div>
+
+          <!-- تب‌ها: data-act صریح در خود سورس، تا به سیم‌کشی حدسیِ انتهای فایل وابسته نباشند.
+               هر آیکن دو نسخه دارد — خطی برای حالت عادی، پُر برای حالت فعال. -->
+          <button type="button" data-tab="home" data-act="home" aria-label="خانه">
+            <span style="display:block;width:24px;height:24px">
+              <svg class="fi-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+                <path d="M11.35 3.36a1 1 0 0 1 1.3 0l8.05 6.93c.19.17.3.41.3.66v9.2a1.4 1.4 0 0 1-1.4 1.4H4.4A1.4 1.4 0 0 1 3 20.15v-9.2c0-.25.11-.49.3-.66l8.05-6.93Z"/>
+              </svg>
+              <svg class="fi-ic-on" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.35 3.36a1 1 0 0 1 1.3 0l8.05 6.93c.19.17.3.41.3.66v9.2a1.4 1.4 0 0 1-1.4 1.4H4.4A1.4 1.4 0 0 1 3 20.15v-9.2c0-.25.11-.49.3-.66l8.05-6.93Z"/>
+              </svg>
+            </span>
+            خانه
+          </button>
+
+          <button type="button" data-tab="search" data-act="opensearch" aria-label="جستجو">
+            <span style="display:block;width:24px;height:24px">
+              <svg class="fi-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="10.9" cy="10.9" r="6.6"/>
+                <path d="M15.7 15.7 20.4 20.4"/>
+              </svg>
+              <svg class="fi-ic-on" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <circle cx="10.9" cy="10.9" r="6.6" fill="currentColor"/>
+                <path d="M15.7 15.7 20.4 20.4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </span>
+            جستجو
+          </button>
+
+          <div style="min-width:58px" aria-hidden="true"></div>
+
+          <button type="button" data-tab="wish" data-act="wishview" aria-label="علاقه‌مندی">
+            <span style="display:block;width:24px;height:24px">
+              <svg class="fi-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20.4C9.6 18.7 3.9 14.9 3.9 10.7a4.3 4.3 0 0 1 8.1-2 4.3 4.3 0 0 1 8.1 2c0 4.2-5.7 8-8.1 9.7Z"/>
+              </svg>
+              <svg class="fi-ic-on" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 20.4C9.6 18.7 3.9 14.9 3.9 10.7a4.3 4.3 0 0 1 8.1-2 4.3 4.3 0 0 1 8.1 2c0 4.2-5.7 8-8.1 9.7Z"/>
+              </svg>
+            </span>
+            علاقه‌مندی
+          </button>
+
+          <button type="button" data-tab="cart" data-act="cart" aria-label="سبد خرید">
+            <span style="position:relative;display:block;width:24px;height:24px">
+              <svg class="fi-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4.7 8.4h14.6l.85 11.3a1.4 1.4 0 0 1-1.4 1.5H5.25a1.4 1.4 0 0 1-1.4-1.5L4.7 8.4Z"/>
+                <path d="M8.95 10.1V6.7a3.05 3.05 0 0 1 6.1 0v3.4"/>
+              </svg>
+              <svg class="fi-ic-on" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M4.7 8.4h14.6l.85 11.3a1.4 1.4 0 0 1-1.4 1.5H5.25a1.4 1.4 0 0 1-1.4-1.5L4.7 8.4Z" fill="currentColor"/>
+                <path d="M8.95 10.1V6.7a3.05 3.05 0 0 1 6.1 0v3.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span style="position:absolute;top:-7px;left:-8px;box-sizing:border-box;width:16px;height:16px;background:#C4805F;color:#fff;font:700 9px/1 'YekanBakh';border-radius:999px;display:flex;align-items:center;justify-content:center;border:2px solid #fff" data-cartcount>۲</span>
+            </span>
+            سبد
+          </button>
+        </div>
+
+        <!-- floating tab-bar action, sibling of the bar so its own paint isn't clipped by the bar's notch mask -->
+        <div data-tabfab role="button" tabindex="0" data-act="plp" data-v="all" aria-label="همه محصولات" style="position:absolute;bottom:25px;left:50%;width:50px;height:50px;border-radius:999px;box-shadow:0 6px 15px rgba(58,42,34,.26);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:61">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="#F8EFE8">
+            <rect x="3.6" y="3.6" width="7.6" height="7.6" rx="1.9"/>
+            <rect x="12.8" y="3.6" width="7.6" height="7.6" rx="1.9"/>
+            <rect x="3.6" y="12.8" width="7.6" height="7.6" rx="1.9"/>
+            <rect x="12.8" y="12.8" width="7.6" height="7.6" rx="1.9"/>
+          </svg>
+        </div>
+
+        <!-- ===== interactive layers (scoped to this artboard) ===== -->
+        <div data-scrim></div>
+        <div data-drawer="menu"></div>
+        <div data-drawer="cart"></div>
+        <div data-sheet="search"></div>
+        <div data-sheet="filter"></div>
+        <div data-modal="quick"></div>
+        <div data-toast></div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</x-dc>
+
+<script>
+/* ================= Footini P1 — interactive prototype engine ================= */
+(function(){
+'use strict';
+var FA='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/[0-9]/g,function(d){return FA[+d];});}
+function money(n){return fa(String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'٬'));}
+function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+
+var SH=[36,37,38,39,40,41];
+var P=[
+ {id:'f245455',n:'اسلیپر طبی شصتی دیبا HP',c:'slipper',pr:1478000,old:2958000,img:'shop/p-245455.webp',sz:[38,39],tag:'پرفروش'},
+ {id:'f245543',n:'اسلیپر (دمپایی) طبی ویدا HP',c:'slipper',pr:968000,old:1940000,img:'shop/p-245543.webp',sz:[37,38,39,40]},
+ {id:'f336960',n:'اسلیپر دمپایی طبی شصتی HP prima',c:'slipper',pr:1480000,old:2948000,img:'shop/p-336960.webp',sz:[37,38,39,40]},
+ {id:'f347361',n:'اسلیپر دمپایی طبی نغمه HP',c:'slipper',pr:2900000,old:5598000,img:'shop/p-347361.webp',sz:[37,38,39]},
+ {id:'f336561',n:'اسلیپر دمپایی تخت تی ناز HP',c:'slipper',pr:1450000,old:2998000,img:'shop/p-336561.webp',sz:[37,38,39,40]},
+ {id:'f45625',n:'دمپایی (اسلیپر) طبی لژدار سوگو PA',c:'slipper',pr:498000,old:1250000,img:'shop/p-45625.webp',sz:[38,39,40],tag:'شگفت‌انگیز'},
+ {id:'f265731',n:'اسلیپر دمپایی طبی ماهرو PA',c:'slipper',pr:1500000,old:2998000,img:'shop/p-265731.webp',sz:[37,38,39]},
+ {id:'f265703',n:'اسلیپر دمپایی زنانه کد 933-11 PA',c:'slipper',pr:798000,old:1500000,img:'shop/p-265703.webp',sz:[37,38,39,40]},
+ {id:'f358599',n:'صندل رکابدار تابستانی کمند HP',c:'sandal',pr:1990000,old:4898000,img:'shop/p-358599.webp',sz:[36,37,38,39,40],tag:'شگفت‌انگیز'},
+ {id:'f18414',n:'صندل تابستانی آیناز RMI',c:'sandal',pr:1390000,old:4800000,img:'shop/p-18414.webp',sz:[36,37,38,39],tag:'شگفت‌انگیز'},
+ {id:'f345270',n:'صندل رکابدار طبی زنانه دوسگک 1373',c:'sandal',pr:1998000,old:5998000,img:'shop/p-345270.webp',sz:[37,38,39,40],tag:'شگفت‌انگیز'},
+ {id:'f15910',n:'صندل پاشنه بلند سیگل PA',c:'sandal',pr:1500000,old:1900000,img:'shop/p-15910.webp',sz:[36,37,38,39,40]},
+ {id:'f221718',n:'صندل رکابدار طبی HP Mahiya',c:'sandal',pr:1600000,old:5200000,img:'shop/p-221718.webp',sz:[36,37,38,39],tag:'شگفت‌انگیز'},
+ {id:'f342135',n:'کفش کالج زنانه NI kook',c:'sandal',pr:2670000,old:4900000,img:'shop/p-342135.webp',sz:[36,37,38,39,40]},
+ {id:'f216693',n:'صندل تابستانی زنانه طبی ساحل BT',c:'sandal',pr:1780000,old:3560000,img:'shop/p-216693.webp',sz:[36,37,38,39,40]},
+ {id:'f225263',n:'کفش تابستانی کنفی نیوشا PA',c:'sandal',pr:998000,old:2500000,img:'shop/p-225263.webp',sz:[37,38,39],tag:'شگفت‌انگیز'},
+ {id:'f345364',n:'کفش مجلسی زنانه پاپیونی 1304 ALV',c:'formal',pr:3400000,old:7798000,img:'shop/p-345364.webp',sz:[36,37,38,39],tag:'شگفت‌انگیز'},
+ {id:'f246798',n:'کفش مجلسی کنفی RO GUCCI',c:'formal',pr:1498000,old:3096000,img:'shop/p-246798.webp',sz:[36,37,38,39]},
+ {id:'f349719',n:'کفش مجلسی زنانه پاشنه 7 سانت الی ALV',c:'formal',pr:3400000,old:7498000,img:'shop/p-349719.webp',sz:[36,37,38],tag:'پرفروش'},
+ {id:'f216199',n:'کفش مجلسی زارا 635 MR',c:'formal',pr:1648000,old:3296000,img:'shop/p-216199.webp',sz:[36,37,38,39]},
+ {id:'f251689',n:'کفش مجلسی زنانه ژیلا توری NI',c:'formal',pr:3198000,old:4316000,img:'shop/p-251689.webp',sz:[37,38,39]},
+ {id:'f338925',n:'کفش مجلسی پاشنه 7 سانت جولیا MR',c:'formal',pr:1198000,old:2396000,img:'shop/p-338925.webp',sz:[36,37,38]},
+ {id:'f385368',n:'کفش مجلسی زنانه تک بند 4058 ALV',c:'formal',pr:3400000,old:7798000,img:'shop/p-385368.webp',sz:[36,37,38,39],tag:'شگفت‌انگیز'},
+ {id:'f257848',n:'کفش مجلسی زنانه NI Lerona',c:'formal',pr:3290000,old:6298000,img:'shop/p-257848.webp',sz:[36,37,38,39]},
+ {id:'f44924',n:'کتونی زنانه و مردانه نیوبالانس کد 530',c:'sneaker-w',pr:3450000,old:7998000,img:'shop/p-44924.webp',sz:[36,37,38,39],tag:'شگفت‌انگیز'},
+ {id:'f205106',n:'کفش کتونی زنانه HK Nike Voodoo',c:'sneaker-w',pr:1530000,old:3061000,img:'shop/p-205106.webp',sz:[37,38,39,40]},
+ {id:'f230233',n:'کتونی زنانه نایک HK RUN V2K',c:'sneaker-w',pr:3990000,old:5989000,img:'shop/p-230233.webp',sz:[36,37,38,39,40]},
+ {id:'f205856',n:'کفش کتونی زنانه MBD Adidas Samba',c:'sneaker-w',pr:1898000,old:3798000,img:'shop/p-205856.webp',sz:[36,37,38,39],tag:'پرفروش'},
+ {id:'f225019',n:'کتونی زنانه نیوبالانس کد HK 800',c:'sneaker-w',pr:2998000,old:8778000,img:'shop/p-225019.webp',sz:[36,37,38,39,40],tag:'شگفت‌انگیز'},
+ {id:'f198056',n:'کفش کتونی زنانه AR Newbalance 470',c:'sneaker-w',pr:2990000,old:6900000,img:'shop/p-198056.webp',sz:[36,37,38,39,40],tag:'شگفت‌انگیز'},
+ {id:'f34765',n:'کفش کتونی طبی زنانه 410 موناکو BT',c:'sneaker-w',pr:3548000,old:7096000,img:'shop/p-34765.webp',sz:[37,38,39]},
+ {id:'f250013',n:'کفش کتونی زنانه راحتی HP Unique',c:'sneaker-w',pr:3478000,old:4000000,img:'shop/p-250013.webp',sz:[36,37,38,39,40]},
+ {id:'f214288',n:'کفش کتونی زنانه BT Veja Volley',c:'sneaker-w',pr:2790000,old:6490000,img:'shop/p-214288.webp',sz:[36,37,38,39,40],tag:'پرفروش'},
+ {id:'f253650',n:'نیم بوت زنانه بند کشی سایمون BT',c:'boot',pr:2700000,old:3439000,img:'shop/p-253650.webp',sz:[37,38,39,40]},
+ {id:'f253846',n:'نیم بوت زنانه طبی Ch65',c:'boot',pr:2700000,old:3439000,img:'shop/p-253846.webp',sz:[37,38,39]},
+ {id:'f261550',n:'نیم بوت زنانه کد RS 1207',c:'boot',pr:2398000,old:4796000,img:'shop/p-261550.webp',sz:[37,38,39,40]},
+ {id:'f261283',n:'نیم بوت زنانه کد 8344 MR',c:'boot',pr:2600000,old:4500000,img:'shop/p-261283.webp',sz:[38,39,40]},
+ {id:'f261319',n:'نیم بوت زنانه کشی کد 369',c:'boot',pr:1248000,old:1498000,img:'shop/p-261319.webp',sz:[37,38,39],tag:'پرفروش'},
+ {id:'f265010',n:'نیم بوت زنانه کد 382 MR',c:'boot',pr:2396000,old:4793000,img:'shop/p-265010.webp',sz:[37,38,39,40]},
+ {id:'f195005',n:'نیم بوت زنانه کد 95 MR',c:'boot',pr:2600000,old:4500000,img:'shop/p-195005.webp',sz:[37,38,39,40]},
+ {id:'f47223',n:'نیم بوت زنانه کد 30',c:'boot',pr:1098000,old:1498000,img:'shop/p-47223.webp',sz:[37,38,39]},
+ {id:'f230187',n:'کتونی زنانه و مردانه TL VANS',c:'sneaker-m',pr:2548000,old:5898000,img:'shop/p-230187.webp',sz:[41,42,43],tag:'شگفت‌انگیز'},
+ {id:'f198155',n:'کفش کتونی مردانه New Balance 530 Balesin',c:'sneaker-m',pr:1390000,old:2780000,img:'shop/p-198155.webp',sz:[40,41,42,43]},
+ {id:'f325625',n:'کفش کتونی مردانه نیوبالانس کد 530 PS',c:'sneaker-m',pr:1598000,old:3898000,img:'shop/p-325625.webp',sz:[40,41,42],tag:'شگفت‌انگیز'},
+ {id:'f336444',n:'کفش کتونی زنانه و مردانه diesel 1987',c:'sneaker-m',pr:498000,old:1348000,img:'shop/p-336444.webp',sz:[40,41,42,43],tag:'شگفت‌انگیز'},
+ {id:'f315060',n:'کفش کتونی زنانه و مردانه PD Nike DX',c:'sneaker-m',pr:1499000,old:4598000,img:'shop/p-315060.webp',sz:[40,41,42,43],tag:'شگفت‌انگیز'},
+ {id:'f346732',n:'کفش کتونی زنانه و مردانه جورابی TL 103',c:'sneaker-m',pr:2298000,old:5298000,img:'shop/p-346732.webp',sz:[41,42],tag:'شگفت‌انگیز'},
+ {id:'f260822',n:'کفش کتونی آدیداس بوست زنانه و مردانه MN BS63',c:'sneaker-m',pr:548000,old:1498000,img:'shop/p-260822.webp',sz:[40,41,42,43],tag:'شگفت‌انگیز'},
+ {id:'f337994',n:'کفش کالج زنانه طرح کلارک ST simple',c:'shoe',pr:698000,old:2298000,img:'shop/p-337994.webp',sz:[36,37,38,39,40],tag:'شگفت‌انگیز'},
+ {id:'f263590',n:'کفش راحتی زنانه کدRZ 31',c:'shoe',pr:2550000,old:6898000,img:'shop/p-263590.webp',sz:[36,37,38,39],tag:'شگفت‌انگیز'},
+ {id:'f448680',n:'کالج عروسکی زنانه 8283 SMT',c:'shoe',pr:1850000,old:4798000,img:'shop/p-448680.webp',sz:[36,37,38,39,40],tag:'شگفت‌انگیز'},
+ {id:'f267159',n:'کفش کتونی زنانه gucci کد 556 MR NEW',c:'shoe',pr:3200000,old:6298000,img:'shop/p-267159.webp',sz:[37,38,39,40]},
+ {id:'f42349',n:'کفش زنانه طبی ژینورا BT',c:'shoe',pr:2890000,old:5198000,img:'shop/p-42349.webp',sz:[36,37,38,39]},
+ {id:'f362094',n:'کفش عروسکی کنفی 201 ST',c:'shoe',pr:1850000,old:4598000,img:'shop/p-362094.webp',sz:[36,37,38,39,40],tag:'شگفت‌انگیز'},
+ {id:'f267122',n:'کفش کتونی زنانه مدل BD delvan',c:'shoe',pr:3200000,old:6780000,img:'shop/p-267122.webp',sz:[36,37,38,39,40]},
+ {id:'f15513',n:'کالج فانتوف پاپیونی TSA Doti',c:'shoe',pr:1948000,old:3898000,img:'shop/p-15513.webp',sz:[36,37,38,39],tag:'پرفروش'},
+ {id:'f396511',n:'کیف زنانه دستی هوتون 131 AM',c:'bag',pr:1128000,img:'shop/p-396511.webp',sz:[]},
+ {id:'f388445',n:'کیف زنانه مجلسی جی وان جی 115 AM',c:'bag',pr:1228000,old:2118000,img:'shop/p-388445.webp',sz:[]},
+ {id:'f377009',n:'کیف زنانه بزرگ مدیسا 069 AM',c:'bag',pr:1118000,img:'shop/p-377009.webp',sz:[]},
+ {id:'f398308',n:'کیف زنانه زارا شالدار 134 AM',c:'bag',pr:1148000,img:'shop/p-398308.webp',sz:[]},
+ {id:'f388020',n:'کیف زنانه چرم قایقی زارا 101 AM',c:'bag',pr:1098000,old:1999000,img:'shop/p-388020.webp',sz:[]},
+ {id:'f396424',n:'کیف زنانه اکسسوری 123 AM',c:'bag',pr:1218000,img:'shop/p-396424.webp',sz:[]},
+ {id:'f375260',n:'کیف پول زنانه 041 PRS',c:'bag',pr:318000,img:'shop/p-375260.webp',sz:[]},
+ {id:'f378449',n:'کیف زنانه گره دار 075 AM',c:'bag',pr:1118000,img:'shop/p-378449.webp',sz:[]}
+];
+var CATS=[{k:'all',n:'همه'},{k:'slipper',n:'اسلیپر'},{k:'sandal',n:'صندل'},{k:'formal',n:'مجلسی'},{k:'sneaker-w',n:'کتونی زنانه'},{k:'boot',n:'نیم‌بوت'},{k:'sneaker-m',n:'کتونی مردانه'},{k:'shoe',n:'کفش'},{k:'bag',n:'کیف'}];
+function catName(k){for(var i=0;i<CATS.length;i++)if(CATS[i].k===k)return CATS[i].n;return 'همه محصولات';}
+/* «این استایل را کامل بخر» — سه محصول واقعی از کاتالوگ، تا افزودن به سبد واقعاً کار کند */
+var LOOKSET=['f337994','f388445','f42349'];
+function byId(id){for(var i=0;i<P.length;i++)if(P[i].id===id)return P[i];return null;}
+
+window.__FI_IMG={};P.forEach(function(p){window.__FI_IMG[p.img]=p.id;});
+var cart=[],wish={};
+var S={};
+function scopes(){return [].slice.call(document.querySelectorAll('[data-screen-label]'));}
+function isM(sc){return (sc.getAttribute('data-screen-label')||'').indexOf('Mobile')>=0;}
+function st(sc){var k=sc.getAttribute('data-screen-label');
+ if(!S[k])S[k]={view:'home',pid:null,sortOpen:false,f:{cat:'all',size:0,disc:false,sort:'new',color:'',pmin:PR_MIN,pmax:PR_MAX}};return S[k];}
+function q(sc,s){return sc.querySelector(s);}
+
+/* ---------- overlays ---------- */
+function closeAll(sc){
+ ['[data-drawer="menu"]','[data-drawer="cart"]','[data-sheet="search"]','[data-sheet="filter"]','[data-modal="quick"]','[data-scrim]']
+ .forEach(function(s){var e=q(sc,s);if(e)e.classList.remove('on');});
+ /* منوی آبشاریِ مرتب‌سازی جزو overlayهای بالا نیست (تویِ خودِ رندر لیست است)،
+    پس هر جا بقیه‌ی overlayها بسته می‌شوند این هم باید بسته و از DOM لیست حذف شود */
+ var s=st(sc);
+ if(s.sortOpen){s.sortOpen=false;if(s.view==='plp')renderView(sc);}
+ syncTabs(sc);
+}
+function openOv(sc,sel){closeAll(sc);var e=q(sc,sel),sm=q(sc,'[data-scrim]');if(!e)return;
+ e.classList.add('on');if(sm)sm.classList.add('on');syncTabs(sc);}
+var TT={};
+function toast(sc,msg){var t=q(sc,'[data-toast]');if(!t)return;t.textContent=msg;t.classList.add('on');
+ if(TT[sc.getAttribute('data-screen-label')])clearTimeout(TT[sc.getAttribute('data-screen-label')]);
+ TT[sc.getAttribute('data-screen-label')]=setTimeout(function(){t.classList.remove('on');},2200);}
+
+/* ---------- pieces ---------- */
+function priceHTML(p,big){
+ var sz=big?22:13;
+ var o=p.old?'<span class="fi-num" style="font:500 '+(big?13:11)+'px/1 \'YekanBakh\';color:#8A7668;text-decoration:line-through">'+money(p.old)+'</span>':'';
+ return '<div style="display:flex;align-items:baseline;gap:8px"><span class="fi-num" style="font:800 '+sz+'px/1 \'YekanBakh\'">'+money(p.pr)+'</span>'+
+ '<span style="font:500 '+(big?12:10.5)+'px/1 \'YekanBakh\';color:#8A7668">تومان</span>'+o+'</div>';
+}
+function heartSVG(s){return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.4C9.6 18.7 3.9 14.9 3.9 10.7a4.3 4.3 0 0 1 8.1-2 4.3 4.3 0 0 1 8.1 2c0 4.2-5.7 8-8.1 9.7Z"/></svg>';}
+
+/* آیکن‌های داخل فیلدهای فرم (ورود/ثبت‌نام، تماس، پیگیری، آدرس تسویه) */
+var FI_ICONS={
+ phone:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>',
+ pin:'<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
+ msg:'<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>',
+ track:'<path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>',
+ user:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+ truck:'<rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
+ help:'<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+ info:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
+ mail:'<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/>'
+};
+/* پوشش مشترک برای فیلدها: آیکن سمت راست (شروع متن در RTL)، عمودی‌وسط برای اینپوت‌ها و بالاچین برای تکست‌اریا */
+function fieldWrap(iconPath,fieldHTML,top){
+ return '<div style="position:relative">'+
+  '<span aria-hidden="true" style="position:absolute;'+(top?'top:18px':'top:50%;transform:translateY(-50%)')+';right:19px;color:#8A7668;display:flex;pointer-events:none;z-index:1">'+
+   '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+iconPath+'</svg>'+
+  '</span>'+fieldHTML+'</div>';
+}
+/* کارت لیست همان کارت خانه است — یک پوسته، دو کاربرد. نسخه‌ی جداگانه‌ی قبلی
+   روی ریشه‌اش overflow:hidden نداشت، پس در گرید، حداقل عرضش به min-content می‌رسید
+   و چون عنوان nowrap است، ستون‌ها از 1fr بیرون می‌زدند. */
+function card(p,m,noQuick,auto){return homeCard(p,m,auto?'plpv':'plp',false,noQuick);}
+function filtered(f){
+ var r=P.filter(function(p){
+  if(f.cat!=='all'&&p.c!==f.cat)return false;
+  if(f.disc&&!p.old)return false;
+  if(f.size&&p.sz.indexOf(f.size)<0)return false;
+  if(f.color&&!vcolors(p).some(function(c){return c.n===f.color;}))return false;
+  if(f.pmin&&p.pr<f.pmin)return false;
+  if(f.pmax&&p.pr>f.pmax)return false;
+  if(f.sort==='best'&&p.tag!=='پرفروش')return false;
+  return true;});
+ if(f.sort==='cheap')r.sort(function(a,b){return a.pr-b.pr;});
+ else if(f.sort==='exp')r.sort(function(a,b){return b.pr-a.pr;});
+ else if(f.sort==='disc')r.sort(function(a,b){return (b.old?b.old-b.pr:0)-(a.old?a.old-a.pr:0);});
+ return r;
+}
+
+/* ---------- views ---------- */
+function vPLP(sc){
+ var s=st(sc),m=isM(sc),f=s.f,list=filtered(f),pad=m?'16px 18px 26px':'34px 56px 60px';
+ var sortLbl={new:'جدیدترین',cheap:'ارزان‌ترین',exp:'گران‌ترین',disc:'بیشترین تخفیف',best:'پرفروش‌ها'}[f.sort];
+ var head,chips='';
+ if(m){
+  /* صفحه‌ی «همه»: بدون دکمه‌ی خانه (تب پایین همیشه در دسترس است)، بدون شمارش مدل،
+     عنوان فقط برای کتالوگ کامل عوض می‌شود؛ زیرشاخه‌ها اسم دسته‌ی خودشان را نگه می‌دارند. */
+  var mtitle=f.cat==='all'?'فوتینی برای همه سلیقه‌ها':catName(f.cat);
+  var fcount=(f.cat!=='all'?1:0)+(f.size?1:0)+(f.color?1:0)+((f.pmin>PR_MIN||f.pmax<PR_MAX)?1:0);
+  head='<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px">'+
+   '<div style="font:800 19px/1.4 \'YekanBakh\';min-width:0">'+mtitle+'</div>'+
+   '<div style="display:flex;align-items:center;gap:8px;flex:0 0 auto;position:relative">'+
+    '<button type="button" class="fi-chip" data-act="sorttoggle" aria-expanded="'+(s.sortOpen?'true':'false')+'" style="height:40px;padding:0 14px">'+sortLbl+
+     '<svg width="10" height="10" viewBox="0 0 10 10" style="margin-inline-start:6px;transform:'+(s.sortOpen?'rotate(180deg)':'none')+';transition:transform .15s ease" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>'+
+    '<button type="button" data-act="openfilter" aria-label="فیلتر" style="position:relative;width:40px;height:40px;border-radius:999px;border:0;background:#3A2A22;color:#F8EFE8;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 40px">'+
+     '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>'+
+     (fcount?'<span class="fi-num" style="position:absolute;top:-3px;left:-3px;min-width:16px;height:16px;padding:0 3px;border-radius:999px;background:#C4805F;color:#fff;font:700 9px/16px \'YekanBakh\';text-align:center">'+fa(fcount)+'</span>':'')+
+    '</button>'+
+    (s.sortOpen?sortDropHTML(f):'')+
+   '</div></div>';
+ }else{
+  head='<div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:22px">'+
+   '<div><button data-act="home" class="fi-chip" style="height:34px;margin-bottom:10px">→ خانه</button>'+
+   '<div style="font:800 30px/1.4 \'YekanBakh\'">'+catName(f.cat)+'</div>'+
+   '<div class="fi-num" style="font:400 12.5px/1 \'YekanBakh\';color:#8A7668;margin-top:7px">'+fa(list.length)+' مدل</div></div>'+
+   '<button class="fi-chip" data-act="sortnext" style="height:44px">مرتب‌سازی: '+sortLbl+'</button></div>';
+  chips='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">';
+  CATS.forEach(function(c){chips+='<button class="fi-chip" data-act="fcat" data-v="'+c.k+'" aria-pressed="'+(f.cat===c.k)+'">'+c.n+'</button>';});
+  chips+='<span style="width:1px;background:rgba(58,42,34,.16);margin:0 6px"></span>';
+  SH.forEach(function(z){chips+='<button class="fi-chip fi-num" data-act="fsize" data-v="'+z+'" aria-pressed="'+(f.size===z)+'">'+fa(z)+'</button>';});
+  chips+='<button class="fi-chip" data-act="fdisc" aria-pressed="'+f.disc+'">فقط تخفیف‌دارها</button>';
+  chips+='<button class="fi-chip" data-act="fclear">پاک کردن</button></div>';
+ }
+ var noQuick=m&&f.cat==='all';
+ /* ---- «فوتینی برای همه سلیقه‌ها»ی موبایل ----
+    محصولاتِ ویدیودار (ویدیو + عکس بک‌سفید) اول صف می‌ایستند و کارت‌شان به‌جای عکس ثابت،
+    ویدیو پخش می‌کند. در حالت بدون فیلتر، چیدمان ادیتوریال می‌شود:
+    کارت شاخص ← سه ردیف دوتایی ← قفسه‌ی ریلی ← باقی کاتالوگ.
+    با روشن شدن هر فیلتری این چیدمان جمع می‌شود و همان شبکه‌ی ساده برمی‌گردد، چون
+    کارت شاخص و قفسه محتوای پیشنهادی‌اند و نباید قاطی نتیجه‌ی جستجوی کاربر شوند. */
+ var vsec=m&&f.cat==='all';
+ if(vsec)list=videoFirst(list);
+ var bare=!f.size&&!f.color&&!f.disc&&f.sort==='new'&&f.pmin<=PR_MIN&&f.pmax>=PR_MAX;
+ var gcols='display:grid;grid-template-columns:repeat('+(m?2:4)+',minmax(0,1fr));gap:'+(m?14:20)+'px';
+ var grid;
+ if(!list.length){
+  grid='<div style="text-align:center;padding:60px 20px;color:#8A7668"><div style="font:700 16px/1.8 \'YekanBakh\';color:#3A2A22;margin-bottom:8px">چیزی با این فیلترها پیدا نشد</div><div style="font:400 13.5px/1.9 \'YekanBakh\';margin-bottom:18px">یک فیلتر را بردار تا نتیجه‌ها برگردند.</div><button class="fi-btn" data-act="fclear">پاک کردن فیلترها</button></div>';
+ }else if(vsec&&bare&&spotHTML(list[0])){
+  var cells=list.slice(1).map(function(p){return card(p,m,noQuick,true);});
+  cells.splice(6,0,railHTML());          /* بعد از سه ردیفِ دوتایی */
+  grid=spotHTML(list[0])+'<div style="'+gcols+'">'+cells.join('')+'</div>';
+ }else{
+  grid='<div style="'+gcols+'">'+list.map(function(p){return card(p,m,noQuick,vsec);}).join('')+'</div>';
+ }
+ return '<div style="padding:'+pad+'">'+head+chips+grid+'</div>';
+}
+function vPDP(sc){
+ var s=st(sc),m=isM(sc),p=byId(s.pid);if(!p)return vPLP(sc);
+ var rel=P.filter(function(x){return x.c===p.c&&x.id!==p.id;}).slice(0,m?2:4);
+ var sizes=p.sz.length? SH.map(function(z){
+   var av=p.sz.indexOf(z)>=0;
+   return '<button class="fi-sz fi-num" data-act="psize" data-v="'+z+'" aria-pressed="'+(s.size===z)+'" '+(av?'':'disabled')+'>'+fa(z)+'</button>';}).join('') : '';
+ var pcols=vcolors(p),pci=cardCol[p.id]||0;if(pci>=pcols.length)pci=0;
+ var colBlock='<div style="font:700 13px/1 \'YekanBakh\';margin:20px 0 10px;display:flex;justify-content:space-between;align-items:baseline"><span>رنگ</span><span data-pcolname style="font:500 12.5px/1 \'YekanBakh\';color:#8A7668">'+esc(pcols[pci].n)+'</span></div>'+
+  '<div class="fi-pc" role="group" aria-label="رنگ‌های موجود">'+pcols.map(function(c,i){
+   return '<button type="button" class="fi-pcb" data-act="pcolor" data-id="'+p.id+'" data-v="'+i+'" aria-pressed="'+(i===pci)+'" aria-label="'+esc(c.n)+'" title="'+esc(c.n)+'" style="background:'+c.h+'"></button>';}).join('')+'</div>';
+ var szBlock=p.sz.length?'<div style="font:700 13px/1 \'YekanBakh\';margin:20px 0 10px;display:flex;justify-content:space-between"><span>سایز</span><span data-act="sizeguide" style="color:#C4805F;font-weight:500;cursor:pointer">راهنمای سایز</span></div><div style="display:flex;gap:8px;flex-wrap:wrap">'+sizes+'</div>':'';
+ var info='<div>'+
+  (m?'':'<button data-act="back" class="fi-chip" style="height:34px;margin-bottom:14px">→ بازگشت</button>')+
+  '<div style="font:800 '+(m?22:32)+'px/1.5 \'YekanBakh\';margin-bottom:10px">'+esc(p.n)+'</div>'+
+  '<div style="font:400 13.5px/1.8 \'YekanBakh\';color:#8A7668;margin-bottom:16px">چرم طبیعی · زیره‌ی فوم فشرده · ارسال ۲ تا ۴ روز کاری</div>'+
+  priceHTML(p,true)+colBlock+szBlock+
+  '<div style="display:flex;gap:10px;margin-top:24px">'+
+   '<button data-act="wish" data-id="'+p.id+'" data-wish class="'+(wish[p.id]?'on':'')+'" aria-label="علاقه‌مندی" style="width:50px;height:50px;border-radius:999px;border:1.5px solid rgba(58,42,34,.24);background:none;display:flex;align-items:center;justify-content:center;color:'+(wish[p.id]?'#C4805F':'#3A2A22')+';cursor:pointer">'+heartSVG(20)+'</button>'+
+   '<button class="fi-btn" data-act="addcart" data-id="'+p.id+'" style="flex:1">افزودن به سبد</button></div></div>';
+ /* گالری همه‌ی رنگ‌هاست: به ازای هر رنگ، نمای بک‌سفید و نمای روی پای مدل، پشت سر هم.
+    زدن روی تگ رنگ نوار را روی همان رنگ می‌برد؛ سوایپ هم رنگِ انتخابی را عوض می‌کند.
+    نوار راست‌چین است و scroll-padding گاتر کناری را نگه می‌دارد. */
+ var pdm=CMEDIA[p.id],pdcols=pdm&&pdm.colors,shots=[];
+ if(pdcols)pdcols.forEach(function(c,ci){
+  shots.push({s:c.white,ci:ci,n:c.n,mo:0});shots.push({s:c.model,ci:ci,n:c.n,mo:1});});
+ else shots=[{s:'assets/'+p.img,ci:0,n:'',mo:0}];
+ var pstart=0;
+ for(var psi=0;psi<shots.length;psi++){if(shots[psi].ci===pci){pstart=psi;break;}}
+ var ptiles=shots.map(function(sh){
+  return '<div data-ci="'+sh.ci+'" style="aspect-ratio:3/4;border-radius:'+(m?16:18)+'px;overflow:hidden;background:#EFE6DD;box-shadow:inset 0 0 0 1px rgba(58,42,34,.08);scroll-snap-align:start"><img src="'+sh.s+'" alt="'+esc(p.n)+(sh.n?'، '+esc(sh.n):'')+' — '+(sh.mo?'روی پای مدل':'نمای سه‌رخ با پس‌زمینه سفید')+'" style="width:100%;height:100%;object-fit:cover" loading="'+(sh.ci===pci?'eager':'lazy')+'"></div>';}).join('');
+ var pmulti=shots.length>1;
+ var pdots=pmulti?'<div class="fi-dots fi-pdots" data-ind>'+shots.map(function(sh,i){
+   return (i&&sh.ci!==shots[i-1].ci?'<i></i>':'')+'<span'+(i===pstart?' class="on"':'')+'></span>';}).join('')+'</div>':'';
+ /* موبایل: شمارنده جای همیشگی‌اش (پایین‌چپ روی عکس) را نگه می‌دارد چون بالاراست حالا جای دکمه‌ی بازگشت است */
+ var pcnt=pmulti?'<span class="fi-cnt'+(m?'':' fi-pcnt')+' fi-num" data-cnt>'+fa(pstart+1)+'/'+fa(shots.length)+'</span>':'';
+ /* دسکتاپ: اسلایدر تمام‌عرض به‌جای شبکه‌ی روی‌هم — فلش‌ها با pdpGoto همان تکنیکی حرکت می‌کنند
+    که گالری موبایل و کاروسل لوک‌بوک استفاده می‌کنند؛ ردیف تامنیل زیرش برای پرش مستقیم به هر عکس. */
+ var pthumbs=pmulti?'<div data-pdpthumbs style="display:flex;gap:10px;margin-top:14px;overflow-x:auto;scrollbar-width:none">'+shots.map(function(sh,i){
+   return '<button type="button" class="fi-pdpthumb" data-act="pdpgoto" data-v="'+i+'" aria-pressed="'+(i===pstart)+'" aria-label="عکس '+fa(i+1)+' از '+fa(shots.length)+'" style="flex:0 0 64px;width:64px;aspect-ratio:3/4;border-radius:10px;overflow:hidden;padding:0;cursor:pointer;background:#EFE6DD"><img src="'+sh.s+'" alt="" style="width:100%;height:100%;object-fit:cover;display:block;pointer-events:none"></button>';}).join('')+'</div>':'';
+ var parrows=pmulti?
+   '<button type="button" data-act="pdpnav" data-v="next" aria-label="عکس بعدی" style="position:absolute;top:50%;right:16px;transform:translateY(-50%);width:42px;height:42px;border-radius:999px;background:rgba(255,255,255,.9);border:0;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;z-index:3">›</button>'+
+   '<button type="button" data-act="pdpnav" data-v="prev" aria-label="عکس قبلی" style="position:absolute;top:50%;left:16px;transform:translateY(-50%);width:42px;height:42px;border-radius:999px;background:rgba(255,255,255,.9);border:0;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;z-index:3">‹</button>'
+   :'';
+ var gal=m
+  ? '<div style="position:relative">'+
+     '<div data-pdpgal data-pid="'+p.id+'" data-start="'+pstart+'" style="display:grid;grid-auto-flow:column;grid-auto-columns:'+(pmulti?'86%':'100%')+';gap:10px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-padding-inline-start:18px;scrollbar-width:none;padding:0 18px 5px">'+ptiles+'</div>'+
+     '<button data-act="back" aria-label="بازگشت" style="position:absolute;top:14px;right:14px;z-index:5;height:36px;padding:0 14px;border:0;border-radius:999px;background:rgba(248,239,232,.94);box-shadow:0 0 0 1px rgba(58,42,34,.08),0 6px 16px rgba(58,42,34,.16);display:inline-flex;align-items:center;gap:6px;font:600 12.5px/1 \'YekanBakh\';color:#3A2A22;cursor:pointer">→ بازگشت</button>'+
+     pcnt+pdots+
+    '</div>'
+  : '<div data-pdpwrap>'+
+     '<div style="position:relative">'+
+      '<div data-pdpgal data-pid="'+p.id+'" data-start="'+pstart+'" style="display:grid;grid-auto-flow:column;grid-auto-columns:100%;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none">'+ptiles+'</div>'+
+      pcnt+parrows+
+     '</div>'+
+     pthumbs+
+    '</div>';
+ var body=m? '<div>'+gal+'<div style="padding:18px">'+info+'</div></div>'
+  : '<div style="display:grid;grid-template-columns:1.05fr .95fr;gap:46px;align-items:start;padding:34px 56px 20px">'+gal+'<div style="position:sticky;top:24px">'+info+'</div></div>';
+ var relHTML=rel.length?'<div style="padding:'+(m?'6px 18px 26px':'20px 56px 60px')+'"><div style="font:800 '+(m?17:22)+'px/1.5 \'YekanBakh\';margin-bottom:16px">مشابه‌ها</div>'+
+  '<div style="display:grid;grid-template-columns:repeat('+(m?2:4)+',minmax(0,1fr));gap:'+(m?14:20)+'px">'+rel.map(function(x){return card(x,m);}).join('')+'</div></div>':'';
+ return body+relHTML;
+}
+/* نقطه‌ها و شمارنده‌ی هر گالری (کارت یا صفحه‌ی محصول) روی کاشی i بایستند */
+function galMark(sl,i){
+ var host=sl.closest('.fi-card')||sl.parentNode,n=sl.children.length;
+ var ind=host&&host.querySelector('[data-ind]'),cnt=host&&host.querySelector('[data-cnt]');
+ if(ind)[].slice.call(ind.querySelectorAll('span')).forEach(function(d,j){d.classList.toggle('on',j===i);});
+ if(cnt)cnt.textContent=fa(i+1)+'/'+fa(n);
+ /* ردیف تامنیل گالری صفحه‌ی محصول دسکتاپ (اگر باشد) هم با همین ایندکس هم‌گام می‌شود */
+ var pwrap=sl.closest('[data-pdpwrap]'),thumbs=pwrap&&pwrap.querySelector('[data-pdpthumbs]');
+ if(thumbs)[].slice.call(thumbs.children).forEach(function(t,j){t.setAttribute('aria-pressed',String(j===i));});
+ sl.__i=i;
+}
+/* بردن نوار عکس روی کاشی i — با offset خودِ کاشی‌ها کار می‌کند تا در RTL هم درست باشد */
+function pdpGoto(g,i,smooth){
+ var t=g&&g.children[i];if(!t)return;
+ var to=t.offsetLeft-g.children[0].offsetLeft;
+ if(g.scrollWidth>g.clientWidth+2){
+  if(smooth&&g.scrollTo&&'scrollBehavior' in document.documentElement.style)g.scrollTo({left:to,behavior:'smooth'});
+  else g.scrollLeft=to;
+ }else if(smooth){t.scrollIntoView({behavior:'smooth',block:'center'});}
+ galMark(g,i);
+}
+function cartTotal(){var t=0;cart.forEach(function(i){t+=byId(i.id).pr*i.q;});return t;}
+function cartCount(){var n=0;cart.forEach(function(i){n+=i.q;});return n;}
+function vCart(sc){
+ var m=isM(sc),pad=m?'16px 18px 26px':'34px 56px 60px';
+ if(!cart.length)return '<div style="padding:'+pad+'"><button data-act="home" class="fi-chip" style="height:34px;margin-bottom:16px">→ بازگشت</button>'+
+  '<div style="text-align:center;padding:60px 20px"><div style="font:800 20px/1.7 \'YekanBakh\';margin-bottom:8px">سبد خالی است</div>'+
+  '<div style="font:400 13.5px/1.9 \'YekanBakh\';color:#8A7668;margin-bottom:20px">یک جفت انتخاب کن تا اینجا ببینیش.</div>'+
+  '<button class="fi-btn" data-act="plp" data-v="all">دیدن محصولات</button></div></div>';
+ var rows=cart.map(function(it,i){var p=byId(it.id);
+  return '<div style="display:flex;gap:14px;padding:16px 0;border-bottom:1px solid rgba(58,42,34,.1)">'+
+   '<div style="width:84px;height:84px;border-radius:14px;overflow:hidden;background:#EFE6DD;flex:0 0 84px"><img src="assets/'+p.img+'" alt="'+esc(p.n)+'" style="width:100%;height:100%;object-fit:cover"></div>'+
+   '<div style="flex:1;min-width:0">'+
+    '<div style="display:flex;justify-content:space-between;gap:10px"><div style="font:700 14px/1.6 \'YekanBakh\'">'+esc(p.n)+'</div>'+
+    '<button data-act="del" data-i="'+i+'" aria-label="حذف" style="background:none;border:0;color:#8A7668;font:600 12px/1 \'YekanBakh\';cursor:pointer">حذف</button></div>'+
+    (it.s?'<div class="fi-num" style="font:400 12.5px/1.7 \'YekanBakh\';color:#8A7668">سایز '+fa(it.s)+'</div>':'')+
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px">'+
+     '<div style="display:flex;align-items:center;gap:0;border:1px solid rgba(58,42,34,.2);border-radius:999px;overflow:hidden">'+
+      '<button data-act="dec" data-i="'+i+'" aria-label="کم" style="width:36px;height:36px;border:0;background:none;font:700 16px/1 \'YekanBakh\';cursor:pointer;color:inherit">−</button>'+
+      '<span class="fi-num" style="min-width:30px;text-align:center;font:700 13px/1 \'YekanBakh\'">'+fa(it.q)+'</span>'+
+      '<button data-act="inc" data-i="'+i+'" aria-label="زیاد" style="width:36px;height:36px;border:0;background:none;font:700 16px/1 \'YekanBakh\';cursor:pointer;color:inherit">+</button></div>'+
+     '<span class="fi-num" style="font:800 14px/1 \'YekanBakh\'">'+money(p.pr*it.q)+'</span></div></div></div>';}).join('');
+ var ship=cartTotal()>=5000000?0:250000;
+ return '<div style="padding:'+pad+'"><button data-act="home" class="fi-chip" style="height:34px;margin-bottom:14px">→ بازگشت</button>'+
+  '<div style="font:800 '+(m?22:30)+'px/1.4 \'YekanBakh\';margin-bottom:6px">سبد خرید</div>'+
+  '<div class="fi-num" style="font:400 12.5px/1 \'YekanBakh\';color:#8A7668;margin-bottom:18px">'+fa(cartCount())+' کالا</div>'+
+  rows+
+  '<div style="margin-top:20px;background:#fff;border-radius:18px;padding:18px">'+
+   '<div style="display:flex;justify-content:space-between;font:500 13.5px/2 \'YekanBakh\'"><span>جمع کالاها</span><span class="fi-num">'+money(cartTotal())+'</span></div>'+
+   '<div style="display:flex;justify-content:space-between;font:500 13.5px/2 \'YekanBakh\';color:'+(ship?'#3A2A22':'#5E6E4F')+'"><span>ارسال</span><span class="fi-num">'+(ship?money(ship):'رایگان')+'</span></div>'+
+   '<div style="height:1px;background:rgba(58,42,34,.12);margin:12px 0"></div>'+
+   '<div style="display:flex;justify-content:space-between;font:800 16px/1.8 \'YekanBakh\'"><span>قابل پرداخت</span><span class="fi-num">'+money(cartTotal()+ship)+' تومان</span></div>'+
+   '<button class="fi-btn" data-act="checkout" style="width:100%;margin-top:16px">ادامه‌ی خرید</button></div></div>';
+}
+function vCheckout(sc){
+ var m=isM(sc),s=st(sc),step=s.step||1,pad=m?'16px 18px 26px':'34px 56px 60px';
+ var ship=cartTotal()>=5000000?0:250000;
+ var dots=[1,2,3].map(function(i){return '<div style="flex:1;display:flex;align-items:center;gap:8px">'+
+  '<span class="fi-num" style="width:28px;height:28px;border-radius:999px;display:flex;align-items:center;justify-content:center;font:700 12px/1 \'YekanBakh\';'+(i<=step?'background:#3A2A22;color:#F8EFE8':'background:rgba(58,42,34,.12);color:#8A7668')+'">'+fa(i)+'</span>'+
+  '<span style="font:600 12px/1 \'YekanBakh\';color:'+(i<=step?'#3A2A22':'#8A7668')+'">'+['آدرس','ارسال','پرداخت'][i-1]+'</span></div>';}).join('');
+ var inner='';
+ if(step===1)inner='<label style="display:block;font:600 13px/1 \'YekanBakh\';margin-bottom:9px">نشانی</label>'+
+  fieldWrap(FI_ICONS.pin,'<textarea rows="4" placeholder="خیابان، کوچه، پلاک، واحد" style="width:100%;border:1px solid rgba(58,42,34,.2);border-radius:18px;padding:16px 52px 16px 18px;font:400 14.5px/1.9 \'YekanBakh\';background:#fff;resize:none;box-sizing:border-box"></textarea>',true)+
+  '<label style="display:block;font:600 13px/1 \'YekanBakh\';margin:18px 0 9px">شماره تماس</label>'+
+  fieldWrap(FI_ICONS.phone,'<input type="tel" inputmode="tel" placeholder="۰۹۱۲…" style="width:100%;height:58px;border:1px solid rgba(58,42,34,.2);border-radius:999px;padding:0 52px 0 20px;font:400 15px/1 \'YekanBakh\';background:#fff;box-sizing:border-box">',false);
+ else if(step===2)inner=['پست پیشتاز — ۲ تا ۴ روز کاری','ارسال فوری تهران — همان روز','تحویل حضوری از فروشگاه'].map(function(t,i){
+  return '<label style="display:flex;align-items:center;gap:11px;background:#fff;border:1px solid rgba(58,42,34,'+(i===0?'.32':'.12')+');border-radius:14px;padding:15px;margin-bottom:10px;cursor:pointer">'+
+  '<input type="radio" name="sh" '+(i===0?'checked':'')+' style="accent-color:#C4805F;width:18px;height:18px"><span style="font:600 13.5px/1.6 \'YekanBakh\'">'+t+'</span></label>';}).join('');
+ else inner=['پرداخت اینترنتی','پرداخت در محل (تهران)'].map(function(t,i){
+  return '<label style="display:flex;align-items:center;gap:11px;background:#fff;border:1px solid rgba(58,42,34,'+(i===0?'.32':'.12')+');border-radius:14px;padding:15px;margin-bottom:10px;cursor:pointer">'+
+  '<input type="radio" name="pm" '+(i===0?'checked':'')+' style="accent-color:#C4805F;width:18px;height:18px"><span style="font:600 13.5px/1.6 \'YekanBakh\'">'+t+'</span></label>';}).join('');
+ return '<div style="padding:'+pad+'"><button data-act="cart" class="fi-chip" style="height:34px;margin-bottom:14px">→ بازگشت</button>'+
+  '<div style="font:800 '+(m?22:30)+'px/1.4 \'YekanBakh\';margin-bottom:18px">تکمیل خرید</div>'+
+  '<div style="display:flex;gap:10px;margin-bottom:22px">'+dots+'</div>'+
+  '<div style="max-width:'+(m?'100%':'520px')+'">'+inner+
+  '<div style="display:flex;justify-content:space-between;font:800 15px/1.8 \'YekanBakh\';margin:22px 0 14px"><span>قابل پرداخت</span><span class="fi-num">'+money(cartTotal()+ship)+' تومان</span></div>'+
+  '<div style="display:flex;gap:10px">'+(step>1?'<button class="fi-btn ghost" data-act="cprev">بازگشت</button>':'')+
+  '<button class="fi-btn'+(step===3?' acc':'')+'" data-act="'+(step===3?'placeorder':'cnext')+'" style="flex:1">'+(step===3?'ثبت سفارش':'ادامه')+'</button></div></div></div>';
+}
+function vWish(sc){
+ var m=isM(sc),pad=m?'16px 18px 26px':'34px 56px 60px';
+ var list=P.filter(function(p){return wish[p.id];});
+ return '<div style="padding:'+pad+'"><button data-act="home" class="fi-chip" style="height:34px;margin-bottom:14px">→ بازگشت</button>'+
+  '<div style="font:800 '+(m?22:30)+'px/1.4 \'YekanBakh\';margin-bottom:18px">علاقه‌مندی‌ها</div>'+
+  (list.length?'<div style="display:grid;grid-template-columns:repeat('+(m?2:4)+',minmax(0,1fr));gap:'+(m?14:20)+'px">'+list.map(function(p){return card(p,m);}).join('')+'</div>'
+   :'<div style="text-align:center;padding:60px 20px"><div style="font:800 18px/1.7 \'YekanBakh\';margin-bottom:8px">هنوز چیزی نپسندیده‌ای</div><div style="font:400 13.5px/1.9 \'YekanBakh\';color:#8A7668;margin-bottom:20px">قلبِ کنار هر محصول را بزن تا اینجا جمع شود.</div><button class="fi-btn" data-act="plp" data-v="all">دیدن محصولات</button></div>')+'</div>';
+}
+function vOrder(sc){
+ var m=isM(sc),pad=m?'40px 18px 60px':'70px 56px 90px';
+ return '<div style="padding:'+pad+';text-align:center">'+
+  '<div style="width:64px;height:64px;border-radius:999px;background:#E4EADD;color:#5E6E4F;display:flex;align-items:center;justify-content:center;margin:0 auto 18px"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 7"/></svg></div>'+
+  '<div style="font:800 '+(m?22:30)+'px/1.5 \'YekanBakh\';margin-bottom:10px">سفارشت ثبت شد</div>'+
+  '<div class="fi-num" style="font:400 14px/1.9 \'YekanBakh\';color:#8A7668;margin-bottom:24px">کد پیگیری: FTN-'+fa(Math.floor(Math.random()*900000)+100000)+'</div>'+
+  '<button class="fi-btn" data-act="home">بازگشت به خانه</button></div>';
+}
+
+/* ---------- «این استایل را کامل بخر» — ردیف‌ها از کاتالوگ واقعی ساخته می‌شوند ---------- */
+function lookRows(m){
+ return LOOKSET.map(function(id){var p=byId(id);
+  return '<div style="display:flex;align-items:center;gap:'+(m?12:14)+'px;background:#F8EFE8;border-radius:'+(m?16:18)+'px;padding:'+(m?'10px':'12px 14px')+'">'+
+   '<img src="assets/'+p.img+'" alt="'+esc(p.n)+'" style="width:'+(m?46:56)+'px;height:'+(m?46:56)+'px;border-radius:'+(m?12:14)+'px;object-fit:cover;flex:0 0 auto">'+
+   '<div style="flex:1;min-width:0"><div class="fi-tt" style="font:700 '+(m?13:14)+'px/1.5 \'YekanBakh\'">'+esc(p.n)+'</div>'+
+   (p.sz.length?'<div class="fi-num" style="font:500 12px/1.5 \'YekanBakh\';color:#8A7668;margin-top:2px">سایز '+fa(p.sz[0])+'</div>':'')+'</div>'+
+   '<div class="fi-num" style="font:700 13.5px/1 \'YekanBakh\'">'+money(p.pr)+'</div></div>';
+ }).join('');
+}
+function lookTotal(){var t=0;LOOKSET.forEach(function(id){t+=byId(id).pr;});return t;}
+function fillLook(sc){
+ var m=isM(sc),list=sc.querySelector('[data-looklist]'),btn=sc.querySelector('[data-lookbtn]');
+ if(list)list.innerHTML=lookRows(m);
+ if(btn)btn.textContent='افزودن کل ست به سبد — '+money(lookTotal())+' تومان';
+}
+function addLookSet(sc){
+ LOOKSET.forEach(function(id){
+  var p=byId(id),sz=p.sz.length?p.sz[0]:0,found=-1;
+  cart.forEach(function(it,i){if(it.id===id&&it.s===sz)found=i;});
+  if(found>=0)cart[found].q++;else cart.push({id:id,s:sz,q:1});
+ });
+ syncBadges();
+ scopes().forEach(function(x){fillCart(x);if(st(x).view!=='home')renderView(x);});
+ toast(sc,'هر سه محصول به سبد اضافه شد');
+}
+
+/* ---------- carousel helper (لوک‌بوک) — همان تکنیک offsetLeft که در گالری محصول جواب داده، برای RTL امن است ---------- */
+function carGoto(car,i){
+ var kids=car.children;if(!kids.length)return;
+ i=Math.max(0,Math.min(kids.length-1,i));
+ var t=kids[i],to=t.offsetLeft-kids[0].offsetLeft;
+ if(car.scrollTo&&'scrollBehavior' in document.documentElement.style)car.scrollTo({left:to,behavior:'smooth'});
+ else car.scrollLeft=to;
+ car.__i=i;
+}
+
+/* ---------- صفحات محتوایی — پیش‌نویسِ حداقلی تا وصل‌شدن به ووکامرس؛ محتوا از همان قوانین واقعی موجود در پروتوتایپ (ارسال، تعویض، سایز) گرفته شده ---------- */
+function pageShell(m,title,body){
+ var pad=m?'16px 18px 40px':'34px 56px 70px';
+ return '<div style="padding:'+pad+'">'+
+  '<button data-act="home" class="fi-chip" style="height:34px;margin-bottom:16px">→ بازگشت</button>'+
+  '<div style="font:800 '+(m?22:32)+'px/1.4 \'YekanBakh\';margin-bottom:'+(m?18:28)+'px">'+title+'</div>'+
+  '<div style="max-width:'+(m?'100%':'640px')+'">'+body+'</div></div>';
+}
+function vAbout(sc){
+ var m=isM(sc);
+ var body='<p style="margin:0 0 18px;font:400 '+(m?13.5:15)+'px/2 \'YekanBakh\';color:#6B584D">فوتینی از دل یک فروشگاه محلی کفش و کیف شروع شد: جایی که هر مشتری پیش از خرید، کفش را می‌پوشید، چند قدم می‌زد و بعد تصمیم می‌گرفت. همان تجربه را آنلاین هم دنبال می‌کنیم — به همین دلیل هر مدل را روی پای واقعی و در حال حرکت نشان می‌دهیم، نه فقط ساکن روی پس‌زمینه‌ی سفید.</p>'+
+  '<p style="margin:0 0 30px;font:400 '+(m?12:13)+'px/1.9 \'YekanBakh\';color:#8A7668">این صفحه یک پیش‌نویس است — متن نهایی پیش از انتشار روی دامنه با تیم فوتینی نهایی می‌شود.</p>'+
+  '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:'+(m?10:16)+'px">'+
+   ['۴۲۰ مدل کفش و کیف','۷ روز تعویض رایگان','ارسال به سراسر ایران'].map(function(t){
+    return '<div style="background:#fff;border-radius:16px;padding:'+(m?'14px 10px':'20px 16px')+';text-align:center;font:700 '+(m?11.5:13)+'px/1.6 \'YekanBakh\'">'+t+'</div>';}).join('')+'</div>';
+ return pageShell(m,'درباره‌ی فوتینی',body);
+}
+function vContact(sc){
+ var m=isM(sc);
+ var rows=[['شماره تماس','۰۲۱-۰۰۰۰۰۰۰ (پیش‌نویس)'],['ایمیل','info@footini.example (پیش‌نویس)'],['ساعات پاسخ‌گویی','شنبه تا پنج‌شنبه، ۹ تا ۱۸']];
+ var info=rows.map(function(r){return '<div style="display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(58,42,34,.1);font:500 '+(m?13:14)+'px/1.6 \'YekanBakh\'"><span style="color:#8A7668">'+r[0]+'</span><span>'+r[1]+'</span></div>';}).join('');
+ var form='<div style="margin-top:26px">'+
+  '<label style="display:block;font:600 13px/1 \'YekanBakh\';margin-bottom:9px">پیام شما</label>'+
+  fieldWrap(FI_ICONS.msg,'<textarea data-contactmsg rows="5" placeholder="سوال یا پیامت را بنویس" style="width:100%;border:1px solid rgba(58,42,34,.2);border-radius:18px;padding:16px 52px 16px 18px;font:400 14.5px/1.9 \'YekanBakh\';background:#fff;resize:none;box-sizing:border-box"></textarea>',true)+
+  '<button class="fi-btn" data-act="contactsend" style="width:100%;margin-top:14px">ارسال پیام</button></div>';
+ return pageShell(m,'تماس با ما',info+form);
+}
+function vFAQ(sc){
+ var m=isM(sc);
+ var qa=[
+  ['اندازه‌ام را از کجا بفهمم؟','سایز ۳۷ معادل ۲۳٫۵ سانتی‌متر طول کف پاست. طول پایت را اندازه بگیر و نزدیک‌ترین سایز را از راهنمای سایز هر محصول انتخاب کن.'],
+  ['ارسال چقدر طول می‌کشد؟','پست پیشتاز معمولاً ۲ تا ۴ روز کاری، ارسال فوری تهران همان روز، یا تحویل حضوری از فروشگاه.'],
+  ['هزینه‌ی ارسال چقدر است؟','برای سفارش‌های بالای ۵٬۰۰۰٬۰۰۰ تومان ارسال رایگان است؛ زیر این مبلغ ۲۵۰٬۰۰۰ تومان هزینه دارد.'],
+  ['اگر سایز مناسب نبود چه کنم؟','تا ۷ روز از تحویل، تعویض رایگان است — از صفحه‌ی پیگیری سفارش درخواست بده.'],
+  ['چه روش‌های پرداختی دارید؟','پرداخت اینترنتی یا پرداخت در محل (فقط تهران).']
+ ];
+ var body=qa.map(function(q){return '<details style="background:#fff;border-radius:16px;padding:'+(m?'14px 16px':'18px 22px')+';margin-bottom:12px"><summary style="cursor:pointer;font:700 '+(m?13.5:15)+'px/1.6 \'YekanBakh\'">'+q[0]+'</summary><p style="margin:10px 0 0;font:400 '+(m?12.5:13.5)+'px/1.9 \'YekanBakh\';color:#6B584D">'+q[1]+'</p></details>';}).join('');
+ return pageShell(m,'پرسش‌های متداول',body);
+}
+function vShipping(sc){
+ var m=isM(sc);
+ var items=[
+  ['روش‌های ارسال','پست پیشتاز (۲ تا ۴ روز کاری) · ارسال فوری تهران (همان روز) · تحویل حضوری از فروشگاه'],
+  ['هزینه‌ی ارسال','رایگان برای سفارش‌های بالای ۵٬۰۰۰٬۰۰۰ تومان؛ در غیر این صورت ۲۵۰٬۰۰۰ تومان'],
+  ['تعویض','تا ۷ روز پس از تحویل، رایگان و بدون پرسش اضافه'],
+  ['مرجوعی','کالای استفاده‌نشده و در بسته‌بندی اصلی، تا ۷ روز قابل مرجوع است']
+ ];
+ var body=items.map(function(it){return '<div style="margin-bottom:'+(m?16:22)+'px"><div style="font:700 '+(m?13.5:15)+'px/1.6 \'YekanBakh\';margin-bottom:6px">'+it[0]+'</div><div style="font:400 '+(m?12.5:13.5)+'px/1.9 \'YekanBakh\';color:#6B584D">'+it[1]+'</div></div>';}).join('');
+ return pageShell(m,'ارسال و تعویض',body);
+}
+function vTrack(sc){
+ var m=isM(sc);
+ var body='<label style="display:block;font:600 13px/1 \'YekanBakh\';margin-bottom:9px">کد پیگیری یا شماره موبایل</label>'+
+  fieldWrap(FI_ICONS.track,'<input type="text" placeholder="FTN-۱۲۳۴۵۶ یا ۰۹۱۲…" style="width:100%;height:58px;border:1px solid rgba(58,42,34,.2);border-radius:999px;padding:0 52px 0 20px;font:400 15px/1 \'YekanBakh\';background:#fff;box-sizing:border-box">',false)+
+  '<button class="fi-btn" data-act="tracksend" style="width:100%;margin-top:16px">پیگیری سفارش</button>'+
+  '<p style="margin:20px 0 0;font:400 '+(m?12:13)+'px/1.9 \'YekanBakh\';color:#8A7668">این بخش پس از اتصال فروشگاه به ووکامرس، وضعیت واقعی سفارش را نشان می‌دهد.</p>';
+ return pageShell(m,'پیگیری سفارش',body);
+}
+function vLogin(sc){
+ var m=isM(sc),s=st(sc),tab=s.authtab||'in';
+ var tabs='<div style="display:flex;gap:8px;margin-bottom:22px">'+
+  '<button class="fi-chip" data-act="authtab" data-v="in" aria-pressed="'+(tab==='in')+'" style="flex:1;justify-content:center;height:44px">ورود</button>'+
+  '<button class="fi-chip" data-act="authtab" data-v="up" aria-pressed="'+(tab==='up')+'" style="flex:1;justify-content:center;height:44px">ثبت‌نام</button></div>';
+ var body='<label style="display:block;font:600 13px/1 \'YekanBakh\';margin-bottom:9px">شماره موبایل</label>'+
+  fieldWrap(FI_ICONS.phone,'<input type="tel" inputmode="tel" placeholder="۰۹۱۲…" style="width:100%;height:58px;border:1px solid rgba(58,42,34,.2);border-radius:999px;padding:0 52px 0 20px;font:400 15px/1 \'YekanBakh\';background:#fff;box-sizing:border-box">',false)+
+  '<button class="fi-btn" data-act="authsend" style="width:100%;margin-top:16px">ارسال کد تایید</button>'+
+  '<p style="margin:20px 0 0;font:400 '+(m?12:13)+'px/1.9 \'YekanBakh\';color:#8A7668">حساب کاربری واقعی پس از اتصال به ووکامرس فعال می‌شود.</p>';
+ return pageShell(m,'ورود / ثبت‌نام',tabs+body);
+}
+function vReviews(sc){
+ var m=isM(sc);
+ var rv=[
+  ['نگار.','کتونی روزمره آریانا','سایزش دقیقاً همون چیزی بود که راهنمای سایز گفته بود. ارسالش هم دو روزه رسید.'],
+  ['امیرحسین.','نیم بوت زنانه','کیفیت چرمش خیلی بهتر از چیزی بود که فکر می‌کردم. فقط کاش رنگ‌های بیشتری داشت.'],
+  ['سارا.','کیف زنانه','تعویض سایز راحت بود، در عرض یک هفته حل شد.']
+ ];
+ var body='<p style="margin:0 0 20px;font:400 '+(m?12.5:13.5)+'px/1.9 \'YekanBakh\';color:#8A7668">این صفحه یک نمونه‌ی پیش‌نویس است — نظرات واقعی مشتریان بعد از اتصال فروشگاه به ووکامرس اینجا نمایش داده می‌شود.</p>'+
+  rv.map(function(r){return '<div style="background:#fff;border-radius:18px;padding:'+(m?'16px':'20px 22px')+';margin-bottom:14px">'+
+   '<div style="font:700 '+(m?13:14)+'px/1.6 \'YekanBakh\';margin-bottom:6px">'+r[0]+' <span style="font-weight:500;color:#8A7668;font-size:'+(m?11.5:12.5)+'px">— '+r[1]+'</span></div>'+
+   '<div style="font:400 '+(m?12.5:13.5)+'px/1.9 \'YekanBakh\';color:#6B584D">'+r[2]+'</div></div>';}).join('');
+ return pageShell(m,'نظرات مشتریان',body);
+}
+
+
+/* home showcase cards, rendered from the same catalogue as the listing pages */
+/* ---------- تگ رنگ، عنوان تک‌خطی، ویدیو و گالری — مشترک بین کارت‌های خانه و لیست ---------- */
+var cardCol={};                                   /* رنگ انتخاب‌شده‌ی هر کارت، تا رندر دوباره پاکش نکند */
+var CVID={                                        /* ویدیوی ۵ ثانیه‌ای رنگ پیش‌فرض هر کارت خانه */
+ f245455:'assets/shop/media/f245455/video.mp4',
+ f225263:'assets/shop/media/f225263/video.mp4',
+ f34765 :'assets/shop/media/f34765/video.mp4',
+ f346732:'assets/shop/media/f346732/video.mp4',
+ f18414 :'assets/shop/media/f18414/video.mp4',
+ f337994:'assets/shop/media/f337994/video.mp4',
+ f221718:'assets/shop/media/f221718/video.mp4',
+ f315060:'assets/shop/media/f315060/video.mp4'
+};
+/* رسانه‌های واقعیِ هر رنگ: عکس اول همیشه بک سفید و عکس دوم روی پای مدل است.
+   ترتیب رنگ‌ها طوری است که رنگ دارای ویدیو در جایگاه اول قرار بگیرد. */
+var CMEDIA={
+ f245455:{colors:[
+  {n:'کرم',h:'#D8C8B5',k:'cream',white:'assets/shop/media/f245455/cream/white-bg.webp',model:'assets/shop/media/f245455/cream/model.webp'},
+  {n:'سفید',h:'#F3F1EC',k:'white',white:'assets/shop/media/f245455/white/white-bg.webp',model:'assets/shop/media/f245455/white/model.webp'},
+  {n:'سبز مریمی',h:'#9DA88C',k:'sage',white:'assets/shop/media/f245455/sage/white-bg.webp',model:'assets/shop/media/f245455/sage/model.webp'},
+  {n:'مشکی',h:'#232323',k:'black',white:'assets/shop/media/f245455/black/white-bg.webp',model:'assets/shop/media/f245455/black/model.webp'}]},
+ f225263:{colors:[
+  {n:'سفید',h:'#F2EFE8',k:'white',white:'assets/shop/media/f225263/white/white-bg.webp',model:'assets/shop/media/f225263/white/model.webp'},
+  {n:'نارنجی',h:'#D97737',k:'orange',white:'assets/shop/media/f225263/orange/white-bg.webp',model:'assets/shop/media/f225263/orange/model.webp'},
+  {n:'آبی',h:'#668FB5',k:'blue',white:'assets/shop/media/f225263/blue/white-bg.webp',model:'assets/shop/media/f225263/blue/model.webp'},
+  {n:'صورتی',h:'#E3A8B6',k:'pink',white:'assets/shop/media/f225263/pink/white-bg.webp',model:'assets/shop/media/f225263/pink/model.webp'}]},
+ f34765:{colors:[
+  {n:'سفید',h:'#EFEFEB',k:'white',white:'assets/shop/media/f34765/white/white-bg.webp',model:'assets/shop/media/f34765/white/model.webp'}]},
+ f346732:{colors:[
+  {n:'مشکی',h:'#1D1D1B',k:'black',white:'assets/shop/media/f346732/black/white-bg.webp',model:'assets/shop/media/f346732/black/model.webp'}]},
+ f18414:{colors:[
+  {n:'آبی روشن',h:'#A9C4DC',k:'light-blue',white:'assets/shop/media/f18414/light-blue/white-bg.webp',model:'assets/shop/media/f18414/light-blue/model.webp'}]},
+ f337994:{colors:[
+  {n:'مشکی',h:'#232323',k:'black',white:'assets/shop/media/f337994/black/white-bg.webp',model:'assets/shop/media/f337994/black/model.webp'},
+  {n:'قهوه‌ای',h:'#664536',k:'brown',white:'assets/shop/media/f337994/brown/white-bg.webp',model:'assets/shop/media/f337994/brown/model.webp'},
+  {n:'بژ',h:'#C7AA86',k:'beige',white:'assets/shop/media/f337994/beige/white-bg.webp',model:'assets/shop/media/f337994/beige/model.webp'},
+  {n:'شتری',h:'#AD7A4D',k:'tan',white:'assets/shop/media/f337994/tan/white-bg.webp',model:'assets/shop/media/f337994/tan/model.webp'}]},
+ f221718:{colors:[
+  {n:'بژ',h:'#C7AA86',k:'beige',white:'assets/shop/media/f221718/beige/white-bg.webp',model:'assets/shop/media/f221718/beige/model.webp'}]},
+ f315060:{colors:[
+  {n:'مشکی',h:'#191E26',k:'black',white:'assets/shop/media/f315060/black/white-bg.webp',model:'assets/shop/media/f315060/black/model.webp'}]}
+};
+/* ---------- «فوتینی برای همه سلیقه‌ها»: ویدیوی پیش‌فرض، قفسه‌ی ریلی، قرعه‌ی هر بار ----------
+   کاشی‌های قفسه‌ی ریلی از ویدیوهای عمودیِ آرشیو (پوشه‌ی Video) ساخته می‌شوند که هیچ‌جای
+   دیگر ماک‌آپ استفاده نشده‌اند — پس تکراری با کارت‌های بالای همان صفحه نیستند.
+   هر ویدیو روی محصولی از کاتالوگ نشسته که سیلوئتش را دارد، تا تپ کردن روی کاشی
+   به یک صفحه‌ی محصول واقعی برسد و ادعای تصویر با کالا یکی باشد. */
+var RAILV=[
+ {id:'f336960',v:'Video/9-16/magnific_a-cinematic-4second-video_1sIkW3zr4r.mp4',cap:'روی شن'},
+ {id:'f336561',v:'Video/9-16/magnific_vertical-phoneshot-custom_gOPspIASXO.mp4',cap:'ظهر تابستان'},
+ {id:'f448680',v:'Video/9-16/magnific_vertical-phoneshot-custom_ovfXw9D829.mp4',cap:'کف پارکت'},
+ {id:'f342135',v:'Video/9-16/magnific_vertical-phoneshot-custom_UP9gdh2wny.mp4',cap:'یک روز کاری'},
+ {id:'f15910',v:'Video/Video%20-%201.mp4',cap:'قاب استودیو'}
+];
+/* ترتیب محصولاتِ ویدیودار فقط یک بار — موقع باز شدن صفحه — قرعه می‌خورد و تا رفرش بعدی
+   ثابت می‌ماند. اگر داخل رندر قرعه می‌خورد، هر بار عوض‌کردن رنگ یا فیلتر شبکه را
+   جابه‌جا می‌کرد و کاربر جای خودش را گم می‌کرد. */
+var VORDER=(function(){
+ var ids=[];
+ for(var k in CVID)if(CVID.hasOwnProperty(k)&&CMEDIA[k]&&byId(k))ids.push(k);
+ for(var i=ids.length-1;i>0;i--){
+  var j=Math.floor(Math.random()*(i+1)),t=ids[i];ids[i]=ids[j];ids[j]=t;}
+ return ids;
+})();
+var VRANK={};VORDER.forEach(function(id,i){VRANK[id]=i;});
+/* محصولاتِ ویدیودار اول می‌آیند (به ترتیب قرعه‌ی همین بار)، بقیه‌ی کاتالوگ پشت سرشان */
+function videoFirst(list){
+ var withV=[],rest=[];
+ list.forEach(function(p){(VRANK[p.id]!==undefined?withV:rest).push(p);});
+ withV.sort(function(a,b){return VRANK[a.id]-VRANK[b.id];});
+ return withV.concat(rest);
+}
+/* همه‌ی نماهای یک محصول پشت سر هم: به ازای هر رنگ، بک‌سفید و روی پای مدل */
+function allShots(p){
+ var cm=CMEDIA[p.id],out=[];
+ if(cm&&cm.colors)cm.colors.forEach(function(c,ci){
+  out.push({s:c.white,ci:ci,n:c.n,mo:0});
+  out.push({s:c.model,ci:ci,n:c.n,mo:1});});
+ return out;
+}
+/* نوار رسانه‌ی مشترک کارت خودکار و کارت شاخص: کاشی صفر ویدیو، بقیه عکس‌ها.
+   کاشی ویدیو data-autov می‌گیرد تا موتور پخش (پایین فایل) پیدایش کند؛ چون خودش
+   کاشیِ یک اسکرولر افقی است، سوایپ کردن به عکس‌ها همان لحظه از دیدِ ناظر خارجش
+   می‌کند و ویدیو بی‌هیچ کد اضافه‌ای مکث می‌کند. */
+function autoStrip(p,shots){
+ return '<div class="fi-asl" data-asl data-pid="'+p.id+'">'+
+   '<div data-ci="0" data-autov><video muted loop playsinline preload="metadata" src="'+CVID[p.id]+'"></video></div>'+
+   shots.map(function(x){
+    return '<div data-ci="'+x.ci+'"><img src="'+x.s+'" alt="'+esc(p.n)+'، '+esc(x.n)+' — '+
+     (x.mo?'روی پای مدل':'نمای سه‌رخ با پس‌زمینه سفید')+'" loading="lazy"></div>';}).join('')+
+  '</div>';
+}
+/* نقطه‌ها با جداکننده بین دسته‌های رنگ — همان قرارداد گالری صفحه‌ی محصول */
+function autoDots(shots){
+ var out='<div class="fi-dots" data-ind><span class="on"></span>';
+ shots.forEach(function(x,i){
+  out+=(i&&x.ci!==shots[i-1].ci?'<i></i>':'')+'<span></span>';});
+ return out+'</div>';
+}
+/* کارت شاخص: همان نوار رسانه در قاب بزرگ ادیتوریال، با قیمت و خرید سریع روی شیشه */
+function spotHTML(p){
+ var sh=allShots(p);if(!sh.length||!CVID[p.id])return '';
+ var disc=p.old?Math.round((1-p.pr/p.old)*100):0;
+ return '<div class="fi-spot" data-slide="0" data-act="pdp" data-id="'+p.id+'" role="button" tabindex="0">'+
+  autoStrip(p,sh)+'<span class="vl"></span>'+
+  '<span class="kk'+(disc?' fi-num':'')+'">'+(disc?'٪'+fa(disc)+' تخفیف':(p.tag||'تازه رسید'))+'</span>'+
+  '<div class="in"><div class="nm">'+esc(p.n)+'</div>'+autoDots(sh)+
+   '<div class="bar"><span class="pz fi-num">'+money(p.pr)+' <span>تومان</span>'+
+    (p.old?'<u>'+money(p.old)+'</u>':'')+'</span>'+
+   '<button type="button" class="go" data-act="quick" data-id="'+p.id+'">افزودن سریع</button></div></div>'+
+ '</div>';
+}
+/* قفسه‌ی ریلی — یک آیتم شبکه که تا لبه‌های صفحه بیرون می‌زند */
+function railHTML(){
+ var tiles=RAILV.map(function(r){
+  var p=byId(r.id);if(!p)return '';
+  return '<div class="fi-rt" data-act="pdp" data-id="'+p.id+'" role="button" tabindex="0" aria-label="'+esc(p.n)+'">'+
+   '<div data-autov><video muted loop playsinline preload="metadata" src="'+r.v+'"></video></div>'+
+   '<span class="vl"></span>'+
+   '<div class="in"><div class="cp">'+r.cap+'</div><div class="nm">'+esc(p.n)+'</div>'+
+    '<div class="pz fi-num">'+money(p.pr)+' <span>تومان</span></div></div>'+
+  '</div>';
+ }).join('');
+ return '<div class="fi-rail"><div class="fi-railh"><span class="d"></span>'+
+  '<b>با ویدیو ببین</b><em>روی پای آدم‌های واقعی</em></div>'+
+  '<div class="fi-railt">'+tiles+'</div></div>';
+}
+function swatchHTML(p,m){
+ var cols=vcolors(p),max=m?4:5,sel=cardCol[p.id]||0,out='';
+ out='<div class="fi-sw" role="group" aria-label="رنگ‌های موجود" style="margin-bottom:'+(m?8:10)+'px">';
+ cols.slice(0,max).forEach(function(c,i){
+  out+='<button type="button" data-act="swatch" data-id="'+p.id+'" data-v="'+i+'" aria-pressed="'+(i===sel)+
+   '" aria-label="'+esc(c.n)+'" title="'+esc(c.n)+'" style="background:'+c.h+'"></button>';
+ });
+ if(cols.length>max)out+='<em class="fi-num">+'+fa(cols.length-max)+'</em>';
+ return out+'</div>';
+}
+function vpillHTML(){
+ return '<button class="fi-vp" type="button" data-act="vplay" aria-pressed="false" aria-label="پخش ویدیوی محصول">'+
+  '<svg width="14" height="14" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2"/>'+
+  '<circle class="rc" cx="10" cy="10" r="8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" transform="rotate(-90 10 10)"/>'+
+  '<path d="M8.3 6.6 L14 10 L8.3 13.4 Z" fill="#fff"/></svg></button>';
+}
+function homeCard(p,m,kind,first,noQuick){
+ var disc=p.old?Math.round((1-p.pr/p.old)*100):0;
+ var badge=disc?'<span class="fi-num" style="position:absolute;top:12px;left:12px;background:#C4805F;color:#fff;border-radius:999px;padding:5px 9px;font:700 10.5px/1 \'YekanBakh\';z-index:5">٪'+fa(disc)+'</span>'
+  :(p.tag?'<span style="position:absolute;top:12px;left:12px;background:#E4EADD;color:#5E6E4F;border-radius:999px;padding:5px 9px;font:700 10.5px/1 \'YekanBakh\';z-index:5">'+p.tag+'</span>':'');
+ var old=p.old?'<span class="fi-num" style="font:400 '+(m?11:12.5)+'px/1 \'YekanBakh\';color:#B0A096;text-decoration:line-through">'+money(p.old)+'</span>':'';
+ var cm=CMEDIA[p.id], cols=cm&&cm.colors, sel=cardCol[p.id]||0;
+ if(cols&&sel>=cols.length){sel=0;cardCol[p.id]=0;}
+ var chosen=cols&&cols[sel], vid=CVID[p.id];
+ /* تقسیم کارِ سه سکشن: «پرفروش‌ها» ویدیوی نگه‌داشتنی، «حراج آرام» گالری اسلایدی،
+    و «همه سلیقه‌ها»ی موبایل (kind=plpv) ویدیوی پیش‌فرض + گالری کامل روی همان کارت.
+    بقیه‌ی فهرست‌ها (plp) مثل حراج، گالری دو نما می‌گیرند. */
+ var hasV = m && kind==='best' && !!vid && sel===0;
+ var autoV = m && kind==='plpv' && !!vid && !!cols;
+ var hasG = m && kind!=='best' && !autoV && !!chosen;
+ /* در صفحه‌های لیست، جای پیل ویدیو را دکمه‌ی «افزودن سریع» می‌گیرد —
+    به‌جز توی «فوتینی برای همه سلیقه‌ها»ی موبایل که noQuick صریح خاموشش می‌کند */
+ var quick = (kind==='plp'&&!noQuick) ? '<button data-act="quick" data-id="'+p.id+'" style="position:absolute;bottom:10px;left:10px;z-index:5;background:rgba(248,239,232,.95);border:0;border-radius:999px;padding:8px 12px;font:600 10.5px/1 \'YekanBakh\';cursor:pointer;color:#3A2A22;box-shadow:0 0 0 1px rgba(58,42,34,.1),0 3px 10px rgba(58,42,34,.14)">افزودن سریع</button>' : '';
+
+ var media;
+ if(autoV){
+  var ash=allShots(p);
+  media=autoStrip(p,ash)+autoDots(ash)+
+   '<span class="fi-cnt fi-num" data-cnt>'+fa(1)+'/'+fa(ash.length+1)+'</span>';
+ }else if(hasG){
+  var imgs=[chosen.white,chosen.model];
+  media='<div class="fi-sl" data-sl>'+imgs.map(function(s,i){
+    return '<img src="'+s+'" alt="'+esc(p.n)+'، '+esc(chosen.n)+' — '+(i?'روی پای مدل':'نمای سه‌رخ با پس‌زمینه سفید')+'" loading="lazy">';}).join('')+'</div>'+
+   '<div class="fi-dots" data-ind>'+imgs.map(function(_,i){return '<span'+(i?'':' class="on"')+'></span>';}).join('')+'</div>'+
+   '<span class="fi-cnt fi-num'+(first?' late':'')+'" data-cnt>'+fa(1)+'/'+fa(imgs.length)+'</span>'+
+   (first?'<span class="fi-hint">← بکش</span>':'');
+ }else{
+  var still=chosen?chosen.white:'assets/'+p.img;
+  media='<img src="'+still+'" alt="'+esc(p.n)+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">';
+ }
+
+ return '<div class="fi-card'+(m?' fi-m':'')+(hasV?' fi-hasv':'')+'" data-act="pdp" data-id="'+p.id+'" data-kind="'+kind+'" data-noquick="'+(noQuick?'1':'0')+'"'+
+   (hasV?' data-vid="'+vid+'"':'')+(autoV?' data-slide="0"':'')+' role="button" tabindex="0" style="background:#fff;border-radius:'+(m?18:24)+'px;overflow:hidden;position:relative">'+
+  '<div class="fi-ph" style="position:relative;aspect-ratio:3/4;background:#F4EAE2;overflow:hidden">'+
+   media+badge+
+   '<button data-act="wish" data-id="'+p.id+'" data-wish class="'+(wish[p.id]?'on':'')+'" aria-label="علاقه‌مندی" style="position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:999px;background:rgba(248,239,232,.94);box-shadow:0 0 0 1px rgba(58,42,34,.1);border:0;display:flex;align-items:center;justify-content:center;color:'+(wish[p.id]?'#C4805F':'#3A2A22')+';cursor:pointer;z-index:5">'+heartSVG(16)+'</button>'+
+   (hasV?vpillHTML():'')+quick+
+  '</div><div style="padding:'+(m?'12px 13px 15px':'18px 20px 20px')+'">'+
+   '<div class="fi-tt" style="font:700 '+(m?12.5:15.5)+'px/1.7 \'YekanBakh\';margin-bottom:'+(m?7:9)+'px">'+esc(p.n)+'</div>'+
+   swatchHTML(p,m)+
+   '<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">'+
+    '<span class="fi-num" style="font:700 '+(m?13:16)+'px/1 \'YekanBakh\'">'+money(p.pr)+' <span style="font-weight:500;font-size:'+(m?10.5:12.5)+'px">تومان</span></span>'+old+
+   '</div></div></div>';
+}
+/* عوض‌کردن رنگ روی یک کارت نباید کارت‌های کنارش را دوباره بسازد — قبلاً fillHome(sc,true)
+   کل شبکه را از نو رندر می‌کرد و موقعیت سواپِ گالریِ کارت‌های دیگر (که فقط در DOM زنده است،
+   نه در state) گم می‌شد. این تابع فقط همان یک کارت را جایگزین می‌کند. */
+function regenCard(sc,cardEl){
+ var id=cardEl.getAttribute('data-id'),kind=cardEl.getAttribute('data-kind')||'plp',p=byId(id);
+ var noQuick=cardEl.getAttribute('data-noquick')==='1';
+ if(!p)return;
+ var tmp=document.createElement('div');
+ tmp.innerHTML=homeCard(p,isM(sc),kind,false,noQuick);
+ var fresh=tmp.firstElementChild;
+ if(fresh)cardEl.replaceWith(fresh);
+}
+function fillHome(sc,force){
+ var m=isM(sc);
+ [].slice.call(sc.querySelectorAll('[data-fill]')).forEach(function(el){
+  if(el.innerHTML && !force) return;
+  var kind=el.getAttribute('data-fill'), n=parseInt(el.getAttribute('data-n'),10)||4, pick=[];
+  if(kind==='sale'){
+   pick=P.filter(function(x){return x.old;})
+         .sort(function(a,b){return (1-a.pr/a.old)<(1-b.pr/b.old)?1:-1;}).slice(0,n);
+  }else if(kind==='best'){
+   /* پرفروش‌های هفته فقط از محصولاتِ دارای عکسِ بک‌سفید و ویدیوی نگه‌داشتنی
+      انتخاب می‌شود (همان استخرِ VORDER)، تا هر کارتِ این ردیف یک‌دست باشد —
+      نه بعضی با عکسِ روی پا و بدون ویدیو، بعضی با بک‌سفید و ویدیو. */
+   pick=VORDER.map(byId).filter(Boolean).slice(0,n);
+  }else{
+   var step=Math.max(1,Math.floor(P.length/n));           /* spread across categories */
+   for(var i=0;i<P.length&&pick.length<n;i+=step) pick.push(P[i]);
+  }
+  el.innerHTML=pick.map(function(x,i){return homeCard(x,m,kind,i===0);}).join('');
+ });
+}
+
+/* ---------- render ---------- */
+function renderView(sc){
+ var s=st(sc),host=sc.querySelector('[data-viewhost]'),home=sc.querySelector('[data-view="home"]');
+ if(!host||!home)return;
+ if(s.view==='home'){host.innerHTML='';home.style.display='';}
+ else{home.style.display='none';
+  host.innerHTML=s.view==='plp'?vPLP(sc):s.view==='pdp'?vPDP(sc):s.view==='cart'?vCart(sc):
+   s.view==='checkout'?vCheckout(sc):s.view==='wish'?vWish(sc):s.view==='order'?vOrder(sc):
+   s.view==='about'?vAbout(sc):s.view==='contact'?vContact(sc):s.view==='faq'?vFAQ(sc):
+   s.view==='shipping'?vShipping(sc):s.view==='track'?vTrack(sc):s.view==='login'?vLogin(sc):
+   s.view==='reviews'?vReviews(sc):'';}
+ var pg=host.querySelector('[data-pdpgal]');
+ if(pg)requestAnimationFrame(function(){pdpGoto(pg,parseInt(pg.getAttribute('data-start'),10)||0,false);});
+ syncBadges();syncTabs(sc);
+ autoBind();
+}
+function syncBadges(){
+ var n=cartCount();
+ [].slice.call(document.querySelectorAll('[data-cartcount]')).forEach(function(e){
+  e.textContent=fa(n);e.style.display=n?'flex':'none';});
+ [].slice.call(document.querySelectorAll('[data-wishcount]')).forEach(function(e){
+  var k=Object.keys(wish).filter(function(x){return wish[x];}).length;
+  e.textContent=fa(k);e.style.display=k?'flex':'none';});
+}
+/* رنگ قلبِ همه‌ی دکمه‌های «علاقه‌مندی» با همین id را همه‌جا (کارت خانه/لیست، PDP، مودال) هم‌زمان می‌کند —
+   بدون رندر دوباره‌ی هیچ کارتی، پس سواپِ گالریِ کارت‌های دیگر دست‌نخورده می‌ماند */
+function syncWishButtons(id){
+ [].slice.call(document.querySelectorAll('[data-wish][data-id="'+id+'"]')).forEach(function(b){
+  var on=!!wish[id];
+  b.classList.toggle('on',on);
+  b.style.color=on?'#C4805F':'#3A2A22';
+ });
+}
+/* تب فعالِ نویگیشن پایین از روی view جاری حساب می‌شود، نه از روی آخرین کلیک —
+   پس «بازگشت به خانه» از داخل یک صفحه هم تب درست را روشن می‌کند. جستجو چون
+   شیت است و view عوض نمی‌کند، فقط تا وقتی باز است روشن می‌ماند. */
+var TABVIEW={home:'home',wish:'wish',cart:'cart',checkout:'cart',plp:'shop',pdp:'shop'};
+function syncTabs(sc){
+ var tabs=[].slice.call(sc.querySelectorAll('[data-tab]')),fab=sc.querySelector('[data-tabfab]');
+ if(!tabs.length&&!fab)return;
+ var sh=sc.querySelector('[data-sheet="search"]');
+ var on=(sh&&sh.classList.contains('on'))?'search':(TABVIEW[st(sc).view]||'');
+ tabs.forEach(function(t){
+  var is=t.getAttribute('data-tab')===on;
+  t.classList.toggle('on',is);
+  if(is)t.setAttribute('aria-current','page');else t.removeAttribute('aria-current');});
+ if(fab){fab.classList.toggle('on',on==='shop');
+  fab.setAttribute('aria-pressed',String(on==='shop'));}
+}
+function syncTabsAll(){scopes().forEach(syncTabs);}
+function go(sc,view,extra){var s=st(sc);s.view=view;if(extra)for(var k in extra)s[k]=extra[k];
+ closeAll(sc);renderView(sc);
+ var root=sc; if(document.body.hasAttribute('data-mode'))window.scrollTo({top:0,behavior:'smooth'});
+ else root.scrollIntoView({block:'start',behavior:'smooth'});}
+
+/* ---------- drawers content ---------- */
+function fillMenu(sc){
+ var e=sc.querySelector('[data-drawer="menu"]');if(!e)return;var s=st(sc);
+ var catOpen=!!s.menuCat;
+ e.innerHTML='<div style="padding:24px 22px">'+
+ '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:26px">'+
+ '<img src="assets/logo-wordmark.webp" alt="فوتینی" style="height:22px;width:auto">'+
+ '<button data-act="close" aria-label="بستن" style="width:40px;height:40px;border-radius:999px;border:1px solid rgba(58,42,34,.16);background:none;font:600 16px/1 \'YekanBakh\';cursor:pointer;color:inherit">✕</button></div>'+
+ '<button type="button" data-act="menucat" aria-expanded="'+catOpen+'" style="display:flex;width:100%;justify-content:space-between;align-items:center;background:none;border:0;border-bottom:1px solid rgba(58,42,34,.1);padding:15px 0;font:700 14.5px/1 \'YekanBakh\';cursor:pointer;color:inherit">'+
+  '<span>دسته‌بندی‌ها</span>'+
+  '<svg width="13" height="13" viewBox="0 0 10 10" style="transform:'+(catOpen?'rotate(180deg)':'none')+';transition:transform .15s ease" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
+ '</button>'+
+ (catOpen?('<div style="padding:2px 0 4px">'+CATS.map(function(c){return '<button data-act="plp" data-v="'+c.k+'" style="display:flex;width:100%;justify-content:space-between;align-items:center;background:none;border:0;border-bottom:1px solid rgba(58,42,34,.08);padding:13px 0 13px 16px;font:600 13.5px/1 \'YekanBakh\';cursor:pointer;color:inherit"><span>'+c.n+'</span><span class="fi-num" style="color:#8A7668;font-weight:400;font-size:12.5px">'+fa(c.k==='all'?P.length:P.filter(function(p){return p.c===c.k;}).length)+'</span></button>';}).join('')+'</div>'):'')+
+ '<div style="height:1px;background:rgba(58,42,34,.1);margin:20px 0 14px"></div>'+
+ '<div style="font:700 11px/1 \'YekanBakh\';color:#8A7668;letter-spacing:.05em;margin-bottom:4px">بیشتر</div>'+
+ [['ورود / ثبت‌نام','login',FI_ICONS.user],['پیگیری سفارش','track',FI_ICONS.track],['پرسش‌های متداول','faq',FI_ICONS.help],['ارسال و تعویض','shipping',FI_ICONS.truck],['درباره ما','about',FI_ICONS.info],['تماس با ما','contact',FI_ICONS.mail]].map(function(x){
+  return '<button data-act="'+x[1]+'" style="display:flex;align-items:center;gap:13px;width:100%;text-align:right;background:none;border:0;border-bottom:1px solid rgba(58,42,34,.08);padding:16px 0;font:600 15px/1 \'YekanBakh\';cursor:pointer;color:inherit">'+
+   '<span style="flex:0 0 auto;display:flex;color:#8A7668"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+x[2]+'</svg></span>'+
+   '<span>'+x[0]+'</span></button>';}).join('')+
+ '</div>';
+}
+function fillCart(sc){
+ var e=sc.querySelector('[data-drawer="cart"]');if(!e)return;
+ var ship=cartTotal()>=5000000?0:250000;
+ var rows=cart.length?cart.map(function(it,i){var p=byId(it.id);
+  return '<div style="display:flex;gap:12px;padding:14px 0;border-bottom:1px solid rgba(58,42,34,.1)">'+
+  '<div style="width:64px;height:64px;border-radius:12px;overflow:hidden;background:#EFE6DD;flex:0 0 64px"><img src="assets/'+p.img+'" alt="" style="width:100%;height:100%;object-fit:cover"></div>'+
+  '<div style="flex:1;min-width:0"><div style="font:700 13px/1.6 \'YekanBakh\'">'+esc(p.n)+'</div>'+
+  (it.s?'<div class="fi-num" style="font:400 11.5px/1.7 \'YekanBakh\';color:#8A7668">سایز '+fa(it.s)+'</div>':'')+
+  '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">'+
+  '<div style="display:flex;align-items:center;border:1px solid rgba(58,42,34,.18);border-radius:999px">'+
+  '<button data-act="dec" data-i="'+i+'" style="width:30px;height:30px;border:0;background:none;cursor:pointer;font:700 15px/1 \'YekanBakh\';color:inherit">−</button>'+
+  '<span class="fi-num" style="min-width:24px;text-align:center;font:700 12px/1 \'YekanBakh\'">'+fa(it.q)+'</span>'+
+  '<button data-act="inc" data-i="'+i+'" style="width:30px;height:30px;border:0;background:none;cursor:pointer;font:700 15px/1 \'YekanBakh\';color:inherit">+</button></div>'+
+  '<span class="fi-num" style="font:800 12.5px/1 \'YekanBakh\'">'+money(p.pr*it.q)+'</span></div></div></div>';}).join('')
+  :'<div style="text-align:center;padding:44px 0;color:#8A7668;font:400 13.5px/1.9 \'YekanBakh\'">سبد خالی است</div>';
+ e.innerHTML='<div style="padding:22px 20px">'+
+ '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">'+
+ '<span style="font:800 17px/1 \'YekanBakh\'">سبد خرید</span>'+
+ '<button data-act="close" aria-label="بستن" style="width:40px;height:40px;border-radius:999px;border:1px solid rgba(58,42,34,.16);background:none;cursor:pointer;font:600 16px/1 \'YekanBakh\';color:inherit">✕</button></div>'+
+ rows+
+ (cart.length?'<div style="display:flex;justify-content:space-between;font:800 15px/1.9 \'YekanBakh\';margin-top:16px"><span>جمع</span><span class="fi-num">'+money(cartTotal()+ship)+'</span></div>'+
+ '<button class="fi-btn" data-act="cart" style="width:100%;margin-top:14px">مشاهده‌ی سبد</button>':'')+'</div>';
+}
+function fillSearch(sc,term){
+ var e=sc.querySelector('[data-sheet="search"]');if(!e)return;
+ term=term||'';
+ var res=term?P.filter(function(p){return p.n.indexOf(term)>=0||catName(p.c).indexOf(term)>=0;}):[];
+ var hot=['کتونی','صندل','کالج','بوت','کیف'];
+ e.innerHTML='<div style="padding:22px 24px 26px">'+
+ '<div style="display:flex;gap:10px;align-items:center;margin-bottom:16px">'+
+ '<input data-searchinput type="search" value="'+esc(term)+'" placeholder="دنبال چی می‌گردی؟" style="flex:1;height:50px;border:1px solid rgba(58,42,34,.2);border-radius:999px;padding:0 18px;font:500 14px/1 \'YekanBakh\';background:#fff;color:inherit">'+
+ '<button data-act="close" aria-label="بستن" style="width:46px;height:46px;border-radius:999px;border:1px solid rgba(58,42,34,.16);background:none;cursor:pointer;font:600 16px/1 \'YekanBakh\';color:inherit">✕</button></div>'+
+ (term? (res.length? '<div style="display:grid;grid-template-columns:repeat('+(isM(sc)?2:4)+',minmax(0,1fr));gap:14px">'+res.map(function(p){return card(p,isM(sc));}).join('')+'</div>'
+   : '<div style="padding:26px 0;font:400 13.5px/1.9 \'YekanBakh\';color:#8A7668">نتیجه‌ای برای «'+esc(term)+'» نبود. یکی از پیشنهادهای زیر را امتحان کن.</div>'+
+     '<div style="display:flex;gap:8px;flex-wrap:wrap">'+hot.map(function(h){return '<button class="fi-chip" data-act="hot" data-v="'+h+'">'+h+'</button>';}).join('')+'</div>')
+  : '<div style="font:700 12.5px/1 \'YekanBakh\';color:#8A7668;margin-bottom:12px">جستجوهای پرتکرار</div>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap">'+hot.map(function(h){return '<button class="fi-chip" data-act="hot" data-v="'+h+'">'+h+'</button>';}).join('')+'</div>')+
+ '</div>';
+ var inp=e.querySelector('[data-searchinput]');
+ if(inp){var t;inp.addEventListener('input',function(){clearTimeout(t);t=setTimeout(function(){fillSearch(sc,inp.value.trim());
+   var n=sc.querySelector('[data-searchinput]');if(n){n.focus();n.setSelectionRange(n.value.length,n.value.length);}},220);});}
+}
+function fillFilter(sc){
+ var e=sc.querySelector('[data-sheet="filter"]');if(!e)return;var f=st(sc).f;
+ var pmin=f.pmin||PR_MIN,pmax=f.pmax||PR_MAX;
+ var pctMin=(pmin-PR_MIN)/(PR_MAX-PR_MIN)*100,pctMax=(pmax-PR_MIN)/(PR_MAX-PR_MIN)*100;
+ e.innerHTML='<div style="padding:20px 20px 26px;display:flex;flex-direction:column;max-height:100%">'+
+ '<div style="width:42px;height:4px;border-radius:999px;background:rgba(58,42,34,.2);margin:0 auto 16px;flex:0 0 auto"></div>'+
+ '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex:0 0 auto"><span style="font:800 17px/1 \'YekanBakh\'">فیلتر</span>'+
+ '<button data-act="close" aria-label="بستن" style="width:40px;height:40px;border-radius:999px;border:1px solid rgba(58,42,34,.16);background:none;cursor:pointer;font:600 16px/1 \'YekanBakh\';color:inherit">✕</button></div>'+
+ '<div style="overflow-y:auto;flex:1 1 auto;padding-bottom:4px">'+
+ '<div style="font:700 12.5px/1 \'YekanBakh\';color:#8A7668;margin-bottom:10px">دسته</div>'+
+ '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px">'+CATS.map(function(c){return '<button class="fi-chip" data-act="fcat" data-v="'+c.k+'" aria-pressed="'+(f.cat===c.k)+'">'+c.n+'</button>';}).join('')+'</div>'+
+ '<div style="font:700 12.5px/1 \'YekanBakh\';color:#8A7668;margin-bottom:10px">سایز</div>'+
+ '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px">'+SH.map(function(z){return '<button class="fi-chip fi-num" data-act="fsize" data-v="'+z+'" aria-pressed="'+(f.size===z)+'">'+fa(z)+'</button>';}).join('')+'</div>'+
+ '<div style="font:700 12.5px/1 \'YekanBakh\';color:#8A7668;margin-bottom:10px">رنگ</div>'+
+ '<div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px">'+FILTER_COLORS.map(function(c){return '<button type="button" class="fi-fcol" data-act="fcolor" data-v="'+esc(c.n)+'" aria-pressed="'+(f.color===c.n)+'" style="display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:0;cursor:pointer;color:inherit">'+
+   '<span style="width:30px;height:30px;border-radius:999px;box-shadow:inset 0 0 0 1px rgba(58,42,34,.14)'+(f.color===c.n?',0 0 0 2px #F8EFE8,0 0 0 3.5px #3A2A22':'')+';background:'+c.h+';display:block"></span>'+
+   '<span style="font:500 10.5px/1 \'YekanBakh\';color:#6B584D">'+esc(c.n)+'</span></button>';}).join('')+'</div>'+
+ '<div style="font:700 12.5px/1 \'YekanBakh\';color:#8A7668;margin-bottom:12px">قیمت</div>'+
+ '<div style="background:#fff;border-radius:16px;padding:16px;margin-bottom:6px">'+
+  '<div data-prangeval style="font:700 12.5px/1.6 \'YekanBakh\';margin-bottom:14px">از '+money(pmin)+' تا '+money(pmax)+' تومان</div>'+
+  '<div data-prangewrap dir="ltr" style="position:relative;height:28px">'+
+   '<div style="position:absolute;top:12px;right:0;left:0;height:4px;border-radius:999px;background:rgba(58,42,34,.12)"></div>'+
+   '<div data-pfill style="position:absolute;top:12px;height:4px;border-radius:999px;background:#C4805F;left:'+pctMin+'%;right:'+(100-pctMax)+'%"></div>'+
+   '<input type="range" data-act="pmin" min="'+PR_MIN+'" max="'+PR_MAX+'" step="10000" value="'+pmin+'" class="fi-range" style="z-index:2" aria-label="کمترین قیمت">'+
+   '<input type="range" data-act="pmax" min="'+PR_MIN+'" max="'+PR_MAX+'" step="10000" value="'+pmax+'" class="fi-range" style="z-index:3" aria-label="بیشترین قیمت">'+
+  '</div></div>'+
+ '</div>'+
+ '<div style="display:flex;gap:10px;flex:0 0 auto;padding-top:14px">'+
+ '<button class="fi-btn ghost" data-act="fclear">پاک کردن</button>'+
+ '<button class="fi-btn" data-act="close" data-fcount style="flex:1">نمایش '+fa(filtered(f).length)+' نتیجه</button></div></div>';
+}
+function fillQuick(sc,id){
+ var e=sc.querySelector('[data-modal="quick"]');if(!e)return;var p=byId(id),s=st(sc);
+ if(isM(sc)){
+  /* موبایل: گالری کامل (بدون کراپ) + رنگ‌ها، همان الگوی گالری صفحه‌ی محصول —
+     برای محصولی که عکسِ جدا به‌ازای هر رنگ ندارد، فقط سواچ رنگ نشان داده می‌شود. */
+  var qcols=vcolors(p),qci=cardCol[p.id]||0;if(qci>=qcols.length)qci=0;
+  var qcm=CMEDIA[p.id],qcmcols=qcm&&qcm.colors,qshots=[];
+  if(qcmcols)qcmcols.forEach(function(c,ci){qshots.push({s:c.white,ci:ci});});
+  else qshots=[{s:'assets/'+p.img,ci:0}];
+  var qstart=0;for(var qi=0;qi<qshots.length;qi++){if(qshots[qi].ci===qci){qstart=qi;break;}}
+  var qmulti=qshots.length>1;
+  var qtiles=qshots.map(function(sh){
+   return '<div data-ci="'+sh.ci+'" style="flex:0 0 100%;width:100%;aspect-ratio:3/4;scroll-snap-align:start;background:#EFE6DD;display:flex;align-items:center;justify-content:center"><img src="'+sh.s+'" alt="'+esc(p.n)+'" style="width:100%;height:100%;object-fit:contain" loading="'+(sh.ci===qci?'eager':'lazy')+'"></div>';}).join('');
+  var qdots=qmulti?'<div class="fi-dots" data-ind style="position:absolute;bottom:10px;right:0;left:0;display:flex;justify-content:center;gap:5px;z-index:2">'+qshots.map(function(sh,i){return '<span'+(i===qstart?' class="on"':'')+'></span>';}).join('')+'</div>':'';
+  var qcnt=qmulti?'<span class="fi-cnt fi-num" data-cnt style="position:absolute;bottom:10px;left:10px;z-index:2">'+fa(qstart+1)+'/'+fa(qshots.length)+'</span>':'';
+  var qcolHTML=qcols.length?('<div style="font:700 12.5px/1 \'YekanBakh\';margin:16px 0 9px;display:flex;justify-content:space-between;align-items:baseline"><span>رنگ</span><span data-qcolname style="font:500 11.5px/1 \'YekanBakh\';color:#8A7668">'+esc(qcols[qci].n)+'</span></div>'+
+   '<div class="fi-pc" role="group" aria-label="رنگ‌های موجود">'+qcols.map(function(c,i){
+    return '<button type="button" class="fi-pcb" data-act="qcolor" data-id="'+p.id+'" data-v="'+i+'" aria-pressed="'+(i===qci)+'" aria-label="'+esc(c.n)+'" title="'+esc(c.n)+'" style="width:26px;height:26px;background:'+c.h+'"></button>';}).join('')+'</div>'):'';
+  e.innerHTML='<div style="position:relative;background:#EFE6DD">'+
+   '<div data-qgal data-pid="'+p.id+'" data-start="'+qstart+'" style="display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none">'+qtiles+'</div>'+
+   qcnt+qdots+
+   '<button data-act="close" aria-label="بستن" style="position:absolute;top:10px;left:10px;z-index:3;width:34px;height:34px;border-radius:999px;background:rgba(28,18,13,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:0;cursor:pointer;font:600 14px/1 \'YekanBakh\';color:#fff">✕</button>'+
+  '</div>'+
+  '<div style="padding:18px 20px 22px">'+
+   '<div style="font:800 17px/1.5 \'YekanBakh\';margin-bottom:8px">'+esc(p.n)+'</div>'+
+   priceHTML(p,true)+
+   qcolHTML+
+   (p.sz.length?'<div style="font:700 13px/1 \'YekanBakh\';margin:16px 0 9px">سایز</div><div style="display:flex;gap:8px;flex-wrap:wrap">'+
+     SH.map(function(z){var av=p.sz.indexOf(z)>=0;return '<button class="fi-sz fi-num" data-act="psize" data-v="'+z+'" aria-pressed="'+(s.size===z)+'" '+(av?'':'disabled')+'>'+fa(z)+'</button>';}).join('')+'</div>':'')+
+   '<div style="display:flex;gap:10px;margin-top:20px">'+
+   '<button class="fi-btn ghost" data-act="pdp" data-id="'+p.id+'">جزئیات</button>'+
+   '<button class="fi-btn" data-act="addcart" data-id="'+p.id+'" style="flex:1">افزودن به سبد</button></div>'+
+  '</div>';
+  var qg=e.querySelector('[data-qgal]');
+  if(qg)requestAnimationFrame(function(){pdpGoto(qg,qstart,false);});
+  return;
+ }
+ e.innerHTML='<div style="display:flex;gap:0;flex-direction:row">'+
+ '<div style="flex:0 0 46%;height:auto;min-height:300px;background:#EFE6DD"><img src="assets/'+p.img+'" alt="'+esc(p.n)+'" style="width:100%;height:100%;object-fit:cover"></div>'+
+ '<div style="flex:1;padding:22px">'+
+ '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px">'+
+ '<div style="font:800 19px/1.5 \'YekanBakh\'">'+esc(p.n)+'</div>'+
+ '<button data-act="close" aria-label="بستن" style="width:36px;height:36px;border-radius:999px;border:1px solid rgba(58,42,34,.16);background:none;cursor:pointer;font:600 15px/1 \'YekanBakh\';color:inherit;flex:0 0 36px">✕</button></div>'+
+ priceHTML(p,true)+
+ (p.sz.length?'<div style="font:700 13px/1 \'YekanBakh\';margin:18px 0 10px">سایز</div><div style="display:flex;gap:8px;flex-wrap:wrap">'+
+   SH.map(function(z){var av=p.sz.indexOf(z)>=0;return '<button class="fi-sz fi-num" data-act="psize" data-v="'+z+'" aria-pressed="'+(s.size===z)+'" '+(av?'':'disabled')+'>'+fa(z)+'</button>';}).join('')+'</div>':'')+
+ '<div style="display:flex;gap:10px;margin-top:22px">'+
+ '<button class="fi-btn ghost" data-act="pdp" data-id="'+p.id+'">جزئیات</button>'+
+ '<button class="fi-btn" data-act="addcart" data-id="'+p.id+'" style="flex:1">افزودن به سبد</button></div></div></div>';
+}
+
+/* ---------- add to cart ---------- */
+function addCart(sc,id){
+ var p=byId(id),s=st(sc);
+ if(p.sz.length&&!s.size){toast(sc,'اول یک سایز انتخاب کن');return;}
+ var sz=p.sz.length?s.size:0,found=-1;
+ cart.forEach(function(it,i){if(it.id===id&&it.s===sz)found=i;});
+ if(found>=0)cart[found].q++;else cart.push({id:id,s:sz,q:1});
+ syncBadges();fillCart(sc);
+ toast(sc,esc(p.n)+' به سبد اضافه شد');
+ scopes().forEach(function(x){if(st(x).view!=='home')renderView(x);fillCart(x);});
+}
+
+/* ---------- shoppable video (mobile, above the lookbook) ---------- */
+/* colour ways per tagged product \u2014 the catalogue itself carries no colour field,
+   so the video sheet keeps its own small map and falls back to the house palette. */
+/* رنگ‌های هر محصول — رنگ اول از روی عکس واقعی همان محصول استخراج شده */
+var VCOL={f245455:[{n:'کرم',h:'#D3C3AE'},{n:'مشکی',h:'#232323'},{n:'سبز مریمی',h:'#9FA98B'}],
+ f245543:[{n:'مشکی',h:'#27282E'},{n:'سبز مریمی',h:'#9FA98B'},{n:'صورتی',h:'#E3B3BE'}],
+ f336960:[{n:'سفید',h:'#EFEFEA'},{n:'کرم',h:'#DFCFB6'},{n:'مشکی',h:'#232323'},{n:'سبز مریمی',h:'#9FA98B'}],
+ f347361:[{n:'شتری',h:'#C99C7F'},{n:'صورتی',h:'#E3B3BE'},{n:'مشکی',h:'#232323'}],
+ f336561:[{n:'عسلی',h:'#8B5A38'},{n:'صورتی',h:'#E3B3BE'},{n:'مشکی',h:'#232323'}],
+ f45625:[{n:'بژ',h:'#C9A487'},{n:'صورتی',h:'#E3B3BE'},{n:'مشکی',h:'#232323'}],
+ f265731:[{n:'قهوه‌ای',h:'#7B4F35'},{n:'صورتی',h:'#E3B3BE'},{n:'مشکی',h:'#232323'}],
+ f265703:[{n:'سفید',h:'#F4F2F5'},{n:'صورتی',h:'#E3B3BE'},{n:'مشکی',h:'#232323'}],
+ f358599:[{n:'مشکی',h:'#2E2A28'},{n:'سفید',h:'#F0EEE9'},{n:'عسلی',h:'#A9703F'}],
+ f18414:[{n:'آبی روشن',h:'#A9C4DC'},{n:'عسلی',h:'#A9703F'},{n:'مشکی',h:'#232323'}],
+ f345270:[{n:'سفید',h:'#E6DED2'},{n:'عسلی',h:'#A9703F'},{n:'مشکی',h:'#232323'}],
+ f15910:[{n:'سبز مریمی',h:'#9DA88C'},{n:'مشکی',h:'#232323'},{n:'کرم',h:'#DFCFB6'},{n:'سفید',h:'#F0EEE9'}],
+ f221718:[{n:'عسلی',h:'#987055'},{n:'سفید',h:'#F0EEE9'},{n:'مشکی',h:'#232323'},{n:'کرم',h:'#DFCFB6'}],
+ f342135:[{n:'مشکی',h:'#262626'},{n:'کرم',h:'#DFCFB6'},{n:'سفید',h:'#F0EEE9'}],
+ f216693:[{n:'مشکی',h:'#212020'},{n:'کرم',h:'#DFCFB6'},{n:'سفید',h:'#F0EEE9'}],
+ f225263:[{n:'سفید',h:'#F0EDE4'},{n:'عسلی',h:'#A9703F'},{n:'مشکی',h:'#232323'}],
+ f345364:[{n:'مشکی',h:'#1D1915'},{n:'کرم',h:'#DFCFB6'},{n:'سرمه‌ای',h:'#26314C'}],
+ f246798:[{n:'عسلی',h:'#9A6B45'},{n:'مشکی',h:'#232323'},{n:'زرشکی',h:'#7A2B33'}],
+ f349719:[{n:'شتری',h:'#BE977C'},{n:'کرم',h:'#DFCFB6'},{n:'مشکی',h:'#232323'}],
+ f216199:[{n:'مشکی',h:'#221E1C'},{n:'کرم',h:'#DFCFB6'},{n:'سرمه‌ای',h:'#26314C'}],
+ f251689:[{n:'مشکی',h:'#2A2A31'},{n:'زرشکی',h:'#7A2B33'},{n:'کرم',h:'#DFCFB6'}],
+ f338925:[{n:'قهوه‌ای',h:'#4A2E22'},{n:'زرشکی',h:'#7A2B33'},{n:'کرم',h:'#DFCFB6'}],
+ f385368:[{n:'کرم',h:'#E2D9C8'},{n:'مشکی',h:'#232323'},{n:'زرشکی',h:'#7A2B33'}],
+ f257848:[{n:'کرم',h:'#DCC3B4'},{n:'زرشکی',h:'#7A2B33'},{n:'مشکی',h:'#232323'}],
+ f44924:[{n:'سفید',h:'#E9E7E2'},{n:'صورتی',h:'#E3B3BE'},{n:'طوسی',h:'#8A8A8A'},{n:'مشکی',h:'#232323'}],
+ f205106:[{n:'صورتی',h:'#E7C3C8'},{n:'مشکی',h:'#232323'},{n:'طوسی',h:'#8A8A8A'}],
+ f230233:[{n:'شتری',h:'#A98263'},{n:'مشکی',h:'#232323'},{n:'صورتی',h:'#E3B3BE'},{n:'سفید',h:'#F0EEE9'}],
+ f205856:[{n:'سرمه‌ای',h:'#373E54'},{n:'سفید',h:'#F0EEE9'},{n:'مشکی',h:'#232323'}],
+ f225019:[{n:'قهوه‌ای',h:'#7A4E3A'},{n:'طوسی',h:'#8A8A8A'},{n:'سفید',h:'#F0EEE9'}],
+ f198056:[{n:'شتری',h:'#C09A7F'},{n:'سفید',h:'#F0EEE9'},{n:'مشکی',h:'#232323'}],
+ f34765:[{n:'سفید',h:'#EDEDEB'},{n:'مشکی',h:'#232323'},{n:'صورتی',h:'#E3B3BE'}],
+ f250013:[{n:'مشکی',h:'#373739'},{n:'سفید',h:'#F0EEE9'},{n:'صورتی',h:'#E3B3BE'}],
+ f214288:[{n:'سفید',h:'#F0EEE9'},{n:'شتری',h:'#C9A87E'},{n:'سرمه‌ای',h:'#26314C'}],
+ f253650:[{n:'مشکی',h:'#262523'},{n:'قهوه‌ای',h:'#5C3B2A'},{n:'کرم',h:'#DFCFB6'}],
+ f253846:[{n:'کرم',h:'#D8C4A8'},{n:'قهوه‌ای',h:'#5C3B2A'},{n:'طوسی',h:'#8A8A8A'}],
+ f261550:[{n:'مشکی',h:'#202329'},{n:'قهوه‌ای',h:'#5C3B2A'},{n:'کرم',h:'#DFCFB6'}],
+ f261283:[{n:'قهوه‌ای',h:'#5C3325'},{n:'طوسی',h:'#8A8A8A'},{n:'مشکی',h:'#232323'},{n:'کرم',h:'#DFCFB6'}],
+ f261319:[{n:'شتری',h:'#C89F72'},{n:'کرم',h:'#DFCFB6'},{n:'طوسی',h:'#8A8A8A'},{n:'مشکی',h:'#232323'}],
+ f265010:[{n:'مشکی',h:'#262625'},{n:'قهوه‌ای',h:'#5C3B2A'},{n:'کرم',h:'#DFCFB6'}],
+ f195005:[{n:'قهوه‌ای',h:'#4E3126'},{n:'کرم',h:'#DFCFB6'},{n:'طوسی',h:'#8A8A8A'}],
+ f47223:[{n:'کرم',h:'#DCCBB2'},{n:'قهوه‌ای',h:'#5C3B2A'},{n:'طوسی',h:'#8A8A8A'}],
+ f230187:[{n:'مشکی',h:'#201F1E'},{n:'سفید',h:'#F0EEE9'},{n:'طوسی',h:'#8A8A8A'}],
+ f198155:[{n:'سرمه‌ای',h:'#2C3550'},{n:'طوسی',h:'#8A8A8A'},{n:'سفید',h:'#F0EEE9'}],
+ f325625:[{n:'سفید',h:'#E4E2DD'},{n:'طوسی',h:'#8A8A8A'},{n:'مشکی',h:'#232323'}],
+ f336444:[{n:'مشکی',h:'#161615'},{n:'سفید',h:'#F0EEE9'},{n:'سرمه‌ای',h:'#26314C'}],
+ f315060:[{n:'مشکی',h:'#191E26'},{n:'سفید',h:'#F0EEE9'},{n:'طوسی',h:'#8A8A8A'}],
+ f346732:[{n:'مشکی',h:'#1D1D1B'},{n:'طوسی',h:'#8A8A8A'},{n:'سفید',h:'#F0EEE9'}],
+ f260822:[{n:'سفید',h:'#EDEFF2'},{n:'سرمه‌ای',h:'#26314C'},{n:'طوسی',h:'#8A8A8A'}],
+ f337994:[{n:'بژ',h:'#C9A87E'},{n:'مشکی',h:'#232323'},{n:'کرم',h:'#DFCFB6'}],
+ f263590:[{n:'سرمه‌ای',h:'#2A3450'},{n:'کرم',h:'#DFCFB6'},{n:'عسلی',h:'#A9703F'}],
+ f448680:[{n:'مشکی',h:'#201C1B'},{n:'سرمه‌ای',h:'#26314C'},{n:'کرم',h:'#DFCFB6'}],
+ f267159:[{n:'سفید',h:'#F1EEED'},{n:'سرمه‌ای',h:'#26314C'},{n:'کرم',h:'#DFCFB6'}],
+ f42349:[{n:'مشکی',h:'#1E1E21'},{n:'عسلی',h:'#A9703F'},{n:'کرم',h:'#DFCFB6'}],
+ f362094:[{n:'کرم',h:'#D9C3AC'},{n:'سرمه‌ای',h:'#26314C'},{n:'عسلی',h:'#A9703F'}],
+ f267122:[{n:'قهوه‌ای',h:'#7A5540'},{n:'کرم',h:'#DFCFB6'},{n:'عسلی',h:'#A9703F'}],
+ f15513:[{n:'بژ',h:'#CDB295'},{n:'مشکی',h:'#232323'},{n:'عسلی',h:'#A9703F'}],
+ f396511:[{n:'مشکی',h:'#191919'},{n:'قهوه‌ای',h:'#5C3B2A'},{n:'کرم',h:'#DFCFB6'},{n:'سرمه‌ای',h:'#26314C'}],
+ f388445:[{n:'مشکی',h:'#121212'},{n:'قهوه‌ای',h:'#5C3B2A'},{n:'کرم',h:'#DFCFB6'}],
+ f377009:[{n:'مشکی',h:'#212020'},{n:'قهوه‌ای',h:'#5C3B2A'},{n:'کرم',h:'#DFCFB6'}],
+ f398308:[{n:'کرم',h:'#E0BFB4'},{n:'سرمه‌ای',h:'#26314C'},{n:'قهوه‌ای',h:'#5C3B2A'}],
+ f388020:[{n:'سرمه‌ای',h:'#2E3A55'},{n:'قهوه‌ای',h:'#5C3B2A'},{n:'کرم',h:'#DFCFB6'},{n:'مشکی',h:'#232323'}],
+ f396424:[{n:'شتری',h:'#B3906B'},{n:'کرم',h:'#DFCFB6'},{n:'سرمه‌ای',h:'#26314C'}],
+ f375260:[{n:'سرخابی',h:'#C94F6D'},{n:'کرم',h:'#DFCFB6'},{n:'سرمه‌ای',h:'#26314C'}],
+ f378449:[{n:'قهوه‌ای',h:'#6B4230'},{n:'کرم',h:'#DFCFB6'},{n:'سرمه‌ای',h:'#26314C'}]};
+function vcolors(p){return (CMEDIA[p.id]&&CMEDIA[p.id].colors)||VCOL[p.id]||[{n:'\u06a9\u0631\u0645',h:'#E4DDCE'},{n:'\u0645\u0634\u06a9\u06cc',h:'#2B2724'},{n:'\u0642\u0647\u0648\u0647\u200c\u0627\u06cc',h:'#7A5A45'}];}
+
+/* \u0628\u0627\u0632\u0647\u200c\u06cc \u0648\u0627\u0642\u0639\u06cc \u0642\u06cc\u0645\u062a \u06a9\u0627\u062a\u0627\u0644\u0648\u06af \u2014 \u0628\u0631\u0627\u06cc \u0627\u0633\u0644\u0627\u06cc\u062f\u0631 \u0642\u06cc\u0645\u062a\u0650 \u0634\u06cc\u062a \u0641\u06cc\u0644\u062a\u0631 */
+var PR_MIN=Math.min.apply(null,P.map(function(p){return p.pr;}));
+var PR_MAX=Math.max.apply(null,P.map(function(p){return p.pr;}));
+/* \u067e\u0631\u062a\u06a9\u0631\u0627\u0631\u062a\u0631\u06cc\u0646 \u0631\u0646\u06af\u200c\u0647\u0627\u06cc \u0648\u0627\u0642\u0639\u06cc \u06a9\u0627\u062a\u0627\u0644\u0648\u06af (\u0646\u0647 \u0631\u0646\u06af\u200c\u0647\u0627\u06cc \u062a\u0632\u0626\u06cc\u0646\u06cc) \u2014 \u0628\u0631\u0627\u06cc \u0641\u06cc\u0644\u062a\u0631 \u0631\u0646\u06af */
+var FILTER_COLORS=(function(){
+ var freq={},hex={},order=[];
+ P.forEach(function(p){vcolors(p).forEach(function(c){
+  if(!(c.n in freq)){freq[c.n]=0;hex[c.n]=c.h;order.push(c.n);}
+  freq[c.n]++;
+ });});
+ return order.sort(function(a,b){return freq[b]-freq[a];}).slice(0,8).map(function(n){return {n:n,h:hex[n]};});
+})();
+/* \u0645\u0646\u0648\u06cc \u0622\u0628\u0634\u0627\u0631\u06cc\u0650 \u0645\u0631\u062a\u0628\u200c\u0633\u0627\u0632\u06cc \u2014 \u06a9\u0646\u0627\u0631 \u0622\u06cc\u06a9\u0646 \u0641\u06cc\u0644\u062a\u0631\u060c \u0645\u0633\u062a\u0642\u0644 \u0627\u0632 \u0634\u06cc\u062a \u0641\u06cc\u0644\u062a\u0631 */
+function sortDropHTML(f){
+ var opts=[['new','\u062c\u062f\u06cc\u062f\u062a\u0631\u06cc\u0646'],['cheap','\u0627\u0631\u0632\u0627\u0646\u200c\u062a\u0631\u06cc\u0646'],['exp','\u06af\u0631\u0627\u0646\u200c\u062a\u0631\u06cc\u0646'],['disc','\u0628\u06cc\u0634\u062a\u0631\u06cc\u0646 \u062a\u062e\u0641\u06cc\u0641'],['best','\u067e\u0631\u0641\u0631\u0648\u0634\u200c\u0647\u0627']];
+ return '<button type="button" data-act="sortclose" aria-label="\u0628\u0633\u062a\u0646 \u0645\u0646\u0648" style="position:fixed;inset:0;background:none;border:0;padding:0;margin:0;cursor:default;z-index:38"></button>'+
+  '<div role="menu" style="position:absolute;top:calc(100% + 8px);left:0;z-index:39;background:#fff;border-radius:16px;box-shadow:0 16px 36px rgba(58,42,34,.22);padding:6px;min-width:172px">'+
+  opts.map(function(o){var on=f.sort===o[0];
+   return '<button type="button" role="menuitemradio" aria-checked="'+on+'" data-act="fsort" data-v="'+o[0]+'" style="display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;background:'+(on?'#F6EEE7':'none')+';border:0;border-radius:11px;padding:10px 12px;font:'+(on?'700':'500')+' 12.5px/1 \'YekanBakh\';color:inherit;cursor:pointer;text-align:right">'+o[1]+(on?'<span style="color:#C4805F">\u2713</span>':'')+'</button>';}).join('')+
+  '</div>';
+}
+function fillVSheet(sc,id){
+ var sh=q(sc,'[data-vsheet]'),p=byId(id),s=st(sc);if(!sh||!p)return;
+ var cols=vcolors(p);if(!(s.vcol>=0&&s.vcol<cols.length))s.vcol=0;
+ var szHTML=p.sz.length
+  ? p.sz.map(function(z){return '<button class="fi-vsz fi-num" data-act="psize" data-v="'+z+'" aria-pressed="'+(s.size===z)+'">'+fa(z)+'</button>';}).join('')
+  : '<span style="font:600 12px/1 \'YekanBakh\';color:#8A7668">\u062a\u06a9\u200c\u0633\u0627\u06cc\u0632</span>';
+ sh.innerHTML='<button data-act="vtagx" aria-label="\u0628\u0633\u062a\u0646" style="position:absolute;top:-11px;left:-7px;width:28px;height:28px;border-radius:999px;border:0;background:#3A2A22;color:#F8EFE8;font:700 12px/1 \'YekanBakh\';cursor:pointer;box-shadow:0 6px 16px rgba(20,12,8,.35)">\u2715</button>'+
+  '<div class="vrow" data-act="pdp" data-id="'+p.id+'">'+
+   '<img src="assets/'+p.img+'" alt="'+esc(p.n)+'" style="width:60px;height:60px;border-radius:15px;object-fit:cover;background:#EFE6DD;flex:0 0 60px">'+
+   '<div style="flex:1;min-width:0">'+
+    '<div style="font:700 12.5px/1.65 \'YekanBakh\';margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">'+esc(p.n)+'</div>'+
+    priceHTML(p,false)+
+   '</div>'+
+   '<span style="flex:0 0 auto;font:700 11px/1 \'YekanBakh\';color:#C4805F">\u062c\u0632\u0626\u06cc\u0627\u062a \u2190</span>'+
+  '</div>'+
+  '<div class="vsep"></div>'+
+  '<div class="vrow" style="margin-bottom:11px">'+
+   '<span class="vlbl">\u0631\u0646\u06af</span>'+
+   '<div style="display:flex;gap:8px;flex:0 0 auto">'+
+    cols.map(function(c,i){return '<button class="fi-vcl" data-act="vcolor" data-v="'+i+'" data-id="'+p.id+'" aria-pressed="'+(s.vcol===i)+'" aria-label="'+esc(c.n)+'" style="background:'+c.h+'"></button>';}).join('')+
+   '</div>'+
+   '<span data-vcolname style="flex:1;min-width:0;font:600 11.5px/1.6 \'YekanBakh\';color:#3A2A22">'+esc(cols[s.vcol].n)+'</span>'+
+  '</div>'+
+  '<div class="vrow">'+
+   '<span class="vlbl">\u0633\u0627\u06cc\u0632</span>'+
+   '<div style="display:flex;gap:6px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none">'+szHTML+'</div>'+
+   '<span data-act="sizeguide" style="flex:0 0 auto;font:600 11px/1 \'YekanBakh\';color:#8A7668;text-decoration:underline;cursor:pointer">\u0631\u0627\u0647\u0646\u0645\u0627</span>'+
+  '</div>'+
+  '<button class="fi-btn" data-act="vaddcart" data-id="'+p.id+'" style="width:100%;height:46px;margin-top:13px;font:700 13.5px/1 \'YekanBakh\'">\u0627\u0641\u0632\u0648\u062f\u0646 \u0628\u0647 \u0633\u0628\u062f</button>';
+}
+function closeVSheet(sc){
+ var sp=q(sc,'[data-vshop]'),sh=q(sc,'[data-vsheet]');
+ if(sp)sp.classList.remove('on');
+ if(sh)sh.classList.remove('on');
+ [].slice.call(sc.querySelectorAll('[data-act="vtag"]')).forEach(function(t){t.classList.remove('on');});
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click',function(ev){
+ var el=ev.target&&ev.target.closest?ev.target.closest('[data-act]'):null;
+ if(!el)return;
+ var sc=el.closest('[data-screen-label]');if(!sc)return;
+ var a=el.getAttribute('data-act'),v=el.getAttribute('data-v'),id=el.getAttribute('data-id'),s=st(sc);
+ var stop=true;
+ switch(a){
+  case 'home': go(sc,'home');break;
+  case 'plp': s.f.cat=v||'all';s.size=0;closeVSheet(sc);go(sc,'plp');break;
+  case 'pdp': s.size=0;closeVSheet(sc);go(sc,'pdp',{pid:id});break;
+  case 'vtag': if(s.vpid!==id){s.vpid=id;s.size=0;s.vcol=0;}
+    fillVSheet(sc,id);
+    [].slice.call(sc.querySelectorAll('[data-act="vtag"]')).forEach(function(t){if(t===el)t.classList.add('on');else t.classList.remove('on');});
+    var vsp=q(sc,'[data-vshop]'),vsh=q(sc,'[data-vsheet]');
+    if(vsp)vsp.classList.add('on');if(vsh)vsh.classList.add('on');break;
+  case 'vnoop': break;
+  case 'vtagx': closeVSheet(sc);break;
+  case 'vcolor': s.vcol=parseInt(v,10)||0;
+    [].slice.call(sc.querySelectorAll('[data-act="vcolor"]')).forEach(function(b){
+      b.setAttribute('aria-pressed',String(b===el));});
+    var cn=q(sc,'[data-vcolname]'),cp=byId(id);
+    if(cn&&cp)cn.textContent=vcolors(cp)[s.vcol].n;
+    break;
+  case 'vaddcart': var vp=byId(id);
+    if(vp&&vp.sz.length&&!s.size){toast(sc,'اول سایز را انتخاب کن');break;}
+    addCart(sc,id);closeVSheet(sc);break;
+  case 'cart': go(sc,'cart');break;
+  case 'wishview': go(sc,'wish');break;
+  case 'checkout': if(!cart.length){toast(sc,'سبد خالی است');break;} s.step=1;go(sc,'checkout');break;
+  case 'cnext': s.step=Math.min(3,(s.step||1)+1);renderView(sc);break;
+  case 'cprev': s.step=Math.max(1,(s.step||1)-1);renderView(sc);break;
+  case 'placeorder': cart=[];syncBadges();go(sc,'order');scopes().forEach(function(x){fillCart(x);});break;
+  case 'back': go(sc,'plp');break;
+  case 'plpdisc': s.f.cat='all';s.f.disc=true;s.f.sort='disc';go(sc,'plp');break;
+  case 'subscribe': var box=el.closest('div'),inp=box&&box.querySelector('input');
+    toast(sc,(inp&&/.+@.+\..+/.test(inp.value))?'ثبت شد — اول از همه باخبر می‌شوی':'ایمیلت را کامل وارد کن');break;
+  case 'openmenu': fillMenu(sc);openOv(sc,'[data-drawer="menu"]');break;
+  case 'menucat': s.menuCat=!s.menuCat;fillMenu(sc);break;
+  case 'opencart': fillCart(sc);openOv(sc,'[data-drawer="cart"]');break;
+  case 'opensearch': fillSearch(sc,'');openOv(sc,'[data-sheet="search"]');
+    setTimeout(function(){var i=sc.querySelector('[data-searchinput]');if(i)i.focus();},260);break;
+  case 'openfilter': fillFilter(sc);openOv(sc,'[data-sheet="filter"]');break;
+  case 'quick': s.size=0;fillQuick(sc,id);openOv(sc,'[data-modal="quick"]');break;
+  case 'close': closeAll(sc);break;
+  case 'hot': fillSearch(sc,v);break;
+  case 'sizeguide': toast(sc,'سایز ۳۷ معادل ۲۳٫۵ سانتی‌متر طول کف پاست');break;
+  case 'psize': s.size=parseInt(v,10);
+    [].slice.call(sc.querySelectorAll('[data-act="psize"]')).forEach(function(b){
+      b.setAttribute('aria-pressed',String(parseInt(b.getAttribute('data-v'),10)===s.size));});
+    break;
+  case 'addcart': addCart(sc,id);break;
+  case 'wish':
+    if(!id){go(sc,'wish');break;}
+    wish[id]=!wish[id];syncBadges();syncWishButtons(id);
+    /* فقط صفحه‌ی «علاقه‌مندی‌ها» واقعاً باید از نو رندر شود — چون آیتم باید از لیست حذف/اضافه شود؛
+       بقیه‌ی جاها (کارت خانه/لیست/PDP) فقط رنگ قلب عوض می‌شود، بدون دست‌زدن به سواپِ کارت‌های کناری */
+    scopes().forEach(function(x){if(st(x).view==='wish')renderView(x);});
+    toast(sc,wish[id]?'به علاقه‌مندی‌ها اضافه شد':'از علاقه‌مندی‌ها حذف شد');break;
+  case 'inc': cart[+el.getAttribute('data-i')].q++;syncBadges();scopes().forEach(function(x){fillCart(x);if(st(x).view!=='home')renderView(x);});break;
+  case 'dec': var i=+el.getAttribute('data-i');if(cart[i].q>1)cart[i].q--;else cart.splice(i,1);
+    syncBadges();scopes().forEach(function(x){fillCart(x);if(st(x).view!=='home')renderView(x);});break;
+  case 'del': cart.splice(+el.getAttribute('data-i'),1);syncBadges();
+    scopes().forEach(function(x){fillCart(x);if(st(x).view!=='home')renderView(x);});break;
+  case 'fcat': s.f.cat=v;refresh(sc);break;
+  case 'fsize': s.f.size=(s.f.size===parseInt(v,10)?0:parseInt(v,10));refresh(sc);break;
+  case 'fdisc': s.f.disc=!s.f.disc;refresh(sc);break;
+  case 'fcolor': s.f.color=(s.f.color===v?'':v);refresh(sc);break;
+  case 'fclear': s.f={cat:'all',size:0,disc:false,sort:s.f.sort,color:'',pmin:PR_MIN,pmax:PR_MAX};refresh(sc);break;
+  case 'sortnext': var o=['new','cheap','exp','disc'];s.f.sort=o[(o.indexOf(s.f.sort)+1)%o.length];refresh(sc);break;
+  case 'fsort': s.f.sort=v;s.sortOpen=false;refresh(sc);break;
+  case 'sorttoggle': s.sortOpen=!s.sortOpen;renderView(sc);break;
+  case 'sortclose': s.sortOpen=false;renderView(sc);break;
+  case 'scroll': var t=sc.querySelector(el.getAttribute('data-v'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});break;
+  case 'swatch': cardCol[id]=parseInt(v,10)||0;
+    var swCard=el.closest('.fi-card'),swAsl=swCard&&swCard.querySelector('[data-asl]');
+    /* کارت خودکار بازسازی نمی‌شود — بازسازی ویدیو را از نو راه می‌اندازد و جای اسلاید را
+       گم می‌کند. به‌جایش نوار را می‌بریم روی نمای بک‌سفیدِ همان رنگ. */
+    if(swAsl&&swAsl.getAttribute('data-pid')===id){
+     [].slice.call(swCard.querySelectorAll('[data-act="swatch"]')).forEach(function(b){
+      b.setAttribute('aria-pressed',String(b===el));});
+     var ach=swAsl.children;
+     for(var ak=1;ak<ach.length;ak++){
+      if(parseInt(ach[ak].getAttribute('data-ci'),10)===cardCol[id]){
+       pdpGoto(swAsl,ak,true);swCard.setAttribute('data-slide',String(ak));break;}}
+    }else if(swCard)regenCard(sc,swCard);
+    break;
+  case 'pcolor': cardCol[id]=parseInt(v,10)||0;
+    [].slice.call(sc.querySelectorAll('[data-act="pcolor"]')).forEach(function(b){
+      b.setAttribute('aria-pressed',String(b===el));});
+    var pcn=q(sc,'[data-pcolname]'),pcp=byId(id);
+    if(pcn&&pcp)pcn.textContent=vcolors(pcp)[cardCol[id]].n;
+    var pgal=q(sc,'[data-pdpgal]');
+    if(pgal&&pgal.getAttribute('data-pid')===id){
+     var pch=pgal.children;
+     for(var pk=0;pk<pch.length;pk++){
+      if(parseInt(pch[pk].getAttribute('data-ci'),10)===cardCol[id]){pdpGoto(pgal,pk,true);break;}}
+    }else if(s.view==='pdp')renderView(sc);
+    break;
+  case 'qcolor': cardCol[id]=parseInt(v,10)||0;
+    var qmodal=el.closest('[data-modal="quick"]');
+    if(qmodal){
+     [].slice.call(qmodal.querySelectorAll('[data-act="qcolor"]')).forEach(function(b){
+      b.setAttribute('aria-pressed',String(b===el));});
+     var qcn=qmodal.querySelector('[data-qcolname]'),qcp=byId(id);
+     if(qcn&&qcp)qcn.textContent=vcolors(qcp)[cardCol[id]].n;
+     var qgal=qmodal.querySelector('[data-qgal]');
+     if(qgal&&qgal.getAttribute('data-pid')===id){
+      var qch=qgal.children;
+      for(var qk=0;qk<qch.length;qk++){
+       if(parseInt(qch[qk].getAttribute('data-ci'),10)===cardCol[id]){pdpGoto(qgal,qk,true);break;}}
+     }
+    }
+    break;
+  case 'vplay': var vc=el.closest('.fi-card');
+    if(vc){ if(vc.classList.contains('live')&&vc.__mode==='pin')cardVideoOff(vc);
+            else{cardVideoOn(vc);vc.__mode='pin';} }
+    break;
+  case 'soon': toast(sc,'این بخش در نسخه‌ی نهایی فعال می‌شود');break;
+  case 'about': go(sc,'about');break;
+  case 'contact': go(sc,'contact');break;
+  case 'faq': go(sc,'faq');break;
+  case 'shipping': go(sc,'shipping');break;
+  case 'track': go(sc,'track');break;
+  case 'login': go(sc,'login');break;
+  case 'reviews': go(sc,'reviews');break;
+  case 'authtab': s.authtab=v;renderView(sc);break;
+  case 'authsend': toast(sc,'کد تایید پس از اتصال به ووکامرس پیامک می‌شود');break;
+  case 'tracksend': toast(sc,'پیگیری واقعی پس از اتصال فروشگاه به ووکامرس فعال می‌شود');break;
+  case 'contactsend': var ta=sc.querySelector('[data-contactmsg]');
+    toast(sc,(ta&&ta.value.trim())?'پیامت ثبت شد — به‌زودی جواب می‌دهیم':'یک پیام بنویس تا بفرستیم');break;
+  case 'addlook': addLookSet(sc);break;
+  case 'homescroll': var hsel=v,doScroll=function(){var t=sc.querySelector(hsel);if(t)t.scrollIntoView({behavior:'smooth',block:'start'});};
+    if(s.view!=='home'){go(sc,'home');setTimeout(doScroll,420);}else doScroll();
+    break;
+  case 'carnav': var cwrap=el.parentNode,ccar=cwrap&&cwrap.querySelector('[data-carousel]');
+    if(ccar)carGoto(ccar,(ccar.__i||0)+(v==='next'?1:-1));
+    break;
+  case 'pdpnav': var pw3=el.closest('[data-pdpwrap]'),pg3=pw3&&pw3.querySelector('[data-pdpgal]');
+    if(pg3)pdpGoto(pg3,(pg3.__i||0)+(v==='next'?1:-1),true);
+    break;
+  case 'pdpgoto': var pw4=el.closest('[data-pdpwrap]'),pg4=pw4&&pw4.querySelector('[data-pdpgal]');
+    if(pg4)pdpGoto(pg4,parseInt(v,10)||0,true);
+    break;
+  default: stop=false;
+ }
+ if(stop){ev.preventDefault();}
+},false);
+function refresh(sc){var s=st(sc);
+ if(s.view!=='plp'){s.view='plp';}
+ renderView(sc);
+ if(sc.querySelector('[data-sheet="filter"]').classList.contains('on'))fillFilter(sc);}
+
+document.addEventListener('keydown',function(e){
+ if(e.key==='Escape')scopes().forEach(function(sc){closeAll(sc);});
+ if(e.key==='Enter'&&e.target&&e.target.closest&&e.target.closest('[data-act]'))e.target.click();
+});
+function bind(){scopes().forEach(function(sc){
+ var sm=sc.querySelector('[data-scrim]');
+ if(sm&&!sm.__b){sm.__b=1;sm.addEventListener('click',function(){closeAll(sc);});}
+ fillCart(sc);fillLook(sc);});}
+
+/* ==================================================================================
+   ویدیوی کارت + گالری اسلایدی — همه با شنونده‌ی واگذارشده، تا رندر دوباره‌ی
+   fillHome نیازی به bind مجدد نداشته باشد.
+   ================================================================================== */
+var HOLD_MS=300, holdAt=0, lastScrollAt=0;
+var REDUCED=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function cardVideoOn(card){
+ var src=card.getAttribute('data-vid'); if(!src)return;
+ var ph=card.querySelector('.fi-ph'), wrap=card.querySelector('.fi-vwrap');
+ if(!wrap){
+  wrap=document.createElement('div'); wrap.className='fi-vwrap';
+  var v=document.createElement('video');
+  v.muted=true; v.loop=true; v.playsInline=true;
+  v.setAttribute('playsinline',''); v.setAttribute('muted',''); v.setAttribute('preload','none');
+  v.src=src; wrap.appendChild(v); ph.appendChild(wrap);
+ }
+ /* هر بار فقط یک کارت زنده باشد */
+ [].slice.call(document.querySelectorAll('.fi-card.live')).forEach(function(o){
+  if(o!==card)cardVideoOff(o);});
+ var vd=wrap.querySelector('video');
+ try{vd.currentTime=0;}catch(e){}
+ var pr=vd.play(); if(pr&&pr.catch)pr.catch(function(){});
+ card.classList.add('live');
+ var pill=card.querySelector('.fi-vp'); if(pill)pill.setAttribute('aria-pressed','true');
+}
+function cardVideoOff(card){
+ card.classList.remove('live'); card.__mode=null;
+ var pill=card.querySelector('.fi-vp'); if(pill)pill.setAttribute('aria-pressed','false');
+ var vd=card.querySelector('.fi-vwrap video');
+ if(vd)setTimeout(function(){ if(!card.classList.contains('live'))vd.pause(); },280);
+}
+
+/* ==================================================================================
+   موتور پخشِ خودکار — کارت‌های «همه سلیقه‌ها» و کاشی‌های قفسه‌ی ریلی.
+   قاعده: هرچه در کادر دید است پخش می‌شود، ولی هیچ‌وقت بیش از AUTOV_MAX تا هم‌زمان؛
+   نزدیک‌ترین‌ها به مرکزِ دید برنده‌اند و بقیه مکث می‌کنند. این سقف، همان چیزی است که
+   نمی‌گذارد شبکه‌ای پر از ویدیو، روی گوشی‌های میان‌رده فریم بیندازد.
+   ناظر روی خودِ کاشیِ ویدیو (data-autov) می‌نشیند، نه روی کارت — پس سوایپ کردن به
+   عکس‌ها، کاشی را از اسکرولرِ افقی بیرون می‌برد و ویدیو بی‌هیچ کد اضافه‌ای می‌ایستد.
+   با prefers-reduced-motion یا حالت ذخیره‌ی داده، هیچ ویدیویی خودکار پخش نمی‌شود.
+   ================================================================================== */
+var AUTOV_MAX=4;
+var SAVEDATA=!!(navigator.connection&&navigator.connection.saveData);
+var autoIO=null,autoSeen=[],autoTick=null;
+
+function autoPlay(el){
+ var v=el.querySelector('video'); if(!v||el.__on)return;
+ el.__on=true; var pr=v.play(); if(pr&&pr.catch)pr.catch(function(){});
+}
+function autoPause(el){
+ var v=el.querySelector('video'); if(!v||!el.__on)return;
+ el.__on=false; try{v.pause();v.currentTime=0;}catch(e){}
+}
+function autoSettle(){
+ autoTick=null;
+ autoSeen=autoSeen.filter(function(el){
+  if(el.isConnected)return true;
+  autoPause(el);return false;});
+ var vh=window.innerHeight||document.documentElement.clientHeight;
+ var mid=function(el){var r=el.getBoundingClientRect();return Math.abs(r.top+r.height/2-vh/2);};
+ var rank=autoSeen.slice().sort(function(a,b){return mid(a)-mid(b);});
+ rank.forEach(function(el,i){ if(i<AUTOV_MAX)autoPlay(el); else autoPause(el); });
+}
+function autoSchedule(){ if(autoTick)return; autoTick=requestAnimationFrame(autoSettle); }
+/* بعد از هر رندر دوباره صدا زده می‌شود: ناظر قبلی رها و همه‌ی کاشی‌های تازه دیده می‌شوند */
+function autoBind(){
+ if(autoIO)autoIO.disconnect();
+ autoSeen.forEach(autoPause); autoSeen=[];
+ if(REDUCED||SAVEDATA||!('IntersectionObserver' in window))return;
+ if(!autoIO)autoIO=new IntersectionObserver(function(entries){
+   entries.forEach(function(en){
+    var i=autoSeen.indexOf(en.target);
+    if(en.isIntersecting){ if(i<0)autoSeen.push(en.target); }
+    else { if(i>=0)autoSeen.splice(i,1); autoPause(en.target); }
+   });
+   autoSchedule();
+  },{threshold:.35});
+ [].slice.call(document.querySelectorAll('[data-autov]')).forEach(function(el){autoIO.observe(el);});
+}
+/* تب که پنهان شد، هیچ ویدیویی نباید پشت پرده بچرخد */
+document.addEventListener('visibilitychange',function(){
+ if(document.hidden)autoSeen.forEach(autoPause); else autoSchedule();
+});
+
+/* ---- منوی بومی مرورگر هنگام نگه‌داشتن: iOS با touch-callout در CSS خفه شد،
+       اندروید فقط با لغو contextmenu خفه می‌شود ---- */
+document.addEventListener('contextmenu',function(e){
+ if(e.target&&e.target.closest&&e.target.closest('.fi-card'))e.preventDefault();
+},false);
+document.addEventListener('dragstart',function(e){
+ if(e.target&&e.target.closest&&e.target.closest('.fi-card'))e.preventDefault();
+},false);
+
+/* ---- هر اسکرولی در صفحه: هم ایندکس گالری، هم قفلِ ضدِ هولدِ تصادفی ---- */
+document.addEventListener('scroll',function(e){
+ var sl=e.target, isGal=sl&&sl.classList&&(sl.classList.contains('fi-sl')||sl.classList.contains('fi-asl')||sl.hasAttribute('data-pdpgal')||sl.hasAttribute('data-qgal')||sl.hasAttribute('data-carousel'));
+ /* قفسه‌ی ریلی گالری نیست، ولی کشیدنش هم ژست افقی است و نباید هولد را قفل کند */
+ var isHz=isGal||(sl&&sl.classList&&sl.classList.contains('fi-railt'));
+ if(!isHz)lastScrollAt=Date.now();
+ if(!isGal)return;
+ sl.setAttribute('data-moved','1');
+ if(sl.__tick)return;
+ sl.__tick=requestAnimationFrame(function(){
+  sl.__tick=null;
+  var n=sl.children.length,
+      w=(n>1?Math.abs(sl.children[1].offsetLeft-sl.children[0].offsetLeft):0)||sl.clientWidth||1,
+      i=Math.max(0,Math.min(n-1,Math.round(Math.abs(sl.scrollLeft)/w)));
+  if(sl.__i===i)return;
+  galMark(sl,i);
+  if(sl.hasAttribute('data-pdpgal'))pdpSyncColor(sl,i);
+  if(sl.hasAttribute('data-qgal'))qSyncColor(sl,i);
+  /* کارت خودکار: شماره‌ی کاشی روی خودِ کارت می‌نشیند تا بج «ویدیو» با CSS محو شود،
+     و تگ رنگ کارت با رنگِ عکسی که جلوی چشم است هم‌گام شود */
+  if(sl.hasAttribute('data-asl'))aslSync(sl,i);
+ });
+},true);
+/* سوایپ روی کارت خودکار: بج ویدیو فقط روی کاشی صفر، و سواچ رنگ همراهِ عکس */
+function aslSync(sl,i){
+ var host=sl.closest('.fi-card')||sl.closest('.fi-spot');
+ if(host)host.setAttribute('data-slide',String(i));
+ var t=sl.children[i];if(!t||i===0)return;
+ var ci=parseInt(t.getAttribute('data-ci'),10)||0,pid=sl.getAttribute('data-pid'),p=byId(pid);
+ if(!p||cardCol[pid]===ci)return;
+ cardCol[pid]=ci;
+ /* فقط برچسب‌های همین کارت — کارت‌های دیگرِ همان محصول در DOM دست نمی‌خورند */
+ if(!host)return;
+ [].slice.call(host.querySelectorAll('[data-act="swatch"]')).forEach(function(b){
+  b.setAttribute('aria-pressed',String(parseInt(b.getAttribute('data-v'),10)===ci));});
+}
+
+/* سوایپ در گالری صفحه‌ی محصول، تگ رنگ را هم با خودش می‌برد */
+function pdpSyncColor(g,i){
+ var t=g.children[i];if(!t)return;
+ var ci=parseInt(t.getAttribute('data-ci'),10)||0,pid=g.getAttribute('data-pid'),p=byId(pid);
+ if(!p||cardCol[pid]===ci)return;
+ cardCol[pid]=ci;
+ var sc=g.closest('[data-screen-label]');if(!sc)return;
+ [].slice.call(sc.querySelectorAll('[data-act="pcolor"]')).forEach(function(b){
+  b.setAttribute('aria-pressed',String(parseInt(b.getAttribute('data-v'),10)===ci));});
+ var nm=q(sc,'[data-pcolname]');if(nm)nm.textContent=vcolors(p)[ci].n;
+}
+/* همان کار برای گالریِ پاپ‌آپ «افزودن سریع» — جدا از PDP، چون هر دو ممکن است هم‌زمان در DOM باشند */
+function qSyncColor(g,i){
+ var t=g.children[i];if(!t)return;
+ var ci=parseInt(t.getAttribute('data-ci'),10)||0,pid=g.getAttribute('data-pid'),p=byId(pid);
+ if(!p||cardCol[pid]===ci)return;
+ cardCol[pid]=ci;
+ var modal=g.closest('[data-modal="quick"]');if(!modal)return;
+ [].slice.call(modal.querySelectorAll('[data-act="qcolor"]')).forEach(function(b){
+  b.setAttribute('aria-pressed',String(parseInt(b.getAttribute('data-v'),10)===ci));});
+ var nm=modal.querySelector('[data-qcolname]');if(nm)nm.textContent=vcolors(p)[ci].n;
+}
+
+/* ---- اسلایدر دوطرفه‌ی قیمت در شیت فیلتر: هر تیک 'input' فقط برچسب/نوار رنگی و شمارش
+   دکمه‌ی پایین را زنده به‌روز می‌کند — بدون رندر دوباره، تا خودِ کشیدنِ دستگیره قطع نشود.
+   رندر کامل شبکه‌ی محصولات فقط موقع رهاکردن دستگیره ('change') انجام می‌شود. ---- */
+document.addEventListener('input',function(ev){
+ var el=ev.target;if(!el||el.tagName!=='INPUT')return;
+ var act=el.getAttribute('data-act');if(act!=='pmin'&&act!=='pmax')return;
+ var sheet=el.closest('[data-sheet="filter"]');if(!sheet)return;
+ var sc=el.closest('[data-screen-label]');if(!sc)return;
+ var mnEl=sheet.querySelector('[data-act="pmin"]'),mxEl=sheet.querySelector('[data-act="pmax"]');
+ var mn=parseInt(mnEl.value,10),mx=parseInt(mxEl.value,10);
+ if(mn>mx){ if(act==='pmin'){mn=mx;mnEl.value=mn;} else {mx=mn;mxEl.value=mx;} }
+ var s=st(sc);s.f.pmin=mn;s.f.pmax=mx;
+ var wrap=sheet.querySelector('[data-prangewrap]'),fill=wrap&&wrap.querySelector('[data-pfill]');
+ if(fill){fill.style.left=((mn-PR_MIN)/(PR_MAX-PR_MIN)*100)+'%';fill.style.right=(100-((mx-PR_MIN)/(PR_MAX-PR_MIN)*100))+'%';}
+ var lab=sheet.querySelector('[data-prangeval]');
+ if(lab)lab.textContent='از '+money(mn)+' تا '+money(mx)+' تومان';
+ var fc=sheet.querySelector('[data-fcount]');
+ if(fc)fc.textContent='نمایش '+fa(filtered(s.f).length)+' نتیجه';
+},true);
+document.addEventListener('change',function(ev){
+ var el=ev.target;if(!el||el.tagName!=='INPUT')return;
+ var act=el.getAttribute('data-act');if(act!=='pmin'&&act!=='pmax')return;
+ var sc=el.closest('[data-screen-label]');if(!sc)return;
+ refresh(sc);
+},true);
+
+/* ---- نگه‌داشتن انگشت / کلیک ---- */
+(function(){
+ var timer=null,card=null,sx=0,sy=0;
+ function clear(){ if(timer){clearTimeout(timer);timer=null;} if(card)card.classList.remove('hold'); }
+ document.addEventListener('pointerdown',function(e){
+  var c=e.target.closest?e.target.closest('.fi-hasv'):null; if(!c)return;
+  if(e.pointerType==='mouse'&&e.button!==0)return;
+  /* روی پیل، قلب یا سواچ، هولد بی‌معناست */
+  var t=e.target.closest('[data-act]'); if(t&&t!==c)return;
+  if(Date.now()-lastScrollAt<350)return;      /* انگشتی که تازه اسکرول کرده، هولد نمی‌کند */
+  card=c; sx=e.clientX; sy=e.clientY; c.classList.add('hold');
+  timer=setTimeout(function(){
+   timer=null; c.classList.remove('hold');
+   cardVideoOn(c); c.__mode='hold'; holdAt=Date.now();
+  },HOLD_MS);
+ },true);
+ document.addEventListener('pointermove',function(e){
+  if(!timer&&!card)return;
+  if(Math.abs(e.clientX-sx)>10||Math.abs(e.clientY-sy)>10){clear();card=null;}
+ },{passive:true,capture:true});
+ ['pointerup','pointercancel'].forEach(function(t){
+  document.addEventListener(t,function(){
+   clear();
+   if(card&&card.__mode==='hold'){cardVideoOff(card);holdAt=Date.now();}
+   card=null;
+  },true);
+ });
+ /* هولد نباید بعدش صفحه‌ی محصول را باز کند */
+ document.addEventListener('click',function(e){
+  if(Date.now()-holdAt<450&&e.target.closest&&e.target.closest('.fi-hasv')){
+   e.preventDefault(); e.stopPropagation();
+  }
+ },true);
+ /* دسکتاپ: هاور کافی است */
+ document.addEventListener('pointerover',function(e){
+  if(e.pointerType!=='mouse')return;
+  var c=e.target.closest?e.target.closest('.fi-hasv'):null; if(!c||c.__mode==='pin')return;
+  if(c.__hv)return; c.__hv=setTimeout(function(){c.__hv=null;cardVideoOn(c);c.__mode='hover';},180);
+ },true);
+ document.addEventListener('pointerout',function(e){
+  if(e.pointerType!=='mouse')return;
+  var c=e.target.closest?e.target.closest('.fi-hasv'):null; if(!c)return;
+  if(c.contains(e.relatedTarget))return;
+  if(c.__hv){clearTimeout(c.__hv);c.__hv=null;}
+  if(c.__mode==='hover')cardVideoOff(c);
+ },true);
+ /* صفحه‌کلید: کارت فوکوس‌دار با V ویدیو را باز/بسته می‌کند */
+ document.addEventListener('keydown',function(e){
+  if(e.key!=='v'&&e.key!=='V')return;
+  var c=document.activeElement&&document.activeElement.closest?document.activeElement.closest('.fi-hasv'):null;
+  if(!c)return;
+  if(c.classList.contains('live'))cardVideoOff(c); else {cardVideoOn(c);c.__mode='pin';}
+ },false);
+})();
+
+window.__FI_BADGES=function(){
+ bind();syncBadges();syncTabsAll();
+ scopes().forEach(function(sc){try{fillHome(sc,false);}catch(e){}});
+ scopes().forEach(function(sc){
+  var s=st(sc),h=sc.querySelector('[data-viewhost]'),home=sc.querySelector('[data-view="home"]');
+  if(!h||s.view==='home')return;
+  if(!h.innerHTML)renderView(sc);
+  if(home)home.style.display='none';});};
+/* no DOM writes at parse time: the canvas runtime is still rendering <x-dc>.
+   __FI_BADGES() is called from the boot sequence after load. */
+})();
+
+</script>
+<script>
+/* ---- wire the existing static mock-up to the prototype engine ---- */
+(function(){
+function norm(t){return (t||'').replace(/[\u06F0-\u06F9]/g,'').replace(/[^\u0600-\u06FF]/g,'');}
+var LABEL={
+ 'خانه':['home'],'دستهبندیها':['openmenu'],'پرفروشها':['plp','all'],'حراجفوتینی':['plpdisc'],
+ 'لوکبوک':['soon'],'مجله':['soon'],'ورودثبتنام':['soon'],'پیگیریسفارش':['soon'],
+ 'جستجو':['opensearch'],'علاقهمندی':['wishview'],'سبد':['opencart'],
+ 'همهدستهها':['plp','all'],'همهپرفروشها':['plp','all'],'دیدنهمه':['plp','all'],
+ 'دیدنکالکشنجدید':['plp','all'],'پیداکردنسایزمن':['sizeguide'],'همهمدلها':['plp','all'],
+ 'عضویت':['subscribe'],'راهنمایخرید':['soon'],'تماشایویدیو':['soon'],'دیدنکالکشن':['plp','all'],
+ 'قدمزدنباصندلهایتابستان':['plp','sandal']};
+var CATMAP={'همه':'all','اسلیپر':'slipper','صندل':'sandal','مجلسی':'formal','کتونیزنانه':'sneaker-w','نیمبوت':'boot','کتونیمردانه':'sneaker-m','کفش':'shoe','کیف':'bag','کتونی':'sneaker-w'};
+var SIG=[['M4 7.6h16','openmenu',null],['cx="10.9"','opensearch',null],['M12 20.4C','wishview',null],
+ ['cx="12" cy="8.2"','soon',null],['M2.6 3.6h2.4','opencart',null],['M4.7 8.4h14.6','opencart',null],
+ ['M11.35 3.36','home',null],['rect x="3.6"','plp','all']];
+function scopes(){return [].slice.call(document.querySelectorAll('[data-screen-label]'));}
+function set(el,a,v){if(!el||el.hasAttribute('data-act'))return;el.setAttribute('data-act',a);
+ if(v)el.setAttribute('data-v',v);el.style.cursor='pointer';}
+
+/* ===== ناحیه‌ی امن + ناظرِ چسبیدنِ هدر =====
+   با viewport-fit=cover هدر دیگر در y=0 نمی‌چسبد، بلکه در y=env(safe-area-inset-top).
+   پس آستانه‌ی تشخیصِ «چسبید» هم باید همان‌قدر پایین بیاید، وگرنه کلاس fi-compact
+   زودتر از موعد می‌نشیند و ریلِ دسته‌بندی یک‌بار می‌پرد. env() از JS خواندنی نیست،
+   پس عددش را از ارتفاعِ [data-safeprobe] می‌گیریم — که خودِ CSS نگهش می‌دارد و با
+   چرخشِ گوشی هم‌گام می‌ماند. */
+function fiSafeTop(){
+  var p=document.querySelector('[data-safeprobe]');
+  return p?Math.round(p.getBoundingClientRect().height):0;
+}
+/* نوارِ خودِ سافاری هم با صفحه هم‌رنگ می‌شود: آبیِ بنر سرِ صفحه، کرمِ هدر بعد از چسبیدن */
+function fiTheme(c){
+  var m=document.querySelector('meta[name="theme-color"]');
+  if(m&&m.getAttribute('content')!==c)m.setAttribute('content',c);
+}
+function fiHeadIO(){
+  if(!('IntersectionObserver' in window))return;
+  var st=fiSafeTop();
+  if(!window.__FI_HEADIO||window.__FI_HEADST!==st){
+    if(window.__FI_HEADIO)window.__FI_HEADIO.disconnect();
+    window.__FI_HEADST=st;
+    window.__FI_HEADIO=new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var sc=entry.target.closest('[data-screen-label]');if(!sc)return;
+        /* سنتینل بی‌ارتفاع است، پس intersectionRatio همیشه صفر می‌ماند و ملاک، خودِ مختصات است */
+        var stuck=entry.boundingClientRect.top<=(window.__FI_HEADST||0)+0.5;
+        sc.classList.toggle('fi-compact',stuck);
+        if(document.body.getAttribute('data-mode')==='mobile')fiTheme(stuck?'#F8EFE8':'#0C99EF');
+      });
+    },{threshold:[0],rootMargin:(st>0?(-st)+'px':'0px')+' 0px 0px 0px'});
+    /* ناظر عوض شد، پس نشانه‌ی «قبلاً دیده‌بانی شده» روی سنتینل‌ها باطل است */
+    [].slice.call(document.querySelectorAll('[data-mheadsentinel]')).forEach(function(el){el.__obs=0;});
+  }
+  [].slice.call(document.querySelectorAll('[data-mheadsentinel]')).forEach(function(el){
+    if(el.__obs)return;el.__obs=1;window.__FI_HEADIO.observe(el);});
+}
+/* چرخشِ گوشی یا باز/بسته شدنِ نوارِ سافاری، مقدارِ ناحیه‌ی امن را عوض می‌کند */
+if(!window.__FI_SAFEBIND){window.__FI_SAFEBIND=1;
+  var fiRT=null,fiKick=function(){clearTimeout(fiRT);fiRT=setTimeout(fiHeadIO,180);};
+  window.addEventListener('resize',fiKick);
+  window.addEventListener('orientationchange',fiKick);
+}
+
+window.__FI_WIRE=function(){
+scopes().forEach(function(sc){
+ /* a) category rail / chips -> listing */
+ [].slice.call(sc.querySelectorAll('[data-catrail]>div,[data-stickycat]>div')).forEach(function(el){
+  var k=CATMAP[norm(el.textContent)];if(k)set(el,'plp',k);});
+ /* b) text labels -> actions */
+ [].slice.call(sc.querySelectorAll('div,span,button,a,li')).forEach(function(el){
+  if(el.hasAttribute('data-act'))return;
+  if(el.closest('[data-viewhost],[data-drawer],[data-sheet],[data-modal],[data-catrail],[data-stickycat]'))return;
+  if(el.childElementCount>3)return;
+  var t=norm(el.textContent);if(!t||t.length>28)return;
+  var m=LABEL[t];if(m)set(el,m[0],m[1]);});
+ /* c) icon-only controls -> actions, matched by their SVG path signature */
+ [].slice.call(sc.querySelectorAll('svg')).forEach(function(sv){
+  var h=sv.innerHTML;
+  for(var i=0;i<SIG.length;i++){ if(h.indexOf(SIG[i][0])>=0){
+   var host=sv.closest('button')||sv.parentElement;
+   if(host&&host.closest('[data-act]'))return;
+   set(host,SIG[i][1],SIG[i][2]);return;}}});
+ /* d) product photos on the home page -> product page */
+ [].slice.call(sc.querySelectorAll('[data-view="home"] img')).forEach(function(im){
+  var src=im.getAttribute('src')||'';if(src.indexOf('assets/')!==0)return;
+  if(im.closest('[data-catrail],[data-stickycat],[data-act]'))return;
+  var f=src.split('/').pop();
+  if(!window.__FI_IMG||!window.__FI_IMG[f])return;
+  var host=im.parentElement;
+  if(host&&!host.hasAttribute('data-act')){host.setAttribute('data-act','pdp');
+   host.setAttribute('data-id',window.__FI_IMG[f]);host.style.cursor='pointer';}});
+});
+/* The canvas runtime rebuilds <video> and drops boolean attributes (loop/autoplay),
+   so loop, mute, inline playback and speed are all set as JS properties each tick.
+   Retime the clip by changing data-speed on the tag. */
+[].slice.call(document.querySelectorAll('video[data-speed]')).forEach(function(v){
+  var r=parseFloat(v.getAttribute('data-speed'))||1;
+  /* هیروی دسکتاپ کنترل مکث ندارد، پس تنظیم سیستم کاربر تنها راه توقف است.
+     __stop لازم است وگرنه هندلر pause پایین‌تر دوباره ویدیو را راه می‌اندازد. */
+  if(v.__rm===undefined)v.__rm=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+  if(v.__rm){v.__stop=1;if(!v.paused)v.pause();return;}
+  v.loop=true;v.muted=true;v.playsInline=true;v.defaultMuted=true;
+  if(v.playbackRate!==r)v.playbackRate=r;
+  function kick(){var q=v.play();if(q&&q.catch)q.catch(function(){});}
+  if(!v.__sp){v.__sp=1;
+    v.addEventListener('loadedmetadata',function(){v.loop=true;v.playbackRate=r;});
+    v.addEventListener('play',function(){v.playbackRate=r;});
+    v.addEventListener('ended',function(){v.currentTime=0;kick();});   /* belt and braces */
+    v.addEventListener('pause',function(){if(!v.__stop)setTimeout(kick,60);});
+  }
+  if(v.paused)kick();
+});
+/* ===== ریل دسته‌بندی: درگ با ماوس + چرخ عمودی به‌عنوان اسکرول افقی =====
+   روی گوشی لمس کار می‌کند، ولی این ماکاپ عمدتاً روی دسکتاپ دیده می‌شود، پس
+   کشیدن با ماوس هم لازم است. آستانه‌ی ۶ پیکسل، درگ را از کلیک جدا می‌کند تا
+   کشیدنِ ریل به‌اشتباه کاربر را وارد صفحه‌ی دسته نکند. */
+[].slice.call(document.querySelectorAll('[data-stickycat]')).forEach(function(r){
+  if(r.__drag)return;r.__drag=1;
+  var down=false,moved=false,x0=0,sl0=0;
+  r.addEventListener('pointerdown',function(e){
+    if(e.pointerType==='touch')return;            /* لمس را به خود مرورگر بسپار */
+    down=true;moved=false;x0=e.clientX;sl0=r.scrollLeft;
+  });
+  r.addEventListener('pointermove',function(e){
+    if(!down)return;
+    var dx=e.clientX-x0;
+    if(!moved){if(Math.abs(dx)<6)return;moved=true;r.classList.add('drag');
+      if(r.setPointerCapture)try{r.setPointerCapture(e.pointerId);}catch(_){}}
+    r.scrollLeft=sl0-dx;e.preventDefault();
+  });
+  function up(){if(!down)return;down=false;r.classList.remove('drag');
+    if(moved)setTimeout(function(){moved=false;},0);}
+  r.addEventListener('pointerup',up);r.addEventListener('pointercancel',up);
+  r.addEventListener('click',function(e){if(moved){e.stopPropagation();e.preventDefault();}},true);
+  r.addEventListener('dragstart',function(e){e.preventDefault();});
+  r.addEventListener('wheel',function(e){
+    if(Math.abs(e.deltaX)>Math.abs(e.deltaY))return;   /* ترک‌پد افقی: دست نزن */
+    var b=r.scrollLeft;r.scrollLeft=b+e.deltaY;
+    if(r.scrollLeft!==b)e.preventDefault();            /* فقط وقتی واقعاً جا دارد */
+  },{passive:false});
+});
+/* ===== جمع‌وجور شدنِ هدر موبایل موقع چسبیدن =====
+   سنتینلِ بی‌ارتفاعِ بالای هدر را دیده‌بانی می‌کنیم؛ همین که از بالای صفحه
+   رد شد یعنی هدر و ریلِ دسته‌بندی چسبیده‌اند — کلاس fi-compact را می‌زنیم.
+   برگشتن به بالا یعنی سنتینل دوباره دیده می‌شود، پس کلاس برداشته و همه‌چیز نرم
+   به حالت باز برمی‌گردد. یک IntersectionObserver سراسری کافی است چون فقط چند
+   سنتینل در کل صفحه داریم. */
+fiHeadIO();
+if(window.__FI_BADGES)window.__FI_BADGES();
+};
+/* The design-canvas runtime re-renders <x-dc> and drops runtime-added attributes,
+   so re-apply the tagging a few times after load. Attribute writes only — never
+   node writes — or the runtime's own reconciler trips over us. */
+function boot(){try{window.__FI_WIRE();}catch(e){}}
+function start(){[80,400,1200,2500].forEach(function(d){setTimeout(boot,d);});}
+if(document.readyState==='complete')start();else window.addEventListener('load',start);
+})();
+</script>
+</body>
+</html>
